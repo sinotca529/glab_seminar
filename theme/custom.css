@@ -1,0 +1,23 @@
+.flex {
+    display: flex;
+}
+
+.sticky {
+    position: sticky;
+    top: 15px;
+}
+
+/* 親要素(コンテナ) */
+.flex-container {
+	display: flex;
+}
+/* 子要素(アイテム) */
+.flex-item {
+	margin: 10px auto;
+	padding: 5px 10px;
+	box-sizing: border-box;
+}
+
+/* :root {
+    --content-max-width: 1200px;
+} */

@@ -1,0 +1,349 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Concrete semantics - glab_seminar</title>
+        <!-- Custom HTML head -->
+<script type="text/javascript">
+    window.MathJax = {
+        tex: {
+            tags: 'ams',
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            macros: {
+                grad: "{\\nabla}",
+                llangle: "{\\langle\\!\\langle}",
+                rrangle: "{\\rangle\\!\\rangle}",
+                bm: ["{\\boldsymbol{#1}}", 1],
+            }
+        }
+    };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom.css">
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/concrete.html" class="active">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">glab_seminar</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="define-concrete-transitional-semantics"><a class="header" href="#define-concrete-transitional-semantics">Define concrete transitional semantics</a></h1>
+<h2 id="steps"><a class="header" href="#steps">Steps</a></h2>
+<ol>
+<li>Define the set of states : $\mathbb{S}$.</li>
+<li>Define the transition relation : $\hookrightarrow \ (\subseteq \mathbb{S} \times \mathbb{S})$.</li>
+<li>Define $\textit{Step}$ : natural powerset-lifted version of $\hookrightarrow$</li>
+<li>Define a concrete semantics.</li>
+</ol>
+<h2 id="14-define-the-set-of-states-mathbbs"><a class="header" href="#14-define-the-set-of-states-mathbbs">[1/4] Define the set of states: $\mathbb{S}$</a></h2>
+<p>A state $s \in \mathbb{S}$ is a pair $(l, m)$.</p>
+<ul>
+<li>$l \in \mathbb{L}$ : program label which denotes the next operator.</li>
+<li>$m \in \mathbb{M}$ : machine state at $l$ (before exec $l$).
+<ul>
+<li>That would consist of:
+<ul>
+<li>memory : <code>Map&lt;Addr, Value&gt;</code></li>
+<li>environment : <code>Map&lt;Variable, Addr&gt;</code></li>
+<li>continuation of the program</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="24-define-the-transition-relation-hookrightarrow"><a class="header" href="#24-define-the-transition-relation-hookrightarrow">[2/4] Define the transition relation $\hookrightarrow$</a></h2>
+<p>If the next state of $s = (l, m)$ is $s' = (l', m')$ :
+$$
+\begin{align}
+s &amp;\hookrightarrow s'\\
+(l, m) &amp;\hookrightarrow (l', m')
+\end{align}
+$$</p>
+<blockquote>
+<ul>
+<li>The next label $l'$ called <strong>control flow</strong></li>
+<li><strong>Control flow</strong> may not be determined solely by the syntax.
+<ul>
+<li>ex. <code>goto</code>, func-ptr, ...</li>
+<li>In those cases, $l'$ is an evaluation result from the current state $(l, m)$.</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h2 id="34-define-textitstep"><a class="header" href="#34-define-textitstep">[3/4] Define $\textit{Step}$</a></h2>
+<blockquote>
+<p><strong>Def. 4.1 (Concrete semantics, the set of reachable states)</strong></p>
+<p>$\textit{Step}$ is a natural powerset-lifted version of $\hookrightarrow$</p>
+<p>$$
+\begin{align}
+\textit{Step} \ &amp;:\  {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S}) \\
+\textit{Step}(X) &amp;= \{ s' | s \hookrightarrow s', s \in X \}
+\end{align}
+$$</p>
+</blockquote>
+<h2 id="44-define-a-concrete-semantics"><a class="header" href="#44-define-a-concrete-semantics">[4/4] Define a concrete semantics.</a></h2>
+<ul>
+<li><strong>We restrict our analysis interest to computing the set of reachable states.</strong></li>
+<li>So, we define the concrete semantics as the set of all the reachable states of the program.</li>
+</ul>
+<details style="background-color: var(--quote-bg);">
+<summary>Example 4.2 (Reachable states)</summary>
+<p>Consider the program:</p>
+<div>
+<div style="float:left; width:50%">
+<pre><code class="language-py"># 0: (label)
+input(x)
+# 1
+while (x &lt;= 99)
+    # 2
+    x += 1
+# 3
+</code></pre>
+</div>
+<div style="text-align:center">
+<p><img src="./fig/ex4.1.drawio.svg" alt="" /></p>
+</div>
+</div>
+<p>Assumptions:</p>
+<ul>
+<li>Initial state : empty memory $\emptyset$</li>
+<li>Inputs are only 0, 99 and 100</li>
+</ul>
+<p>Concrete semantics of the program is:
+$$
+\begin{align}
+&amp; \{(0, \emptyset), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
+\cup \quad&amp; \{(0, \emptyset), (1, x \mapsto 99), (2, x \mapsto 99), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
+\cup \quad&amp; \{(0, \emptyset), (1, x \mapsto 0), (2, x \mapsto 0), (1, x \mapsto 1), \cdots, (1, x \mapsto 100), (3, x \mapsto 100)\}
+\end{align}
+$$</p>
+</details>
+<h3 id="accumulate-all-reachable-states"><a class="header" href="#accumulate-all-reachable-states">Accumulate all reachable states</a></h3>
+<p>Reachable states of a program is:
+$$
+\begin{align}
+\bigcup_{i=0}^\infty \textit{Step}^i(I) \quad (I \text{ is initial states}) \label{eq:reachable}
+\end{align}
+$$</p>
+<p>We define the function $F$ :
+$$
+\begin{align}
+&amp;F: \mathscr{\mathbb{S}} \rightarrow \mathscr{\mathbb{S}}\\
+&amp;F(X) = I \cup \textit{Step}(X)
+\end{align}
+$$</p>
+<p>It means,
+$$
+\begin{align}
+F^i(\emptyset) =
+\begin{cases}
+\emptyset &amp; (i = 0)\\
+\bigcup_{k=0}^{i-1} \textit{Step}^k(I) &amp; (i &gt; 0)
+\end{cases}
+\end{align}
+$$</p>
+<p>$F$ has a least fix point:
+$$
+\begin{align}
+\textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset)
+\end{align}
+$$</p>
+<p>Because</p>
+<ul>
+<li>$F$ is a monotonic function over $({\Large\wp}(\mathbb{S}), \subseteq)$ and $\mathbb{S}$ is finite height
+<ul>
+<li>→　$F$ is a continuous function over $({\Large\wp}(\mathbb{S}), \subseteq)$</li>
+</ul>
+</li>
+<li>$\mathbb{S}$ has a infimum $\emptyset$</li>
+</ul>
+<p>(We will skip the proof because we already saw it in ModelChecking)</p>
+<blockquote>
+<p><strong>Continuous</strong></p>
+<p>A function $f : A \rightarrow B$ is continuous when :</p>
+<p>For all chain $\{ a_i \}$ on $A$,
+$$
+\begin{align}
+\sqcup\{ f(a_i) \} = f(\sqcup \{a_i\})
+\end{align}
+$$</p>
+</blockquote>
+<p>The $\textbf{lfp} F$ is equal to the reachable states $\eqref{eq:reachable}$ :
+$$
+\begin{align}
+\textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset) = \bigcup_{i=0}^\infty \textit{Step}^i(I)
+\end{align}
+$$</p>
+<blockquote>
+<p><strong>Def 4.2 (Semantic domain and semantic function)</strong></p>
+<p>We call:</p>
+<ul>
+<li>$F$ : concrete <strong>semantic function</strong></li>
+<li>$({\Large\wp}(\mathbb{S}), \subseteq)$ : <strong>concrete semantic domain</strong> or <strong>concrete domain</strong></li>
+</ul>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../slides/isa_4/main.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../../slides/isa_4/abstract.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../slides/isa_4/main.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../../slides/isa_4/abstract.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

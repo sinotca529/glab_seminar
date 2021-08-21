@@ -1,0 +1,1109 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>glab_seminar</title>
+        <meta name="robots" content="noindex" />
+        <!-- Custom HTML head -->
+<script type="text/javascript">
+    window.MathJax = {
+        tex: {
+            tags: 'ams',
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            macros: {
+                grad: "{\\nabla}",
+                llangle: "{\\langle\\!\\langle}",
+                rrangle: "{\\rangle\\!\\rangle}",
+                bm: ["{\\boldsymbol{#1}}", 1],
+            }
+        }
+    };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/custom.css">
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item "><a href="slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">glab_seminar</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="輪講"><a class="header" href="#輪講">輪講</a></h1>
+<ul>
+<li><a href="slides/./isa_4/main.html">ISA Ch.4 (WIP)</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="isa-ch4--a-general-static-analysis-framework-based-on-a-transitional-semantics"><a class="header" href="#isa-ch4--a-general-static-analysis-framework-based-on-a-transitional-semantics">ISA Ch.4 : A General Static Analysis Framework Based on a Transitional Semantics</a></h1>
+<h2 id="goal"><a class="header" href="#goal">Goal</a></h2>
+<p>Provide a formal introduction to static analysis by the transitional style.</p>
+<p>Transitional style is useful when the target language's compositional semantics is not obvious.</p>
+<ul>
+<li>ex. When the program contains dynamic jumps such as <code>goto</code>.</li>
+</ul>
+<p>Transitional style is also a good fit for the proof of the reachability property.</p>
+<h2 id="contents"><a class="header" href="#contents">Contents</a></h2>
+<ol>
+<li><a href="slides/isa_4/./concrete.html">Define concrete semantic</a></li>
+<li><a href="slides/isa_4/./abstract.html">Define abstract semantic</a></li>
+<li><a href="slides/isa_4/./analysis.html">Define sound analysis</a></li>
+<li><a href="slides/isa_4/./ex_framework.html">Example of the framework</a></li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="define-concrete-transitional-semantics"><a class="header" href="#define-concrete-transitional-semantics">Define concrete transitional semantics</a></h1>
+<h2 id="steps"><a class="header" href="#steps">Steps</a></h2>
+<ol>
+<li>Define the set of states : $\mathbb{S}$.</li>
+<li>Define the transition relation : $\hookrightarrow \ (\subseteq \mathbb{S} \times \mathbb{S})$.</li>
+<li>Define $\textit{Step}$ : natural powerset-lifted version of $\hookrightarrow$</li>
+<li>Define a concrete semantics.</li>
+</ol>
+<h2 id="14-define-the-set-of-states-mathbbs"><a class="header" href="#14-define-the-set-of-states-mathbbs">[1/4] Define the set of states: $\mathbb{S}$</a></h2>
+<p>A state $s \in \mathbb{S}$ is a pair $(l, m)$.</p>
+<ul>
+<li>$l \in \mathbb{L}$ : program label which denotes the next operator.</li>
+<li>$m \in \mathbb{M}$ : machine state at $l$ (before exec $l$).
+<ul>
+<li>That would consist of:
+<ul>
+<li>memory : <code>Map&lt;Addr, Value&gt;</code></li>
+<li>environment : <code>Map&lt;Variable, Addr&gt;</code></li>
+<li>continuation of the program</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="24-define-the-transition-relation-hookrightarrow"><a class="header" href="#24-define-the-transition-relation-hookrightarrow">[2/4] Define the transition relation $\hookrightarrow$</a></h2>
+<p>If the next state of $s = (l, m)$ is $s' = (l', m')$ :
+$$
+\begin{align}
+s &amp;\hookrightarrow s'\\
+(l, m) &amp;\hookrightarrow (l', m')
+\end{align}
+$$</p>
+<blockquote>
+<ul>
+<li>The next label $l'$ called <strong>control flow</strong></li>
+<li><strong>Control flow</strong> may not be determined solely by the syntax.
+<ul>
+<li>ex. <code>goto</code>, func-ptr, ...</li>
+<li>In those cases, $l'$ is an evaluation result from the current state $(l, m)$.</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h2 id="34-define-textitstep"><a class="header" href="#34-define-textitstep">[3/4] Define $\textit{Step}$</a></h2>
+<blockquote>
+<p><strong>Def. 4.1 (Concrete semantics, the set of reachable states)</strong></p>
+<p>$\textit{Step}$ is a natural powerset-lifted version of $\hookrightarrow$</p>
+<p>$$
+\begin{align}
+\textit{Step} \ &amp;:\  {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S}) \\
+\textit{Step}(X) &amp;= \{ s' | s \hookrightarrow s', s \in X \}
+\end{align}
+$$</p>
+</blockquote>
+<h2 id="44-define-a-concrete-semantics"><a class="header" href="#44-define-a-concrete-semantics">[4/4] Define a concrete semantics.</a></h2>
+<ul>
+<li><strong>We restrict our analysis interest to computing the set of reachable states.</strong></li>
+<li>So, we define the concrete semantics as the set of all the reachable states of the program.</li>
+</ul>
+<details style="background-color: var(--quote-bg);">
+<summary>Example 4.2 (Reachable states)</summary>
+<p>Consider the program:</p>
+<div>
+<div style="float:left; width:50%">
+<pre><code class="language-py"># 0: (label)
+input(x)
+# 1
+while (x &lt;= 99)
+    # 2
+    x += 1
+# 3
+</code></pre>
+</div>
+<div style="text-align:center">
+<p><img src="slides/isa_4/./fig/ex4.1.drawio.svg" alt="" /></p>
+</div>
+</div>
+<p>Assumptions:</p>
+<ul>
+<li>Initial state : empty memory $\emptyset$</li>
+<li>Inputs are only 0, 99 and 100</li>
+</ul>
+<p>Concrete semantics of the program is:
+$$
+\begin{align}
+&amp; \{(0, \emptyset), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
+\cup \quad&amp; \{(0, \emptyset), (1, x \mapsto 99), (2, x \mapsto 99), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
+\cup \quad&amp; \{(0, \emptyset), (1, x \mapsto 0), (2, x \mapsto 0), (1, x \mapsto 1), \cdots, (1, x \mapsto 100), (3, x \mapsto 100)\}
+\end{align}
+$$</p>
+</details>
+<h3 id="accumulate-all-reachable-states"><a class="header" href="#accumulate-all-reachable-states">Accumulate all reachable states</a></h3>
+<p>Reachable states of a program is:
+$$
+\begin{align}
+\bigcup_{i=0}^\infty \textit{Step}^i(I) \quad (I \text{ is initial states}) \label{eq:reachable}
+\end{align}
+$$</p>
+<p>We define the function $F$ :
+$$
+\begin{align}
+&amp;F: \mathscr{\mathbb{S}} \rightarrow \mathscr{\mathbb{S}}\\
+&amp;F(X) = I \cup \textit{Step}(X)
+\end{align}
+$$</p>
+<p>It means,
+$$
+\begin{align}
+F^i(\emptyset) =
+\begin{cases}
+\emptyset &amp; (i = 0)\\
+\bigcup_{k=0}^{i-1} \textit{Step}^k(I) &amp; (i &gt; 0)
+\end{cases}
+\end{align}
+$$</p>
+<p>$F$ has a least fix point:
+$$
+\begin{align}
+\textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset)
+\end{align}
+$$</p>
+<p>Because</p>
+<ul>
+<li>$F$ is a monotonic function over $({\Large\wp}(\mathbb{S}), \subseteq)$ and $\mathbb{S}$ is finite height
+<ul>
+<li>→　$F$ is a continuous function over $({\Large\wp}(\mathbb{S}), \subseteq)$</li>
+</ul>
+</li>
+<li>$\mathbb{S}$ has a infimum $\emptyset$</li>
+</ul>
+<p>(We will skip the proof because we already saw it in ModelChecking)</p>
+<blockquote>
+<p><strong>Continuous</strong></p>
+<p>A function $f : A \rightarrow B$ is continuous when :</p>
+<p>For all chain $\{ a_i \}$ on $A$,
+$$
+\begin{align}
+\sqcup\{ f(a_i) \} = f(\sqcup \{a_i\})
+\end{align}
+$$</p>
+</blockquote>
+<p>The $\textbf{lfp} F$ is equal to the reachable states $\eqref{eq:reachable}$ :
+$$
+\begin{align}
+\textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset) = \bigcup_{i=0}^\infty \textit{Step}^i(I)
+\end{align}
+$$</p>
+<blockquote>
+<p><strong>Def 4.2 (Semantic domain and semantic function)</strong></p>
+<p>We call:</p>
+<ul>
+<li>$F$ : concrete <strong>semantic function</strong></li>
+<li>$({\Large\wp}(\mathbb{S}), \subseteq)$ : <strong>concrete semantic domain</strong> or <strong>concrete domain</strong></li>
+</ul>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="abstract-semantics-as-abstract-state-transitions"><a class="header" href="#abstract-semantics-as-abstract-state-transitions">Abstract semantics as Abstract State Transitions</a></h1>
+<h2 id="steps-1"><a class="header" href="#steps-1">Steps</a></h2>
+<ol>
+<li>Define concrete domain &amp; concrete semantic function.</li>
+<li>Define abstract domain.</li>
+<li>Define abstract semantic function.</li>
+</ol>
+<h2 id="13-define-concrete-domain--concrete-semantic-function"><a class="header" href="#13-define-concrete-domain--concrete-semantic-function">1/3. Define concrete domain &amp; concrete semantic function.</a></h2>
+<p>A concrete semantic domain $\mathbb{D}$ is:
+$$
+\begin{align}
+\mathbb{D} &amp;= {\Large\wp}(\mathbb{S})\\
+\mathbb{S} &amp;= \mathbb{L} \times \mathbb{M}
+\end{align}
+$$</p>
+<p>where:</p>
+<ul>
+<li>$\mathbb{L}$ : Set of program labels.</li>
+<li>$\mathbb{M}$ : Set of machine states.</li>
+<li>$\mathbb{S}$ : Set of concrete states.</li>
+</ul>
+<h2 id="23-define-abstract-domain"><a class="header" href="#23-define-abstract-domain">2/3. Define abstract domain.</a></h2>
+<h3 id="program-label-wise-reachability"><a class="header" href="#program-label-wise-reachability">Program-label-wise reachability</a></h3>
+<p>We are interested in the reachable set for each program label (<strong>flow sensitive</strong>).</p>
+<p>In this case, we can view the abstraction in two steps:</p>
+<p><strong>[ Step1 ]</strong>
+$$
+\begin{align}
+\text{collection of all states} &amp; &amp; &amp;\text{label-wise collection}\\
+{\Large\wp}(\mathbb{L} \times \mathbb{M}) &amp;\quad \xrightarrow{\text{abstraction}} &amp; &amp;(\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M}))
+\end{align}
+$$</p>
+<p><strong>[ Step2 ]</strong>
+$$
+\begin{align}
+\text{label-wise collection} &amp; &amp; &amp;\text{label-wise abstraction}\\
+(\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})) &amp;\quad \xrightarrow{\text{abstraction}} &amp; &amp;(\mathbb{L} \rightarrow \mathbb{M}^\sharp)
+\end{align}
+$$</p>
+<p>We define abstract domain $\mathbb{S}^\sharp$:
+$$
+\begin{align}
+\mathbb{S}^\sharp = (\mathbb{L} \rightarrow \mathbb{M}^\sharp)
+\end{align}
+$$</p>
+<blockquote>
+<p>The way to design $\mathbb{M}^\sharp$ is depending on the target properties to compute.</p>
+</blockquote>
+<h2 id="notations"><a class="header" href="#notations">Notations</a></h2>
+<p>Before we continue, we briefly define the notations.</p>
+<h4 id="implicit-type-conversion"><a class="header" href="#implicit-type-conversion">Implicit type conversion</a></h4>
+<ul>
+<li>A map $A \rightarrow B$ is interchangeably an element in ${\Large\wp}(A\times B)$</li>
+<li>A relation $f \subseteq A \times B$ is interchangeably a function $f \in A \rightarrow {\Large\wp}(B)$ defined as:
+$$ f(a) = \{ b | (a, b) \in \text{relation} f \} $$</li>
+</ul>
+<h4 id="new-notations"><a class="header" href="#new-notations">New notations</a></h4>
+<ul>
+<li>
+<p>For functions $f : A \rightarrow B$, we write ${\Large\wp}(f)$ for its powerset version:
+$$
+\begin{align}
+&amp;{\Large\wp}(f) : {\Large\wp}(A) \rightarrow {\Large\wp}(B)\\
+&amp;{\Large\wp}(f)(X) = \{ f(x) | x \in X \}
+\end{align}
+$$</p>
+</li>
+<li>
+<p>For functions $f : A \rightarrow {\Large\wp}(B)$, we write $\breve{{\Large\wp}}(f)$ for its powerset version:
+$$
+\begin{align}
+&amp;\breve{{\Large\wp}}(f) : {\Large\wp}(A) \rightarrow {\Large\wp}(B)\\
+&amp;\breve{{\Large\wp}}(f)(X) = \bigcup\{ f(x) | x \in X \}
+\end{align}
+$$</p>
+<ul>
+<li>ex. $\textit{Step} = \breve{\Large\wp}(\hookrightarrow)$</li>
+</ul>
+</li>
+<li>
+<p>For functions $f : A \rightarrow B$ and $g : A' \rightarrow B'$, we write $(f, g)$ for:
+$$
+\begin{align}
+&amp;(f, g) : A \times A' \rightarrow B \times B'\\
+&amp;(f, g)(a, a') = (f(a), g(a'))
+\end{align}
+$$</p>
+</li>
+</ul>
+<h2 id="33-define-abstract-semantic-function"><a class="header" href="#33-define-abstract-semantic-function">3/3. Define abstract semantic function</a></h2>
+<h3 id="review-concrete-semantic-function-f"><a class="header" href="#review-concrete-semantic-function-f">Review: Concrete semantic function $F$</a></h3>
+<p>$$
+\begin{align}
+&amp;\mathbb{S} = \mathbb{L} \times \mathbb{M}\\
+&amp;F : {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S})\\
+&amp;F(X) = I \cup \textit{Step}(X)
+\end{align}
+$$</p>
+<p>where:
+$$
+\begin{align}
+&amp;\textit{Step} = \breve{\Large\wp}(\hookrightarrow)\qquad \text{(relation} \hookrightarrow \text{as a function)}\\
+&amp;\hookrightarrow \quad\subseteq\quad (\mathbb{L} \times \mathbb{M}) \times (\mathbb{L} \times \mathbb{M})
+\end{align}
+$$</p>
+<h3 id="define-abstract-version"><a class="header" href="#define-abstract-version">Define abstract version</a></h3>
+<p>$$
+\begin{align}
+&amp;\mathbb{S}^\sharp = \mathbb{L} \rightarrow \mathbb{M}^\sharp\\
+&amp;F^\sharp : \mathbb{S}^\sharp \rightarrow \mathbb{S}^\sharp\\
+&amp;F^\sharp(X) = \alpha(I) \cup^\sharp \textit{Step}^\sharp(X^\sharp)
+\end{align}
+$$</p>
+<p>where:
+$$
+\begin{align}
+&amp;\textit{Step}^\sharp : \mathbb{S}^\sharp \rightarrow \mathbb{S}^\sharp \\
+&amp;\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)\\
+&amp;\hookrightarrow^\sharp \quad\subseteq\quad (\mathbb{L} \times \mathbb{M}^\sharp) \times (\mathbb{L} \times \mathbb{M}^\sharp)
+\end{align}
+$$</p>
+<p>About $\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$:</p>
+<ul>
+<li>$\breve{\Large\wp}(\hookrightarrow^\sharp)$ : Compute next states</li>
+<li>$\pi$ : Partition the result by the labels.
+<ul>
+<li>Result can be convert into $\mathbb{L} \rightarrow {\Large\wp}(M^\sharp)$</li>
+</ul>
+</li>
+<li>${\Large\wp}((\text{id}, \cup^\sharp_M))$ : Union machine states.
+$$
+\begin{align}
+\mathbb{L} \rightarrow \mathbb{M}^\sharp
+&amp;\xrightarrow{\text{implicit convert}}                       &amp;&amp; {\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)\\
+&amp;\xrightarrow{\ \breve{\Large\wp}(\hookrightarrow^\sharp)\ } &amp;&amp; {\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)\\
+&amp;\xrightarrow{\quad\pi\quad}                                 &amp;&amp; {\Large\wp}(\mathbb{L} \times {\Large\wp}(M^\sharp))\\
+&amp;\xrightarrow{\ {\Large\wp}((\text{id}, \cup^\sharp_M))\ }   &amp;&amp; {\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)\\
+&amp;\xrightarrow{\text{implicit convert}}                       &amp;&amp; \mathbb{L} \rightarrow \mathbb{M}^\sharp \label{eq:implicit-convert}
+\end{align}
+$$</li>
+</ul>
+<blockquote>
+<p>Implicit convert $\eqref{eq:implicit-convert}$ can be done.
+Because the result of ${\Large\wp}((\text{id}, \cup^\sharp_M))$ has exactly one entry for each labels.</p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="define-sound-analysis"><a class="header" href="#define-sound-analysis">Define sound analysis</a></h1>
+<h2 id="steps-2"><a class="header" href="#steps-2">Steps</a></h2>
+<ol>
+<li>Make assumptions for soundness</li>
+<li>Define sound static analysis (in math form)</li>
+<li>Check soundness</li>
+<li>Implement the analysis (pseudo code)</li>
+</ol>
+<h2 id="make-assumptions-for-soundness"><a class="header" href="#make-assumptions-for-soundness">Make assumptions for soundness</a></h2>
+<h4 id="mathbbssharp-is-cpo"><a class="header" href="#mathbbssharp-is-cpo">$\mathbb{S^\sharp}$ is CPO</a></h4>
+<p>We assume an abstract domain $\mathbb{S}^\sharp$ is CPO.</p>
+<blockquote>
+<p><strong>Def. CPO (complete partial order)</strong></p>
+<p>A partial order $E$ is CPO when $E$ satisfies:</p>
+<ul>
+<li>$E$ has infimum (bottom) and,</li>
+<li>Any totally ordered subset of $E$ (called <em>chain</em>) has a least upper bound in $E$</li>
+</ul>
+<div style="text-align: center">
+<p><img src="slides/isa_4/./fig/cpo.drawio.svg" alt="" /></p>
+</div>
+</blockquote>
+<h3 id="abstract-domain-by-galois-connection"><a class="header" href="#abstract-domain-by-galois-connection">Abstract domain by galois connection</a></h3>
+<p>An abstract domain needs to preserve the partial order of the concrete domain.
+Galois connection capture this concept.</p>
+<p>We design an abstract domain as a CPO that is Galois connection with the concrete domain.</p>
+<p>$$
+\begin{align}
+({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq) \overset{\gamma}{\underset{\alpha}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
+\end{align}
+$$</p>
+<p>where:</p>
+<ul>
+<li>
+<p>The partial order $\sqsubseteq$ is the label-wise order:
+$$
+a^\sharp \sqsubseteq b^\sharp \quad\text{iff}\quad \forall l \in \mathbb{L} : a^\sharp(l) \sqsubseteq_M b^\sharp(l)
+$$</p>
+</li>
+<li>
+<p>$\alpha$ defines how each element in the concrete domain is abstracted.</p>
+</li>
+<li>
+<p>$\gamma$ defines how each element in the abstract domain is concretized.</p>
+</li>
+</ul>
+<h4 id="assumption-for-hookrightarrowsharp-cupsharp-and-cup_msharp"><a class="header" href="#assumption-for-hookrightarrowsharp-cupsharp-and-cup_msharp">Assumption for $\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup_M^\sharp$</a></h4>
+<p>The abstract one-step transition relation $\hookrightarrow^\sharp$ must satisfy, as a function:
+$$
+\begin{align}
+\breve{\Large\wp}(\hookrightarrow) \circ \gamma \subseteq \gamma \circ \breve{\Large\wp}(\hookrightarrow^\sharp)
+\end{align}
+$$</p>
+<div style="text-align: center">
+<p><img src="slides/isa_4/./fig/sound_abs_trans.drawio.svg" alt="Figure 4.2" /></p>
+</div>
+<p>The abstract union $\cup^\sharp$ and $\cup_M^\sharp$ must satisfy:
+$$
+\begin{align}
+\cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp \_
+\end{align}
+$$</p>
+<div style="text-align: center">
+<p><img src="slides/isa_4/./fig/sound_abs_union.drawio.svg" alt="Figure 4.2b" /></p>
+</div>
+<h2 id="define-sound-static-analysis-in-math-form"><a class="header" href="#define-sound-static-analysis-in-math-form">Define sound static analysis (in math form)</a></h2>
+<h3 id="case-1"><a class="header" href="#case-1">Case 1.</a></h3>
+<p>If $\mathbb{S}^\sharp$ is of finite height (every chain is finite) and $F^\sharp$ is monotone or extensive,</p>
+<p>the analysis computes:
+$$
+\begin{align}
+\bigsqcup_{i\geq 0} F^{\sharp^i}(\bot)
+\end{align}
+$$</p>
+<blockquote>
+<p><strong>Def. Extensive</strong></p>
+<p>A function $f : E \rightarrow E$ is extensive iff:
+$$
+\forall x \in E, \quad x \preceq f(x)
+$$</p>
+</blockquote>
+<h3 id="case-2"><a class="header" href="#case-2">Case 2.</a></h3>
+<p>Otherwise,</p>
+<p>the analysis computes:
+$$
+\begin{align}
+Y_{\text{lim}} \ \ (= Y_{\infty})
+\end{align}
+$$</p>
+<p>where
+$$
+\begin{align}
+Y_0 &amp;= \bot\\
+Y_{i+1} &amp;= Y_i \triangledown F^\sharp(Y_i)
+\end{align}
+$$</p>
+<p>$\triangledown$ is a widening operator</p>
+<blockquote>
+<p><strong>Def. 3.11 (Widening operator)</strong></p>
+<p>A widening operator over an abstract domain $\mathbb{A}$ is a binary operator $\triangledown$, such that:
+$$
+\begin{align}
+\forall a_0, a_1 \in \mathbb{A} :\quad \gamma(a_0) \cup \gamma(a_1) \subseteq \gamma(a_0 \triangledown a_1)\\
+\end{align}
+$$</p>
+<p>and</p>
+<p>For all sequences $\{ a_n \}$, the sequence $\{ a'_n \}$ defined below is ultimately stationary:
+$$
+\left\{
+\begin{array}{ll}
+a'_0 &amp;= a_0\\
+a'_{n+1} &amp;= a_n' \triangledown a_n
+\end{array}
+\right.
+$$</p>
+</blockquote>
+<h2 id="check-soundness"><a class="header" href="#check-soundness">Check soundness</a></h2>
+<h3 id="theorem-42-sound-static-analysis-by-fsharp"><a class="header" href="#theorem-42-sound-static-analysis-by-fsharp">Theorem 4.2 (Sound static analysis by $F^\sharp$)</a></h3>
+<p>Given a program, $F$, $F^\sharp$, if</p>
+<ul>
+<li>$\mathbb{S}^\sharp$ is of finite height (every chain $\mathbb{S}^\sharp$ is finite) and</li>
+<li>$F^\sharp$ is monotone or extensive</li>
+</ul>
+<p>Then:
+$$
+\begin{align}
+\bigsqcup_{i \geq 0} F^{\sharp^i} (\bot)
+\end{align}
+$$</p>
+<p>is finitely computable and over-approximates $\textbf{lfp} F$:
+$$
+\begin{align}
+\textbf{lfp} F \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i} (\bot))
+\end{align}
+$$</p>
+<!-- \left( \iff \alpha (\textbf{lfp}F) \sqsubseteq \bigsqcup_{i \geq 0} F^{\sharp^i} (\bot) \right) -->
+<details style="background-color: var(--quote-bg);">
+<summary>Proof</summary>
+<p>Overview:
+$$
+\begin{align}
+\text{The condition}
+&amp;\implies F \circ \gamma \subseteq \gamma \circ F^\sharp \label{eq:b1}\\
+&amp;\implies \forall n \geq 0 : F^n(\bot) \subseteq \gamma(F^{\sharp^n}(\bot)) \label{eq:b2}\\
+&amp;\implies \textbf{lfp}F \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i}(\bot)) \label{eq:b3}
+\end{align}
+$$</p>
+<h4 id="proofeqrefeqb1"><a class="header" href="#proofeqrefeqb1">Proof$\eqref{eq:b1}$</a></h4>
+<p>$$F \circ \gamma \subseteq \gamma \circ F^\sharp$$</p>
+<p>From the condition:
+$$
+\begin{align}
+\textit{Step} \circ \gamma
+&amp;= \breve{\Large\wp}(\hookrightarrow) \circ \gamma\\
+&amp;\subseteq \gamma \circ \breve{\Large\wp}(\hookrightarrow^\sharp) &amp;&amp;\text{by the condition of} \hookrightarrow^\sharp\\
+&amp;\subseteq \gamma \circ {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp) &amp;&amp;\text{by the monotonicity of} \gamma\\
+&amp;= \gamma \circ \textit{Step}^\sharp \label{eq:b1-1}
+\end{align}
+$$</p>
+<p>Then:
+$$
+\begin{align}
+(\gamma \circ F^\sharp)
+&amp;= \gamma(\alpha(I) \cup^\sharp \textit{Step}^\sharp(X))\\
+&amp;\supseteq (\gamma\circ\alpha)I \cup (\gamma\circ\textit{Step}^\sharp)(X) &amp;&amp;\text{by the condition of } \cup^\sharp\\
+&amp;\supseteq I \cup (\textit{Step}\circ\gamma)(X) &amp;&amp;\text{by} \eqref{eq:b1-1} \text{ and id} \subseteq \gamma\circ\alpha\\
+&amp;= (F\circ\gamma)(X)
+\end{align}
+$$</p>
+<h4 id="proofeqrefeqb1-1"><a class="header" href="#proofeqrefeqb1-1">Proof$\eqref{eq:b1}$</a></h4>
+<p>$$\forall n \geq 0 : F^n(\bot) \subseteq \gamma(F^{\sharp^n}(\bot))$$</p>
+<p>Use induction on $n$.</p>
+<h5 id="step-1-n--0"><a class="header" href="#step-1-n--0">step 1: $n = 0$</a></h5>
+<p>$$\bot \subseteq \gamma(\bot)$$
+is OK.</p>
+<h5 id="step-2-assume-fkbot-subseteq-gammafsharpkbot"><a class="header" href="#step-2-assume-fkbot-subseteq-gammafsharpkbot">step 2: assume $F^k(\bot) \subseteq \gamma(F^{\sharp^k}(\bot))$</a></h5>
+<p>$$
+\begin{align}
+F(F^k(\bot))
+&amp;\subseteq F(\gamma(F^{\sharp^k})(\bot)) &amp;&amp; \text{by assumption}\\
+&amp;\subseteq \gamma(F^\sharp(F^{\sharp^k}(\bot))) &amp;&amp; \text{by } F \circ \gamma \subseteq \gamma \circ F^\sharp
+\end{align}
+$$</p>
+<h4 id="proofeqrefeqb3"><a class="header" href="#proofeqrefeqb3">Proof$\eqref{eq:b3}$</a></h4>
+<p>$$\textbf{lfp}F = \bigsqcup_{i \geq 0} F^i \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i}(\bot))$$</p>
+<h5 id="existence-of-quad-textbflfpf-quad-bigsqcup_i-geq-0-gammafsharpibot"><a class="header" href="#existence-of-quad-textbflfpf-quad-bigsqcup_i-geq-0-gammafsharpibot">Existence of $\quad \textbf{lfp}F, \quad \bigsqcup_{i \geq 0} \gamma(F^{\sharp^i}(\bot))$</a></h5>
+<p>$\bigsqcup_{i \geq 0} F^i$ is exist because:</p>
+<ul>
+<li>A sequence $\{ F^i(\bot) \}$ is a chain in CPO ${\Large\wp}(\mathbb{S})$</li>
+</ul>
+<p>$\bigsqcup_{i \geq 0} \gamma(F^{\sharp^i}(\bot))$ is exist because:</p>
+<ul>
+<li>A sequence $\{ F^{\sharp^i}(\bot) \}$ is a chain and $\gamma$ is monotone.</li>
+<li>→ sequence $\{ \gamma(F^{\sharp^i}(\bot)) \}$ is a chain in CPO $\mathbb{S}^\sharp$</li>
+</ul>
+<h5 id="proof"><a class="header" href="#proof">proof:</a></h5>
+<p>$$
+\begin{align}
+\bigsqcup_{i\geq 0} F^i(\bot)
+&amp;\subseteq \bigsqcup_{i\geq 0} \gamma(F^{\sharp^i}(\bot))\\
+&amp;\subseteq \gamma(\bigsqcup_{i\geq 0} F^{\sharp^i}(\bot)) &amp;&amp; \text{by the monotonicity of } \gamma
+\end{align}
+$$</p>
+<p>(monotonicity $\implies$ continuous)</p>
+</details>
+<h3 id="theorem-43-sound-static-analysis-by-fsharp-and-widening-operator-triangledown"><a class="header" href="#theorem-43-sound-static-analysis-by-fsharp-and-widening-operator-triangledown">Theorem 4.3 (Sound static analysis by $F^\sharp$ and widening operator $\triangledown$)</a></h3>
+<p>Given a program, $F$, $F^\sharp$, $\triangledown$ (defined in <strong>definition 3.11</strong>):</p>
+<p>Then the following chain $Y_0 \sqsubseteq Y_1 \sqsubseteq \cdots$
+$$
+\begin{align}
+Y_0 &amp;= \bot\\
+Y_{i+1} &amp;= Y_i \triangledown F^\sharp(Y_i)
+\end{align}
+$$</p>
+<p>is finite, and its last element $Y_{\text{lim}}$ over-approximates $\textbf{lfp} F$:
+$$
+\begin{align}
+\textbf{lfp} F \subseteq \gamma(Y_{\text{lim}})
+\end{align}
+$$</p>
+<details style="background-color: var(--quote-bg);">
+<summary>Proof</summary>
+<h4 id="step1"><a class="header" href="#step1">Step1</a></h4>
+<p>Goal :  $\{ Y_i \}$ is a chain</p>
+<p>From the definition of $\triangledown$ (Def. 3.11)
+$$
+\begin{align}
+\gamma(a) \cup \gamma(b) \subseteq \gamma(a \triangledown b) \label{eq:t4.3-1}
+\end{align}
+$$</p>
+<p>Thus, for all $a, b$:
+$$
+\begin{align}
+a \triangledown b
+&amp;\sqsupseteq\alpha (\gamma(a) \cup \gamma(b)) &amp;&amp;(\because \text{by Galois connection and } \eqref{eq:t4.3-1})\\
+&amp;\sqsupseteq \alpha(\gamma(a)) &amp;&amp;(\because \alpha \text{ is monotone})\\
+&amp;\sqsupseteq a &amp;&amp; (\because \text{id} \sqsubseteq \alpha\circ\gamma)
+\end{align}
+$$</p>
+<p>So, the sequence $\{ Y_i \}$ is a chain because:
+$$
+\begin{align}
+\forall k,\quad Y_k \sqsubseteq Y_{k+1} = Y_k \triangledown F^\sharp(Y_k)
+\end{align}
+$$</p>
+<h4 id="step2"><a class="header" href="#step2">Step2.</a></h4>
+<p>Goal : Prove,</p>
+<p>$$
+\begin{align}
+\forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n) \label{eq:t4.3step2}
+\end{align}
+$$</p>
+<p>Use induction on $k$.</p>
+<h5 id="k0"><a class="header" href="#k0">[$k=0$]</a></h5>
+<p>Obvious.</p>
+<h5 id="assume--k-and-prove--k1"><a class="header" href="#assume--k-and-prove--k1">[assume @ $k$ and prove @ $k+1$]</a></h5>
+<p>$$
+\begin{align}
+\bigcup_{i=0}^{k+1} F^i(\bot)
+&amp;= \bigcup_{i=0}^k F^i(\bot) \cup F^{k+1}(\bot)\\
+&amp;\subseteq \gamma(Y_k) \cup F^{k+1}(\bot) &amp;&amp; \text{by induction hypothesis}\\
+&amp;= \gamma(Y_k) \cup F(F^k(\bot))\\
+&amp;\subseteq \gamma(Y_k) \cup F(\bigcup_{i=0}^k F^i(\bot)) &amp;&amp; \because F \text{ is monotone}\\
+&amp;\subseteq \gamma(Y_k) \cup F(\gamma(Y_k)) &amp;&amp; \text{by induction hypothesis}\\
+&amp;\subseteq \gamma(Y_k) \cup \gamma(F^\sharp(Y_k)) &amp;&amp; \because F \circ \gamma \subseteq \gamma \circ F^\sharp\\
+&amp;\subseteq \gamma(Y_k \triangledown F^\sharp(Y_k)) &amp;&amp; \text{by the condition of } \triangledown\\
+&amp;= \gamma(Y_{k+1})
+\end{align}
+$$</p>
+<h4 id="step3"><a class="header" href="#step3">Step3.</a></h4>
+<p>From the definition of $\triangledown$ (Def. 3.11), $\{ Y_i \}$ is ultimately stationary.</p>
+<p>Let the last element be $Y_{\text{lim}}$.</p>
+<p>By step1 and step2,
+$$
+\begin{align}
+\forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n) \subseteq \gamma(Y_{\text{lim}})
+\end{align}
+$$</p>
+<p>hence,
+$$
+\begin{align}
+\textbf{lfp} F = \bigcup_{i=0}^{\infty} F^i (\bot) \subseteq \gamma(Y_{\text{lim}})
+\end{align}
+$$</p>
+</details>
+<h2 id="implement-the-analysis-pseudo-code"><a class="header" href="#implement-the-analysis-pseudo-code">Implement the analysis (pseudo code)</a></h2>
+<h3 id="naive-algorithm"><a class="header" href="#naive-algorithm">Naive algorithm</a></h3>
+<p>Algorithm without widening</p>
+<pre><code>C ← ⊥
+repeat
+    R ← C
+    C ← F#(C)
+until C ⊑ R
+return R
+</code></pre>
+<p>Algorithm with widening</p>
+<pre><code>C ← ⊥
+repeat
+    R ← C
+    C ← C ▽ F#(C)
+until C ⊑ R
+return R
+</code></pre>
+<h3 id="bottleneck"><a class="header" href="#bottleneck">Bottleneck</a></h3>
+<p><code>F#</code> may be a bottleneck because it applies $\hookrightarrow^\sharp$ to the state at every label in the program.</p>
+<blockquote>
+<p>$$
+\begin{align*}
+F^\sharp &amp;= \alpha(I) \cup^\sharp \textit{Step}^\sharp(X^\sharp)\\
+\textit{Step}^\sharp &amp;= {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)
+\end{align*}
+$$</p>
+</blockquote>
+<h3 id="improvement"><a class="header" href="#improvement">Improvement</a></h3>
+<p>Idea : Update only labels which are updated the previous step.</p>
+<pre><code>C : L → M#
+F# : (L → M#) → (L → M#)
+WorkList : P(L)
+
+WorkList ← L
+C ← ⊥
+repeat
+    R ← C
+    C ← C ▽ F#(C.filter_by(WorkList))
+    WorkList ← {l | C(l) ⊐ R(l), l ∈ L}
+until WorkList = ∅
+return R
+</code></pre>
+<blockquote>
+<p>More simple description (?)</p>
+<pre><code>C ← ⊥
+R ← ⊥
+repeat
+    C ← C ▽ F#(C\R)
+    R ← C
+until C\R = ∅
+return R
+</code></pre>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="example-of-the-framework"><a class="header" href="#example-of-the-framework">Example of the framework</a></h1>
+<h2 id="syntax-of-a-target-language"><a class="header" href="#syntax-of-a-target-language">Syntax of a target language</a></h2>
+<p>$$
+\begin{align*}
+x   &amp;\in \mathbb{X} &amp;&amp; \text{program variables}\\
+C ::&amp;= &amp;&amp; \text{statements}\\
+&amp;|\quad \textbf{skip} &amp;&amp; \text{nop}\\
+&amp;|\quad C; C &amp;&amp; \text{sequence of statements}\\
+&amp;|\quad x := E &amp;&amp; \text{assignment}\\
+&amp;|\quad \textbf{input}(x) &amp;&amp; \text{read an integer input}\\
+&amp;|\quad \textbf{if}(B)\{C\} \textbf{else} \{C\} &amp;&amp; \text{condition statement}\\
+&amp;|\quad \textbf{while}(B) \{C\} &amp;&amp; \text{loop statement}\\
+&amp;|\quad \textbf{goto} E &amp;&amp; \text{goto with dynamically computed label}\\
+E ::&amp;= &amp;&amp; \text{expression}\\
+&amp;|\quad n &amp;&amp; \text{integer}\\
+&amp;|\quad x &amp;&amp; \text{variable}\\
+&amp;|\quad E + E &amp;&amp; \text{addition}\\
+B ::&amp;= &amp;&amp; \text{Boolean expression}\\
+&amp;|\quad \textbf{true} | \textbf{false}\\
+&amp;|\quad E &lt; E &amp;&amp; \text{comparison}\\
+&amp;|\quad E = E &amp;&amp; \text{equality}\\
+P ::&amp;= C &amp;&amp; \text{program}
+\end{align*}
+$$</p>
+<h2 id="program-labels"><a class="header" href="#program-labels">Program Labels</a></h2>
+<ul>
+<li>Each statements $C$ of the given program has a unique label.</li>
+<li>The label is a natural number.</li>
+<li>$\text{label}(C)$ means the label of statement $C$.</li>
+</ul>
+<h2 id="execution-order-control-flow"><a class="header" href="#execution-order-control-flow">Execution Order (control flow)</a></h2>
+<p>Given a statement $C$ and the label $l'$ (the next label to continue after executing $C$),</p>
+<p>For all $C'$ which is an element of $C$, the function $\llangle C, l' \rrangle$ computes:</p>
+<ul>
+<li>$\text{next}(\text{label}(C'))$
+<ul>
+<li>the label of statement that will be executed after $C$</li>
+</ul>
+</li>
+<li>$\text{nextTrue}(\text{label}(C'))$
+<ul>
+<li>the label of statement that if the condition hold, will be executed after $C$</li>
+</ul>
+</li>
+<li>$\text{nextFalse}(\text{label}(C'))$
+<ul>
+<li>the label of statement that if the condition doesn't hold, will be executed after $C$</li>
+</ul>
+</li>
+</ul>
+<p>$$
+\begin{align*}
+\llangle C, l' \rrangle = \text{case } C \text{ of} &amp; \quad(\text{let } l \text{ be } \text{label}(C))\\
+\textbf{skip}                           \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
+C; C                                    \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
+x := E                                  \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
+\textbf{input}(x)                       \quad&amp;:\quad \{ \text{next}(l) = \text{label}(C_1) \} \cup \llangle C_1, \text{label}(C_2) \rrangle \cup \llangle C_2, l' \rrangle\\
+\textbf{if}(B)\{C\} \textbf{else} \{C\} \quad&amp;:\quad \{ \text{nextTrue}(l) = \text{label}(C_1), \text{nextFalse}(l) = \text{label}(C_2) \} \cup\\
+&amp;\quad\quad  \llangle C_1, l' \rrangle \cup \llangle C_2, l' \rrangle\\
+\textbf{while}(B) \{C\}                 \quad&amp;:\quad \{ \text{nextTrue}(l) = \text{label}(C), \text{nextFalse}(l) = l' \} \cup \llangle C, l \rrangle\\
+\textbf{goto} E                         \quad&amp;:\quad \{\}\quad (\text{to be determined at run-time by evaluating } E)\\
+\end{align*}
+$$</p>
+<p>Thus, given a program $p$ and the end label of the program $l_{\text{end}}$, $\llangle C, l_{\text{end}} \rrangle$ collects whole $\text{next, nextTrue, nextFalse}$</p>
+<h2 id="concrete-state-transition-semantics"><a class="header" href="#concrete-state-transition-semantics">Concrete state transition semantics</a></h2>
+<p>Given a program $p$ and</p>
+<ul>
+<li>$\mathbb{X}$ is the finite set of its variables.</li>
+<li>each statement of the program is uniquely labeled.</li>
+<li>$\text{next, nextTrue, nextFalse}$ is computed by $\llangle C, l_{\text{end}} \rrangle$.</li>
+<li>$I$ is the set of input states.</li>
+</ul>
+<p>Then the concrete semantics of the program is:
+$$
+\begin{align}
+\textbf{lfp} F
+\end{align}
+$$</p>
+<p>where:
+$$
+\begin{align}
+\mathbb{S} &amp;= \mathbb{L} \times \mathbb{M}\\
+\text{values} \quad \mathbb{V} &amp;= \mathbb{Z} \cup \mathbb{L}\\
+\text{memories} \quad \mathbb{M} &amp;= \mathbb{X} \rightarrow \mathbb{V}
+\end{align}
+$$</p>
+<p>and</p>
+<p>$$
+\begin{align}
+&amp;F : {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S})\\
+&amp;F(X) = I \cup \textit{Step}(X)\\
+&amp;\text{Step}(X) = \breve{\Large\wp}(\hookrightarrow)
+\end{align}
+$$</p>
+<p>$\hookrightarrow$ is defined as:</p>
+<p>$$
+\begin{align*}
+\textbf{skip}                             \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), m)\\
+\textbf{input}(x)                         \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, z)) &amp;&amp; \text{for an input integer} z\\
+x := E                                    \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, \textit{eval}_E(m)))\\
+C_1; C_2                                  \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), m)\\
+\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \quad&amp;:\quad (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
+\quad&amp;:\quad (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
+\textbf{while}(B) \{C\}                   \quad&amp;:\quad (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
+\quad&amp;:\quad (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
+\textbf{goto} E                           \quad&amp;:\quad (l, m) \hookrightarrow (\textit{eval}_E(m), m)\\
+\end{align*}
+$$</p>
+<p>where</p>
+<ul>
+<li>$\textit{update}_x(m, x)$
+<ul>
+<li>return a new memory that is the same as $m$ except that its image for $x$ is $v$</li>
+</ul>
+</li>
+<li>$\textit{eval}_E(m)$
+<ul>
+<li>return a value of expression $E$ given memory $m$</li>
+</ul>
+</li>
+<li>$\textit{filter}_B$
+<ul>
+<li>return $m$ if the value of Boolean expression $E$ for $m$ is true.</li>
+<li>otherwise, return nothing</li>
+</ul>
+</li>
+</ul>
+<h2 id="abstract-state"><a class="header" href="#abstract-state">Abstract state</a></h2>
+<p>An abstract domain $\mathbb{M}^\sharp$ is a CPO such that
+$$
+\begin{align}
+({\Large\wp}(\mathbb{M}), \subseteq) \quad \overset{\gamma_M}{\underset{\alpha_M}{\leftrightarrows}} \quad (\mathbb{M}^\sharp, \sqsubseteq_M)
+\end{align}
+$$</p>
+<p>We define an abstract memory $M^\sharp$ for a set of memories:
+$$
+\begin{align}
+M^\sharp \in \mathbb{M}^\sharp = \mathbb{X} \rightarrow \mathbb{V}^\sharp
+\end{align}
+$$</p>
+<p>where $\mathbb{V}^\sharp$ is an abstract domain that is a CPO such that
+$$
+\begin{align}
+({\Large\wp}(\mathbb{V}), \subseteq) \quad \overset{\gamma_V}{\underset{\alpha_V}{\leftrightarrows}} \quad (\mathbb{V}^\sharp, \sqsubseteq_V)
+\end{align}
+$$</p>
+<p>We design $\mathbb{V^\sharp}$ as
+$$
+\begin{align}
+\mathbb{V}^\sharp = \mathbb{Z}^\sharp \times \mathbb{L}^\sharp
+\end{align}
+$$</p>
+<p>where</p>
+<ul>
+<li>$\mathbb{Z}^\sharp$ : a CPO that is Galois connected with ${\Large\wp}(\mathbb{Z})$</li>
+<li>$\mathbb{L}^\sharp = {\Large\wp}(\mathbb{L})$</li>
+</ul>
+<blockquote>
+<h3 id="note"><a class="header" href="#note">Note</a></h3>
+<p>All abstract domains ($\mathbb{Z}^\sharp, \mathbb{L}^\sharp, \mathbb{M}^\sharp, \mathbb{V}^\sharp, \mathbb{S}^\sharp$) are Galois connected CPOs.</p>
+<p>Because:</p>
+<ol>
+<li>About $\mathbb{Z}^\sharp, \mathbb{L}^\sharp$ :
+<ul>
+<li>By definition, they are Galois connected CPOs.</li>
+<li>$({\Large\wp}(\mathbb{Z}), \subseteq) \leftrightarrows (\mathbb{Z}^\sharp, \sqsubseteq)$</li>
+<li>$({\Large\wp}(\mathbb{L}), \subseteq) \leftrightarrows (\mathbb{L}^\sharp, \sqsubseteq)$</li>
+</ul>
+</li>
+<li>About $\mathbb{V}^\sharp = \mathbb{Z}^\sharp \times \mathbb{L}^\sharp$ :
+<ul>
+<li>$(({\Large\wp}(\mathbb{Z})\times{\Large\wp}(\mathbb{L})), \subseteq) \leftrightarrows ((\mathbb{Z}^\sharp\times \mathbb{L}^\sharp), \sqsubseteq)$</li>
+<li>$\subseteq, \sqsubseteq$ : component-wise-ordered</li>
+<li>→ Galois connected CPO</li>
+</ul>
+</li>
+<li>About $\mathbb{M}^\sharp$ :
+<ul>
+<li>$((\mathbb{X}\rightarrow {\Large\wp}(\mathbb{V})), \subseteq) \leftrightarrows ((\mathbb{X}\rightarrow\mathbb{V}^\sharp), \sqsubseteq)$</li>
+<li>$\subseteq, \sqsubseteq$ : point-wise-ordered</li>
+<li>→ Galois connected CPO</li>
+</ul>
+</li>
+<li>About $\mathbb{S}^\sharp$ :
+<ul>
+<li>$({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq) \leftrightarrows ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)$</li>
+<li>$\subseteq, \sqsubseteq$ : point-wise-ordered</li>
+<li>→ Galois connected CPO</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<h2 id="abstract-state-transition-semantics"><a class="header" href="#abstract-state-transition-semantics">Abstract state transition semantics</a></h2>
+<p>We define the abstract state transition relation $(l, M^\sharp) \hookrightarrow^\sharp (l', {M^\sharp}')$ :
+$$
+\begin{align*}
+\text{Case: The } l \text{-labeled statement of}\\
+\textbf{skip}                             \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
+\textbf{input}(x)                         \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, z)) &amp;&amp; \text{for an input integer} z\\
+x := E                                    \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, \textit{eval}_E^\sharp(M^\sharp)))\\
+C_1; C_2                                  \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
+\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
+\quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
+\textbf{while}(B) \{C\}                   \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
+\quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
+\textbf{goto} E                           \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\textit{eval}_E^\sharp(M^\sharp), M^\sharp)\\
+\end{align*}
+$$</p>
+<p>Let $F^\sharp$ be defined as the framework :
+$$
+\begin{align}
+&amp;F^\sharp : \mathbb{S}^\sharp \rightarrow \mathbb{S}^\sharp\\
+&amp;F^\sharp(X) = \alpha(I) \cup^\sharp \textit{Step}^\sharp(X^\sharp)\\
+&amp;\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)
+\end{align}
+$$</p>
+<p>Condition to satisfy soundness :
+$$
+\begin{align}
+\breve{\Large\wp}(\hookrightarrow) \circ \gamma &amp;\subseteq \gamma \circ \breve{\Large\wp}(\hookrightarrow^\sharp)\\
+\cup \circ (\gamma \_ , \gamma \_ ) &amp;\subseteq \gamma \_ \circ \cup^\sharp \_
+\end{align}
+$$</p>
+<h2 id="defining-sound-hookrightarrowsharp"><a class="header" href="#defining-sound-hookrightarrowsharp">Defining sound $\hookrightarrow^\sharp$</a></h2>
+<p>The difference of $\hookrightarrow$ and $\hookrightarrow^\sharp$ is :</p>
+<ul>
+<li>$\textit{eval}_E^\sharp$</li>
+<li>$\textit{update}_x^\sharp$</li>
+<li>$\textit{filter}_B^\sharp$</li>
+<li>$\textit{filter}_{\neg B}^\sharp$</li>
+</ul>
+<p>If all of them are sound abstraction, then $\hookrightarrow^\sharp$ is a sound abstraction.</p>
+<h3 id="theorem-44-soundness-of-hookrightarrowsharp"><a class="header" href="#theorem-44-soundness-of-hookrightarrowsharp">Theorem 4.4 (Soundness of $\hookrightarrow^\sharp$)</a></h3>
+<p>If the following conditions are satisfied,
+$$
+\begin{align}
+{\Large\wp}(\textit{eval}_E)\circ\gamma_M &amp;\subseteq \gamma_V\circ\textit{eval}^\sharp_E\\
+{\Large\wp}(\textit{update}_x)\circ\times\circ(\gamma_M, \gamma_V) &amp;\subseteq \gamma_M\circ\textit{update}^\sharp_x\\
+{\Large\wp}(\textit{filter}_B)\circ\gamma_M &amp;\subseteq \gamma_V\circ\textit{filter}^\sharp_B\\
+{\Large\wp}(\textit{filter}_{\neg B})\circ\gamma_M &amp;\subseteq \gamma_V\circ\textit{filter}^\sharp_{\neg B}
+\end{align}
+$$</p>
+<p>then
+$$
+\begin{align}
+\breve{\Large\wp}(\hookrightarrow)\circ\gamma \sqsubseteq \gamma\circ\breve{\Large\wp}(\hookrightarrow^\sharp)
+\end{align}
+$$</p>
+<h2 id="defining-sound-cupsharp-cupsharp_m"><a class="header" href="#defining-sound-cupsharp-cupsharp_m">Defining sound $\cup^\sharp, \cup^\sharp_M$</a></h2>
+<h3 id="for-a-sound-cupsharp"><a class="header" href="#for-a-sound-cupsharp">For a sound $\cup^\sharp$</a></h3>
+<p>One candidate is the least-upper-bound operator $\sqcup$ if $\mathbb{S}$ is closed by $\sqcup$.</p>
+<p>because :
+$$
+\begin{align}
+(\gamma \circ \sqcup)(a^\sharp, b^\sharp)
+&amp;= \gamma(a^\sharp \sqcup b^\sharp)\\
+&amp;\sqsupseteq \gamma(a^\sharp) \cup \gamma(b^\sharp) &amp;&amp; (\because \gamma \text{ is monotone})\\
+&amp;= (\cup \circ (\gamma, \gamma))(a^\sharp, b^\sharp)
+\end{align}
+$$</p>
+<h3 id="for-a-sound-cupsharp_m"><a class="header" href="#for-a-sound-cupsharp_m">For a sound $\cup^\sharp_M$</a></h3>
+<p>Same as above (replace $\sqcup$ to $\sqcup_M$, and $\cup^\sharp$ to $\cup^\sharp_M$).</p>
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+    </body>
+</html>

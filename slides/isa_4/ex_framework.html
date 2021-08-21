@@ -1,0 +1,451 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Example of the framework - glab_seminar</title>
+        <!-- Custom HTML head -->
+<script type="text/javascript">
+    window.MathJax = {
+        tex: {
+            tags: 'ams',
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            macros: {
+                grad: "{\\nabla}",
+                llangle: "{\\langle\\!\\langle}",
+                rrangle: "{\\rangle\\!\\rangle}",
+                bm: ["{\\boldsymbol{#1}}", 1],
+            }
+        }
+    };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/custom.css">
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/ex_framework.html" class="active">Example of the framework</a></li></ol></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">glab_seminar</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="example-of-the-framework"><a class="header" href="#example-of-the-framework">Example of the framework</a></h1>
+<h2 id="syntax-of-a-target-language"><a class="header" href="#syntax-of-a-target-language">Syntax of a target language</a></h2>
+<p>$$
+\begin{align*}
+x   &amp;\in \mathbb{X} &amp;&amp; \text{program variables}\\
+C ::&amp;= &amp;&amp; \text{statements}\\
+&amp;|\quad \textbf{skip} &amp;&amp; \text{nop}\\
+&amp;|\quad C; C &amp;&amp; \text{sequence of statements}\\
+&amp;|\quad x := E &amp;&amp; \text{assignment}\\
+&amp;|\quad \textbf{input}(x) &amp;&amp; \text{read an integer input}\\
+&amp;|\quad \textbf{if}(B)\{C\} \textbf{else} \{C\} &amp;&amp; \text{condition statement}\\
+&amp;|\quad \textbf{while}(B) \{C\} &amp;&amp; \text{loop statement}\\
+&amp;|\quad \textbf{goto} E &amp;&amp; \text{goto with dynamically computed label}\\
+E ::&amp;= &amp;&amp; \text{expression}\\
+&amp;|\quad n &amp;&amp; \text{integer}\\
+&amp;|\quad x &amp;&amp; \text{variable}\\
+&amp;|\quad E + E &amp;&amp; \text{addition}\\
+B ::&amp;= &amp;&amp; \text{Boolean expression}\\
+&amp;|\quad \textbf{true} | \textbf{false}\\
+&amp;|\quad E &lt; E &amp;&amp; \text{comparison}\\
+&amp;|\quad E = E &amp;&amp; \text{equality}\\
+P ::&amp;= C &amp;&amp; \text{program}
+\end{align*}
+$$</p>
+<h2 id="program-labels"><a class="header" href="#program-labels">Program Labels</a></h2>
+<ul>
+<li>Each statements $C$ of the given program has a unique label.</li>
+<li>The label is a natural number.</li>
+<li>$\text{label}(C)$ means the label of statement $C$.</li>
+</ul>
+<h2 id="execution-order-control-flow"><a class="header" href="#execution-order-control-flow">Execution Order (control flow)</a></h2>
+<p>Given a statement $C$ and the label $l'$ (the next label to continue after executing $C$),</p>
+<p>For all $C'$ which is an element of $C$, the function $\llangle C, l' \rrangle$ computes:</p>
+<ul>
+<li>$\text{next}(\text{label}(C'))$
+<ul>
+<li>the label of statement that will be executed after $C$</li>
+</ul>
+</li>
+<li>$\text{nextTrue}(\text{label}(C'))$
+<ul>
+<li>the label of statement that if the condition hold, will be executed after $C$</li>
+</ul>
+</li>
+<li>$\text{nextFalse}(\text{label}(C'))$
+<ul>
+<li>the label of statement that if the condition doesn't hold, will be executed after $C$</li>
+</ul>
+</li>
+</ul>
+<p>$$
+\begin{align*}
+\llangle C, l' \rrangle = \text{case } C \text{ of} &amp; \quad(\text{let } l \text{ be } \text{label}(C))\\
+\textbf{skip}                           \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
+C; C                                    \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
+x := E                                  \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
+\textbf{input}(x)                       \quad&amp;:\quad \{ \text{next}(l) = \text{label}(C_1) \} \cup \llangle C_1, \text{label}(C_2) \rrangle \cup \llangle C_2, l' \rrangle\\
+\textbf{if}(B)\{C\} \textbf{else} \{C\} \quad&amp;:\quad \{ \text{nextTrue}(l) = \text{label}(C_1), \text{nextFalse}(l) = \text{label}(C_2) \} \cup\\
+&amp;\quad\quad  \llangle C_1, l' \rrangle \cup \llangle C_2, l' \rrangle\\
+\textbf{while}(B) \{C\}                 \quad&amp;:\quad \{ \text{nextTrue}(l) = \text{label}(C), \text{nextFalse}(l) = l' \} \cup \llangle C, l \rrangle\\
+\textbf{goto} E                         \quad&amp;:\quad \{\}\quad (\text{to be determined at run-time by evaluating } E)\\
+\end{align*}
+$$</p>
+<p>Thus, given a program $p$ and the end label of the program $l_{\text{end}}$, $\llangle C, l_{\text{end}} \rrangle$ collects whole $\text{next, nextTrue, nextFalse}$</p>
+<h2 id="concrete-state-transition-semantics"><a class="header" href="#concrete-state-transition-semantics">Concrete state transition semantics</a></h2>
+<p>Given a program $p$ and</p>
+<ul>
+<li>$\mathbb{X}$ is the finite set of its variables.</li>
+<li>each statement of the program is uniquely labeled.</li>
+<li>$\text{next, nextTrue, nextFalse}$ is computed by $\llangle C, l_{\text{end}} \rrangle$.</li>
+<li>$I$ is the set of input states.</li>
+</ul>
+<p>Then the concrete semantics of the program is:
+$$
+\begin{align}
+\textbf{lfp} F
+\end{align}
+$$</p>
+<p>where:
+$$
+\begin{align}
+\mathbb{S} &amp;= \mathbb{L} \times \mathbb{M}\\
+\text{values} \quad \mathbb{V} &amp;= \mathbb{Z} \cup \mathbb{L}\\
+\text{memories} \quad \mathbb{M} &amp;= \mathbb{X} \rightarrow \mathbb{V}
+\end{align}
+$$</p>
+<p>and</p>
+<p>$$
+\begin{align}
+&amp;F : {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S})\\
+&amp;F(X) = I \cup \textit{Step}(X)\\
+&amp;\text{Step}(X) = \breve{\Large\wp}(\hookrightarrow)
+\end{align}
+$$</p>
+<p>$\hookrightarrow$ is defined as:</p>
+<p>$$
+\begin{align*}
+\textbf{skip}                             \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), m)\\
+\textbf{input}(x)                         \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, z)) &amp;&amp; \text{for an input integer} z\\
+x := E                                    \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, \textit{eval}_E(m)))\\
+C_1; C_2                                  \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), m)\\
+\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \quad&amp;:\quad (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
+\quad&amp;:\quad (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
+\textbf{while}(B) \{C\}                   \quad&amp;:\quad (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
+\quad&amp;:\quad (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
+\textbf{goto} E                           \quad&amp;:\quad (l, m) \hookrightarrow (\textit{eval}_E(m), m)\\
+\end{align*}
+$$</p>
+<p>where</p>
+<ul>
+<li>$\textit{update}_x(m, x)$
+<ul>
+<li>return a new memory that is the same as $m$ except that its image for $x$ is $v$</li>
+</ul>
+</li>
+<li>$\textit{eval}_E(m)$
+<ul>
+<li>return a value of expression $E$ given memory $m$</li>
+</ul>
+</li>
+<li>$\textit{filter}_B$
+<ul>
+<li>return $m$ if the value of Boolean expression $E$ for $m$ is true.</li>
+<li>otherwise, return nothing</li>
+</ul>
+</li>
+</ul>
+<h2 id="abstract-state"><a class="header" href="#abstract-state">Abstract state</a></h2>
+<p>An abstract domain $\mathbb{M}^\sharp$ is a CPO such that
+$$
+\begin{align}
+({\Large\wp}(\mathbb{M}), \subseteq) \quad \overset{\gamma_M}{\underset{\alpha_M}{\leftrightarrows}} \quad (\mathbb{M}^\sharp, \sqsubseteq_M)
+\end{align}
+$$</p>
+<p>We define an abstract memory $M^\sharp$ for a set of memories:
+$$
+\begin{align}
+M^\sharp \in \mathbb{M}^\sharp = \mathbb{X} \rightarrow \mathbb{V}^\sharp
+\end{align}
+$$</p>
+<p>where $\mathbb{V}^\sharp$ is an abstract domain that is a CPO such that
+$$
+\begin{align}
+({\Large\wp}(\mathbb{V}), \subseteq) \quad \overset{\gamma_V}{\underset{\alpha_V}{\leftrightarrows}} \quad (\mathbb{V}^\sharp, \sqsubseteq_V)
+\end{align}
+$$</p>
+<p>We design $\mathbb{V^\sharp}$ as
+$$
+\begin{align}
+\mathbb{V}^\sharp = \mathbb{Z}^\sharp \times \mathbb{L}^\sharp
+\end{align}
+$$</p>
+<p>where</p>
+<ul>
+<li>$\mathbb{Z}^\sharp$ : a CPO that is Galois connected with ${\Large\wp}(\mathbb{Z})$</li>
+<li>$\mathbb{L}^\sharp = {\Large\wp}(\mathbb{L})$</li>
+</ul>
+<blockquote>
+<h3 id="note"><a class="header" href="#note">Note</a></h3>
+<p>All abstract domains ($\mathbb{Z}^\sharp, \mathbb{L}^\sharp, \mathbb{M}^\sharp, \mathbb{V}^\sharp, \mathbb{S}^\sharp$) are Galois connected CPOs.</p>
+<p>Because:</p>
+<ol>
+<li>About $\mathbb{Z}^\sharp, \mathbb{L}^\sharp$ :
+<ul>
+<li>By definition, they are Galois connected CPOs.</li>
+<li>$({\Large\wp}(\mathbb{Z}), \subseteq) \leftrightarrows (\mathbb{Z}^\sharp, \sqsubseteq)$</li>
+<li>$({\Large\wp}(\mathbb{L}), \subseteq) \leftrightarrows (\mathbb{L}^\sharp, \sqsubseteq)$</li>
+</ul>
+</li>
+<li>About $\mathbb{V}^\sharp = \mathbb{Z}^\sharp \times \mathbb{L}^\sharp$ :
+<ul>
+<li>$(({\Large\wp}(\mathbb{Z})\times{\Large\wp}(\mathbb{L})), \subseteq) \leftrightarrows ((\mathbb{Z}^\sharp\times \mathbb{L}^\sharp), \sqsubseteq)$</li>
+<li>$\subseteq, \sqsubseteq$ : component-wise-ordered</li>
+<li>→ Galois connected CPO</li>
+</ul>
+</li>
+<li>About $\mathbb{M}^\sharp$ :
+<ul>
+<li>$((\mathbb{X}\rightarrow {\Large\wp}(\mathbb{V})), \subseteq) \leftrightarrows ((\mathbb{X}\rightarrow\mathbb{V}^\sharp), \sqsubseteq)$</li>
+<li>$\subseteq, \sqsubseteq$ : point-wise-ordered</li>
+<li>→ Galois connected CPO</li>
+</ul>
+</li>
+<li>About $\mathbb{S}^\sharp$ :
+<ul>
+<li>$({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq) \leftrightarrows ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)$</li>
+<li>$\subseteq, \sqsubseteq$ : point-wise-ordered</li>
+<li>→ Galois connected CPO</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<h2 id="abstract-state-transition-semantics"><a class="header" href="#abstract-state-transition-semantics">Abstract state transition semantics</a></h2>
+<p>We define the abstract state transition relation $(l, M^\sharp) \hookrightarrow^\sharp (l', {M^\sharp}')$ :
+$$
+\begin{align*}
+\text{Case: The } l \text{-labeled statement of}\\
+\textbf{skip}                             \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
+\textbf{input}(x)                         \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, z)) &amp;&amp; \text{for an input integer} z\\
+x := E                                    \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, \textit{eval}_E^\sharp(M^\sharp)))\\
+C_1; C_2                                  \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
+\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
+\quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
+\textbf{while}(B) \{C\}                   \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
+\quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
+\textbf{goto} E                           \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\textit{eval}_E^\sharp(M^\sharp), M^\sharp)\\
+\end{align*}
+$$</p>
+<p>Let $F^\sharp$ be defined as the framework :
+$$
+\begin{align}
+&amp;F^\sharp : \mathbb{S}^\sharp \rightarrow \mathbb{S}^\sharp\\
+&amp;F^\sharp(X) = \alpha(I) \cup^\sharp \textit{Step}^\sharp(X^\sharp)\\
+&amp;\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)
+\end{align}
+$$</p>
+<p>Condition to satisfy soundness :
+$$
+\begin{align}
+\breve{\Large\wp}(\hookrightarrow) \circ \gamma &amp;\subseteq \gamma \circ \breve{\Large\wp}(\hookrightarrow^\sharp)\\
+\cup \circ (\gamma \_ , \gamma \_ ) &amp;\subseteq \gamma \_ \circ \cup^\sharp \_
+\end{align}
+$$</p>
+<h2 id="defining-sound-hookrightarrowsharp"><a class="header" href="#defining-sound-hookrightarrowsharp">Defining sound $\hookrightarrow^\sharp$</a></h2>
+<p>The difference of $\hookrightarrow$ and $\hookrightarrow^\sharp$ is :</p>
+<ul>
+<li>$\textit{eval}_E^\sharp$</li>
+<li>$\textit{update}_x^\sharp$</li>
+<li>$\textit{filter}_B^\sharp$</li>
+<li>$\textit{filter}_{\neg B}^\sharp$</li>
+</ul>
+<p>If all of them are sound abstraction, then $\hookrightarrow^\sharp$ is a sound abstraction.</p>
+<h3 id="theorem-44-soundness-of-hookrightarrowsharp"><a class="header" href="#theorem-44-soundness-of-hookrightarrowsharp">Theorem 4.4 (Soundness of $\hookrightarrow^\sharp$)</a></h3>
+<p>If the following conditions are satisfied,
+$$
+\begin{align}
+{\Large\wp}(\textit{eval}_E)\circ\gamma_M &amp;\subseteq \gamma_V\circ\textit{eval}^\sharp_E\\
+{\Large\wp}(\textit{update}_x)\circ\times\circ(\gamma_M, \gamma_V) &amp;\subseteq \gamma_M\circ\textit{update}^\sharp_x\\
+{\Large\wp}(\textit{filter}_B)\circ\gamma_M &amp;\subseteq \gamma_V\circ\textit{filter}^\sharp_B\\
+{\Large\wp}(\textit{filter}_{\neg B})\circ\gamma_M &amp;\subseteq \gamma_V\circ\textit{filter}^\sharp_{\neg B}
+\end{align}
+$$</p>
+<p>then
+$$
+\begin{align}
+\breve{\Large\wp}(\hookrightarrow)\circ\gamma \sqsubseteq \gamma\circ\breve{\Large\wp}(\hookrightarrow^\sharp)
+\end{align}
+$$</p>
+<h2 id="defining-sound-cupsharp-cupsharp_m"><a class="header" href="#defining-sound-cupsharp-cupsharp_m">Defining sound $\cup^\sharp, \cup^\sharp_M$</a></h2>
+<h3 id="for-a-sound-cupsharp"><a class="header" href="#for-a-sound-cupsharp">For a sound $\cup^\sharp$</a></h3>
+<p>One candidate is the least-upper-bound operator $\sqcup$ if $\mathbb{S}$ is closed by $\sqcup$.</p>
+<p>because :
+$$
+\begin{align}
+(\gamma \circ \sqcup)(a^\sharp, b^\sharp)
+&amp;= \gamma(a^\sharp \sqcup b^\sharp)\\
+&amp;\sqsupseteq \gamma(a^\sharp) \cup \gamma(b^\sharp) &amp;&amp; (\because \gamma \text{ is monotone})\\
+&amp;= (\cup \circ (\gamma, \gamma))(a^\sharp, b^\sharp)
+\end{align}
+$$</p>
+<h3 id="for-a-sound-cupsharp_m"><a class="header" href="#for-a-sound-cupsharp_m">For a sound $\cup^\sharp_M$</a></h3>
+<p>Same as above (replace $\sqcup$ to $\sqcup_M$, and $\cup^\sharp$ to $\cup^\sharp_M$).</p>
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../slides/isa_4/analysis.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../slides/isa_4/analysis.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
