@@ -93,7 +93,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/analysis.html" class="active">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/analysis.html" class="active">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -161,18 +161,22 @@
 <li>Implement the analysis (pseudo code)</li>
 </ol>
 <h2 id="make-assumptions-for-soundness"><a class="header" href="#make-assumptions-for-soundness">Make assumptions for soundness</a></h2>
-<h4 id="mathbbssharp-is-cpo"><a class="header" href="#mathbbssharp-is-cpo">$\mathbb{S^\sharp}$ is CPO</a></h4>
+<h3 id="mathbbssharp-is-cpo"><a class="header" href="#mathbbssharp-is-cpo">$\mathbb{S^\sharp}$ is CPO</a></h3>
 <p>We assume an abstract domain $\mathbb{S}^\sharp$ is CPO.</p>
 <blockquote>
 <p><strong>Def. CPO (complete partial order)</strong></p>
 <p>A partial order $E$ is CPO when $E$ satisfies:</p>
 <ul>
-<li>$E$ has infimum (bottom) and,</li>
-<li>Any totally ordered subset of $E$ (called <em>chain</em>) has a least upper bound in $E$</li>
+<li>$E$ has infimum (bottom, $\bot$) and,</li>
+<li>Any totally ordered subset of $E$ (called <strong>chain</strong>) has a least upper bound in $E$</li>
 </ul>
 <div style="text-align: center">
 <p><img src="./fig/cpo.drawio.svg" alt="" /></p>
 </div>
+</blockquote>
+<blockquote>
+<p><strong>[Note]</strong></p>
+<p>Different structures other than the CPO can also be used (ex. $\sqcup$-semilattices)</p>
 </blockquote>
 <h3 id="abstract-domain-by-galois-connection"><a class="header" href="#abstract-domain-by-galois-connection">Abstract domain by galois connection</a></h3>
 <p>An abstract domain needs to preserve the partial order of the concrete domain.
@@ -188,7 +192,9 @@ $$</p>
 <li>
 <p>The partial order $\sqsubseteq$ is the label-wise order:
 $$
-a^\sharp \sqsubseteq b^\sharp \quad\text{iff}\quad \forall l \in \mathbb{L} : a^\sharp(l) \sqsubseteq_M b^\sharp(l)
+\begin{align}
+a^\sharp \sqsubseteq b^\sharp \iff \forall l \in \mathbb{L} : a^\sharp(l) \sqsubseteq_M b^\sharp(l)
+\end{align}
 $$</p>
 </li>
 <li>
@@ -198,7 +204,42 @@ $$</p>
 <p>$\gamma$ defines how each element in the abstract domain is concretized.</p>
 </li>
 </ul>
-<h4 id="assumption-for-hookrightarrowsharp-cupsharp-and-cup_msharp"><a class="header" href="#assumption-for-hookrightarrowsharp-cupsharp-and-cup_msharp">Assumption for $\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup_M^\sharp$</a></h4>
+<blockquote>
+<p><strong>Def. 3.5 (Galois connection)</strong></p>
+<p>If $\mathbb{C}$ and $\mathbb{A}$ satisfies
+$$
+\begin{align}
+\forall c \in \mathbb{C}, \forall a \in \mathbb{A}, \alpha(c) \sqsubseteq a \iff c \subseteq \gamma(a)
+\end{align}
+$$</p>
+<p>then, tha pair of $\mathbb{C}$ and $\mathbb{A}$ is a Galois connection and we write :
+$$
+\begin{align}
+(\mathbb{C}, \subseteq) \overset{\gamma}{\underset{\alpha}{\leftrightarrows}} (\mathbb{A}, \sqsubseteq)
+\end{align}
+$$</p>
+</blockquote>
+<blockquote>
+<p><strong>[Note]</strong></p>
+<p>Different structures other than the Galois connection can also be used.</p>
+</blockquote>
+<p>The above Galois connection can be understood as the composition of two Galois connections:
+$$
+\begin{align}
+({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq)
+&amp;\overset{\gamma_0}{\underset{\alpha_0}{\leftrightarrows}} ((\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})), \sqsubseteq)
+&amp;&amp; \sqsubseteq \text{ is the label-wise } \subseteq\\
+&amp;\overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
+&amp;&amp; \sqsubseteq \text{ is the label-wise } \sqsubseteq_{M}
+\end{align}
+$$</p>
+<p>This second Galois connection pair boils down to :
+$$
+\begin{align}
+({\Large\wp}(\mathbb{M}), \subseteq) \overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} (\mathbb{M}^\sharp, \sqsubseteq_M)
+\end{align}
+$$</p>
+<h3 id="assumption-for-hookrightarrowsharp-cupsharp-and-cup_msharp"><a class="header" href="#assumption-for-hookrightarrowsharp-cupsharp-and-cup_msharp">Assumption for $\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup_M^\sharp$</a></h3>
 <p>The abstract one-step transition relation $\hookrightarrow^\sharp$ must satisfy, as a function:
 $$
 \begin{align}

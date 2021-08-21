@@ -93,7 +93,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/concrete.html" class="active">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/concrete.html" class="active">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -196,16 +196,13 @@ $$</p>
 </ul>
 </blockquote>
 <h2 id="34-define-textitstep"><a class="header" href="#34-define-textitstep">[3/4] Define $\textit{Step}$</a></h2>
-<blockquote>
-<p><strong>Def. 4.1 (Concrete semantics, the set of reachable states)</strong></p>
-<p>$\textit{Step}$ is a natural powerset-lifted version of $\hookrightarrow$</p>
-<p>$$
+<p>$\textit{Step}$ is a natural powerset-lifted version of $\hookrightarrow$
+$$
 \begin{align}
 \textit{Step} \ &amp;:\  {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S}) \\
 \textit{Step}(X) &amp;= \{ s' | s \hookrightarrow s', s \in X \}
 \end{align}
 $$</p>
-</blockquote>
 <h2 id="44-define-a-concrete-semantics"><a class="header" href="#44-define-a-concrete-semantics">[4/4] Define a concrete semantics.</a></h2>
 <ul>
 <li><strong>We restrict our analysis interest to computing the set of reachable states.</strong></li>
@@ -299,6 +296,24 @@ $$
 \textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset) = \bigcup_{i=0}^\infty \textit{Step}^i(I)
 \end{align}
 $$</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<blockquote>
+<p><strong>Def. 4.1 (Concrete semantics, the set of reachable states)</strong>
+Given a program and</p>
+<ul>
+<li>$\mathbb{S}$ : the set of states</li>
+<li>$\hookrightarrow$ : a one-step transition relation between two states</li>
+<li>$I$ : the set of initial states</li>
+<li>$\textit{Step}$ : a natural powerset-lifted version of $\hookrightarrow$</li>
+<li>$F(X) = I \cup \textit{Step}(X)$</li>
+</ul>
+<p>Then, the concrete semantics of the program, the set of all reachable states from $I$ is :
+$$
+\begin{align}
+\textbf{lfp} F
+\end{align}
+$$</p>
+</blockquote>
 <blockquote>
 <p><strong>Def 4.2 (Semantic domain and semantic function)</strong></p>
 <p>We call:</p>

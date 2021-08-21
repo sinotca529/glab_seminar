@@ -93,7 +93,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/abstract.html" class="active">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/abstract.html" class="active">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -159,7 +159,7 @@
 <li>Define abstract domain.</li>
 <li>Define abstract semantic function.</li>
 </ol>
-<h2 id="13-define-concrete-domain--concrete-semantic-function"><a class="header" href="#13-define-concrete-domain--concrete-semantic-function">1/3. Define concrete domain &amp; concrete semantic function.</a></h2>
+<h2 id="13-define-concrete-domain--concrete-semantic-function"><a class="header" href="#13-define-concrete-domain--concrete-semantic-function">[1/3] Define concrete domain &amp; concrete semantic function.</a></h2>
 <p>A concrete semantic domain $\mathbb{D}$ is:
 $$
 \begin{align}
@@ -173,7 +173,7 @@ $$</p>
 <li>$\mathbb{M}$ : Set of machine states.</li>
 <li>$\mathbb{S}$ : Set of concrete states.</li>
 </ul>
-<h2 id="23-define-abstract-domain"><a class="header" href="#23-define-abstract-domain">2/3. Define abstract domain.</a></h2>
+<h2 id="23-define-abstract-domain"><a class="header" href="#23-define-abstract-domain">[2/3] Define abstract domain.</a></h2>
 <h3 id="program-label-wise-reachability"><a class="header" href="#program-label-wise-reachability">Program-label-wise reachability</a></h3>
 <p>We are interested in the reachable set for each program label (<strong>flow sensitive</strong>).</p>
 <p>In this case, we can view the abstraction in two steps:</p>
@@ -191,6 +191,39 @@ $$
 (\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})) &amp;\quad \xrightarrow{\text{abstraction}} &amp; &amp;(\mathbb{L} \rightarrow \mathbb{M}^\sharp)
 \end{align}
 $$</p>
+<details style="background-color: var(--quote-bg);">
+<summary>Example (Figure 4.1)</summary>
+<p>$$
+\begin{align*}
+{\Large\wp}(\mathbb{L} \times \mathbb{M})
+&amp;\ni \text{collection of all states}
+&amp;&amp; \begin{cases}
+(0, m_0), (0, m'_0), \cdots, \text{ at } 0\\
+(1, m_1), (1, m'_1), \cdots, \text{ at } 1\\
+\quad \vdots\\
+(n, m_n), (n, m'_n), \cdots, \text{ at } n
+\end{cases}\\
+\\
+\mathbb{L} \rightarrow {\Large\wp}\mathbb{M})
+&amp;\ni \text{label-wise collection}
+&amp;&amp; \begin{cases}
+(0, m_0, m'_0, \cdots)\\
+(1, m_1, m'_1, \cdots)\\
+\quad \vdots\\
+(n, m_n, m'_n, \cdots)
+\end{cases}\\
+\\
+\mathbb{L} \rightarrow \mathbb{M}^\sharp
+&amp;\ni \text{label-wise abstraction}
+&amp;&amp; \begin{cases}
+(0, M^\sharp_0)\\
+(1, M^\sharp_1)\\
+\quad \vdots\\
+(n, M^\sharp_n)
+\end{cases}
+\end{align*}
+$$</p>
+</details>
 <p>We define abstract domain $\mathbb{S}^\sharp$:
 $$
 \begin{align}
@@ -198,7 +231,11 @@ $$
 \end{align}
 $$</p>
 <blockquote>
-<p>The way to design $\mathbb{M}^\sharp$ is depending on the target properties to compute.</p>
+<p><strong>[Note]</strong></p>
+<ul>
+<li>The way to design $\mathbb{M}^\sharp$ is depending on the target properties to compute.</li>
+<li>An element of ${\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)$ is called <strong>graph</strong></li>
+</ul>
 </blockquote>
 <h2 id="notations"><a class="header" href="#notations">Notations</a></h2>
 <p>Before we continue, we briefly define the notations.</p>
@@ -224,7 +261,7 @@ $$</p>
 $$
 \begin{align}
 &amp;\breve{{\Large\wp}}(f) : {\Large\wp}(A) \rightarrow {\Large\wp}(B)\\
-&amp;\breve{{\Large\wp}}(f)(X) = \bigcup\{ f(x) | x \in X \}
+&amp;\breve{{\Large\wp}}(f)(X) = \bigcup_{x \in X} f(x)
 \end{align}
 $$</p>
 <ul>
@@ -241,7 +278,7 @@ $$
 $$</p>
 </li>
 </ul>
-<h2 id="33-define-abstract-semantic-function"><a class="header" href="#33-define-abstract-semantic-function">3/3. Define abstract semantic function</a></h2>
+<h2 id="33-define-abstract-semantic-function"><a class="header" href="#33-define-abstract-semantic-function">[3/3] Define abstract semantic function</a></h2>
 <h3 id="review-concrete-semantic-function-f"><a class="header" href="#review-concrete-semantic-function-f">Review: Concrete semantic function $F$</a></h3>
 <p>$$
 \begin{align}
@@ -273,7 +310,7 @@ $$
 &amp;\hookrightarrow^\sharp \quad\subseteq\quad (\mathbb{L} \times \mathbb{M}^\sharp) \times (\mathbb{L} \times \mathbb{M}^\sharp)
 \end{align}
 $$</p>
-<p>About $\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$:</p>
+<h4 id="explanation-of-textitstepsharp--largewptextid-cupsharp_m-circ-pi-circ-brevelargewphookrightarrowsharp"><a class="header" href="#explanation-of-textitstepsharp--largewptextid-cupsharp_m-circ-pi-circ-brevelargewphookrightarrowsharp">Explanation of $\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$:</a></h4>
 <ul>
 <li>$\breve{\Large\wp}(\hookrightarrow^\sharp)$ : Compute next states</li>
 <li>$\pi$ : Partition the result by the labels.
