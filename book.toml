@@ -1,0 +1,15 @@
+[book]
+authors = ["Sinotca529"]
+language = "en"
+multilingual = false
+src = "src"
+title = "glab_seminar"
+
+[preprocessor.sinotca-flavored]
+
+[output.html]
+no-section-label = true
+additional-css = ["theme/custom.css"]
+
+[output.html.fold]
+enable = true
