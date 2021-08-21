@@ -7,20 +7,24 @@
 4. Implement the analysis (pseudo code)
 
 ## Make assumptions for soundness
-#### $\mathbb{S^\sharp}$ is CPO
+### $\mathbb{S^\sharp}$ is CPO
 We assume an abstract domain $\mathbb{S}^\sharp$ is CPO.
 
 > **Def. CPO (complete partial order)**
 >
 > A partial order $E$ is CPO when $E$ satisfies:
-> - $E$ has infimum (bottom) and,
-> - Any totally ordered subset of $E$ (called *chain*) has a least upper bound in $E$
+> - $E$ has infimum (bottom, $\bot$) and,
+> - Any totally ordered subset of $E$ (called **chain**) has a least upper bound in $E$
 >
 > <div style="text-align: center">
 >
 > ![](./fig/cpo.drawio.svg)
 >
 > </div>
+
+> **[Note]**
+>
+> Different structures other than the CPO can also be used (ex. $\sqcup$-semilattices)
 
 ### Abstract domain by galois connection
 An abstract domain needs to preserve the partial order of the concrete domain.
@@ -37,13 +41,54 @@ $$
 where:
 - The partial order $\sqsubseteq$ is the label-wise order:
     $$
-    a^\sharp \sqsubseteq b^\sharp \quad\text{iff}\quad \forall l \in \mathbb{L} : a^\sharp(l) \sqsubseteq_M b^\sharp(l)
+    \begin{align}
+        a^\sharp \sqsubseteq b^\sharp \iff \forall l \in \mathbb{L} : a^\sharp(l) \sqsubseteq_M b^\sharp(l)
+    \end{align}
     $$
 
 - $\alpha$ defines how each element in the concrete domain is abstracted.
 - $\gamma$ defines how each element in the abstract domain is concretized.
 
-#### Assumption for $\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup_M^\sharp$
+> **Def. 3.5 (Galois connection)**
+>
+> If $\mathbb{C}$ and $\mathbb{A}$ satisfies
+> $$
+> \begin{align}
+>     \forall c \in \mathbb{C}, \forall a \in \mathbb{A}, \alpha(c) \sqsubseteq a \iff c \subseteq \gamma(a)
+> \end{align}
+> $$
+>
+> then, tha pair of $\mathbb{C}$ and $\mathbb{A}$ is a Galois connection and we write :
+> $$
+> \begin{align}
+>     (\mathbb{C}, \subseteq) \overset{\gamma}{\underset{\alpha}{\leftrightarrows}} (\mathbb{A}, \sqsubseteq)
+> \end{align}
+> $$
+
+
+> **[Note]**
+>
+> Different structures other than the Galois connection can also be used.
+
+The above Galois connection can be understood as the composition of two Galois connections:
+$$
+\begin{align}
+    ({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq)
+        &\overset{\gamma_0}{\underset{\alpha_0}{\leftrightarrows}} ((\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})), \sqsubseteq)
+        && \sqsubseteq \text{ is the label-wise } \subseteq\\
+        &\overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
+        && \sqsubseteq \text{ is the label-wise } \sqsubseteq_{M}
+\end{align}
+$$
+
+This second Galois connection pair boils down to :
+$$
+\begin{align}
+    ({\Large\wp}(\mathbb{M}), \subseteq) \overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} (\mathbb{M}^\sharp, \sqsubseteq_M)
+\end{align}
+$$
+
+### Assumption for $\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup_M^\sharp$
 The abstract one-step transition relation $\hookrightarrow^\sharp$ must satisfy, as a function:
 $$
 \begin{align}

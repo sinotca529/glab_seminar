@@ -5,7 +5,7 @@
 2. Define abstract domain.
 3. Define abstract semantic function.
 
-## 1/3. Define concrete domain & concrete semantic function.
+## [1/3] Define concrete domain & concrete semantic function.
 A concrete semantic domain $\mathbb{D}$ is:
 $$
 \begin{align}
@@ -20,7 +20,7 @@ where:
 - $\mathbb{S}$ : Set of concrete states.
 
 
-## 2/3. Define abstract domain.
+## [2/3] Define abstract domain.
 ### Program-label-wise reachability
 We are interested in the reachable set for each program label (**flow sensitive**).
 
@@ -42,6 +42,42 @@ $$
 \end{align}
 $$
 
+<details style="background-color: var(--quote-bg);">
+<summary>Example (Figure 4.1)</summary>
+
+$$
+\begin{align*}
+    {\Large\wp}(\mathbb{L} \times \mathbb{M})
+        &\ni \text{collection of all states}
+        && \begin{cases}
+            (0, m_0), (0, m'_0), \cdots, \text{ at } 0\\
+            (1, m_1), (1, m'_1), \cdots, \text{ at } 1\\
+            \quad \vdots\\
+            (n, m_n), (n, m'_n), \cdots, \text{ at } n
+        \end{cases}\\
+    \\
+    \mathbb{L} \rightarrow {\Large\wp}\mathbb{M})
+        &\ni \text{label-wise collection}
+        && \begin{cases}
+            (0, m_0, m'_0, \cdots)\\
+            (1, m_1, m'_1, \cdots)\\
+            \quad \vdots\\
+            (n, m_n, m'_n, \cdots)
+        \end{cases}\\
+    \\
+    \mathbb{L} \rightarrow \mathbb{M}^\sharp
+        &\ni \text{label-wise abstraction}
+        && \begin{cases}
+            (0, M^\sharp_0)\\
+            (1, M^\sharp_1)\\
+            \quad \vdots\\
+            (n, M^\sharp_n)
+        \end{cases}
+\end{align*}
+$$
+
+</details>
+
 We define abstract domain $\mathbb{S}^\sharp$:
 $$
 \begin{align}
@@ -49,9 +85,9 @@ $$
 \end{align}
 $$
 
-> The way to design $\mathbb{M}^\sharp$ is depending on the target properties to compute.
-
-
+> **[Note]**
+> - The way to design $\mathbb{M}^\sharp$ is depending on the target properties to compute.
+> - An element of ${\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)$ is called **graph**
 
 ## Notations
 Before we continue, we briefly define the notations.
@@ -74,7 +110,7 @@ Before we continue, we briefly define the notations.
     $$
     \begin{align}
         &\breve{{\Large\wp}}(f) : {\Large\wp}(A) \rightarrow {\Large\wp}(B)\\
-        &\breve{{\Large\wp}}(f)(X) = \bigcup\{ f(x) | x \in X \}
+        &\breve{{\Large\wp}}(f)(X) = \bigcup_{x \in X} f(x)
     \end{align}
     $$
     - ex. $\textit{Step} = \breve{\Large\wp}(\hookrightarrow)$
@@ -87,7 +123,7 @@ Before we continue, we briefly define the notations.
     \end{align}
     $$
 
-## 3/3. Define abstract semantic function
+## [3/3] Define abstract semantic function
 ### Review: Concrete semantic function $F$
 $$
 \begin{align}
@@ -123,7 +159,7 @@ $$
 \end{align}
 $$
 
-About $\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$:
+#### Explanation of $\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$:
 - $\breve{\Large\wp}(\hookrightarrow^\sharp)$ : Compute next states
 - $\pi$ : Partition the result by the labels.
     - Result can be convert into $\mathbb{L} \rightarrow {\Large\wp}(M^\sharp)$
@@ -141,4 +177,3 @@ $$
 
 > Implicit convert $\eqref{eq:implicit-convert}$ can be done.
 > Because the result of ${\Large\wp}((\text{id}, \cup^\sharp_M))$ has exactly one entry for each labels.
-

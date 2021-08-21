@@ -29,17 +29,13 @@ $$
 >     - In those cases, $l'$ is an evaluation result from the current state $(l, m)$.
 
 ## [3/4] Define $\textit{Step}$
-
-> **Def. 4.1 (Concrete semantics, the set of reachable states)**
->
-> $\textit{Step}$ is a natural powerset-lifted version of $\hookrightarrow$
->
-> $$
-> \begin{align}
->     \textit{Step} \ &:\  {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S}) \\
->     \textit{Step}(X) &= \{ s' | s \hookrightarrow s', s \in X \}
-> \end{align}
-> $$
+$\textit{Step}$ is a natural powerset-lifted version of $\hookrightarrow$
+$$
+\begin{align}
+    \textit{Step} \ &:\  {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S}) \\
+    \textit{Step}(X) &= \{ s' | s \hookrightarrow s', s \in X \}
+\end{align}
+$$
 
 ## [4/4] Define a concrete semantics.
 - **We restrict our analysis interest to computing the set of reachable states.**
@@ -152,7 +148,21 @@ $$
 \end{align}
 $$
 
-
+## Summary
+> **Def. 4.1 (Concrete semantics, the set of reachable states)**
+> Given a program and
+> - $\mathbb{S}$ : the set of states
+> - $\hookrightarrow$ : a one-step transition relation between two states
+> - $I$ : the set of initial states
+> - $\textit{Step}$ : a natural powerset-lifted version of $\hookrightarrow$
+> - $F(X) = I \cup \textit{Step}(X)$
+>
+> Then, the concrete semantics of the program, the set of all reachable states from $I$ is :
+> $$
+> \begin{align}
+>     \textbf{lfp} F
+> \end{align}
+> $$
 
 > **Def 4.2 (Semantic domain and semantic function)**
 >
