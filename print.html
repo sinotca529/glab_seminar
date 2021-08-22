@@ -156,7 +156,7 @@
                         <h1 id="home"><a class="header" href="#home">Home</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="輪講"><a class="header" href="#輪講">輪講</a></h1>
 <ul>
-<li><a href="slides/./isa_4/main.html">ISA Ch.4 (WIP)</a></li>
+<li><a href="slides/./isa_4/main.html">ISA Ch.4 A General Static Analysis Framework Based on a Transitional Semantics</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="isa-ch4--a-general-static-analysis-framework-based-on-a-transitional-semantics"><a class="header" href="#isa-ch4--a-general-static-analysis-framework-based-on-a-transitional-semantics">ISA Ch.4 : A General Static Analysis Framework Based on a Transitional Semantics</a></h1>
 <h2 id="goal"><a class="header" href="#goal">Goal</a></h2>
@@ -245,7 +245,8 @@ $$
 \begin{align}
 &amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)\\
 &amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 99)\hookrightarrow  (1, x \mapsto 99)\hookrightarrow (\textcolor{green}{\textbf{Q. Fill the rest.}})\\
-&amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 0)\hookrightarrow (2, x \mapsto 0)\hookrightarrow (1, x \mapsto 1)\hookrightarrow \cdots\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)
+&amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 0)\hookrightarrow (2, x \mapsto 0)\hookrightarrow (1, x \mapsto 1)\hookrightarrow \nonumber\\
+&amp;\qquad\qquad\quad\cdots\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)
 \end{align}
 $$</p>
 <details>
@@ -544,8 +545,8 @@ $$
 \begin{align}
 \mathbb{L} \rightarrow \mathbb{M}^\sharp
 &amp;\xrightarrow{\text{implicit convert}}                       &amp;&amp; {\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)\\
-&amp;\xrightarrow{\ \breve{\Large\wp}(\hookrightarrow^\sharp)\ } &amp;&amp; {\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)\\
-&amp;\xrightarrow{\quad\pi\quad}                                 &amp;&amp; {\Large\wp}(\mathbb{L} \times {\Large\wp}(M^\sharp))\\
+&amp;\xrightarrow{\quad\breve{\Large\wp}(\hookrightarrow^\sharp)\quad} &amp;&amp; {\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)\\
+&amp;\xrightarrow{\qquad\pi\qquad}                                 &amp;&amp; {\Large\wp}(\mathbb{L} \times {\Large\wp}(M^\sharp))\\
 &amp;\xrightarrow{\ {\Large\wp}((\text{id}, \cup^\sharp_M))\ }   &amp;&amp; {\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)\\
 &amp;\xrightarrow{\text{implicit convert}}                       &amp;&amp; \mathbb{L} \rightarrow \mathbb{M}^\sharp \label{eq:implicit-convert}
 \end{align}
