@@ -6,7 +6,7 @@
 3. Check soundness
 4. Implement the analysis (pseudo code)
 
-## Make assumptions for soundness
+## [1/4] Make assumptions for soundness
 ### $\mathbb{S^\sharp}$ is CPO
 We assume an abstract domain $\mathbb{S}^\sharp$ is CPO.
 
@@ -34,7 +34,9 @@ We design an abstract domain as a CPO that is Galois connection with the concret
 
 $$
 \begin{align}
-    ({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq) \overset{\gamma}{\underset{\alpha}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
+    (\underset{{\Large\wp}(\mathbb{S})}{\underline{{\Large\wp}(\mathbb{L}\times\mathbb{M})}}, \subseteq)
+    \overset{\gamma}{\underset{\alpha}{\leftrightarrows}}
+    (\underset{\mathbb{S}^\sharp}{\underline{(\mathbb{L} \rightarrow \mathbb{M}^\sharp)}}, \sqsubseteq)
 \end{align}
 $$
 
@@ -54,7 +56,7 @@ where:
 > If $\mathbb{C}$ and $\mathbb{A}$ satisfies
 > $$
 > \begin{align}
->     \forall c \in \mathbb{C}, \forall a \in \mathbb{A}, \alpha(c) \sqsubseteq a \iff c \subseteq \gamma(a)
+>     \forall (c, a) \in (\mathbb{C}, \mathbb{A}), \quad \alpha(c) \sqsubseteq a \iff c \subseteq \gamma(a)
 > \end{align}
 > $$
 >
@@ -75,21 +77,58 @@ $$
 \begin{align}
     ({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq)
         &\overset{\gamma_0}{\underset{\alpha_0}{\leftrightarrows}} ((\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})), \sqsubseteq)
-        && \sqsubseteq \text{ is the label-wise } \subseteq\\
+        && (\sqsubseteq \text{ is the label-wise } \subseteq)\\
         &\overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
-        && \sqsubseteq \text{ is the label-wise } \sqsubseteq_{M}
+        && (\sqsubseteq \text{ is the label-wise } \sqsubseteq_{M})
 \end{align}
 $$
 
-This second Galois connection pair boils down to :
+#### The first part
+$$
+({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq)
+\overset{\gamma_0}{\underset{\alpha_0}{\leftrightarrows}} ((\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})), \sqsubseteq)
+\quad (\sqsubseteq \text{ is the label-wise } \subseteq)\\
+$$
+- Collects the memories for each label :
+$$
+\alpha_0 \left\{
+    \begin{array}{l}
+        (0, m_0), (0, m'_0), \cdots,\\
+        (1, m_1), (1, m'_1), \cdots,\\
+        \vdots\\
+        (n, m_n), (n, m'_n), \cdots,
+    \end{array}
+\right\} = \left\{
+    \begin{array}{l}
+        (0, \{m_0, m'_0, \cdots\}),\\
+        (1, \{m_1, m'_1, \cdots\}),\\
+        \vdots\\
+        (n, \{m_n, m'_n, \cdots\}),
+    \end{array}
+\right\}
+$$
+
+- $\alpha_0 \circ \gamma_0 \equiv \text{id}$
+- This relation satisfies the conditions of Galois connection.
+
+#### The second part
+$$
+((\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})), \sqsubseteq)
+\overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
+\quad (\sqsubseteq \text{ is the label-wise } \sqsubseteq_{M})
+$$
+
+- This second Galois connection pair boils down to :
 $$
 \begin{align}
-    ({\Large\wp}(\mathbb{M}), \subseteq) \overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} (\mathbb{M}^\sharp, \sqsubseteq_M)
+    ({\Large\wp}(\mathbb{M}), \subseteq) \overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} (\mathbb{M}^\sharp, \sqsubseteq_M) \label{eq:abst_m}
 \end{align}
 $$
 
+> So, we can define $\mathbb{S}^\sharp$ which Galois connection with the concrete domain by defining $\mathbb{M}^\sharp$ which satisfy $\eqref{eq:abst_m}$
+
 ### Assumption for $\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup_M^\sharp$
-The abstract one-step transition relation $\hookrightarrow^\sharp$ must satisfy, as a function:
+The abstract one-step transition relation $\hookrightarrow^\sharp$ must satisfy, as a function :
 $$
 \begin{align}
     \breve{\Large\wp}(\hookrightarrow) \circ \gamma \subseteq \gamma \circ \breve{\Large\wp}(\hookrightarrow^\sharp)
@@ -102,7 +141,7 @@ $$
 
 </div>
 
-The abstract union $\cup^\sharp$ and $\cup_M^\sharp$ must satisfy:
+The abstract union $\cup^\sharp$ and $\cup_M^\sharp$ must satisfy :
 $$
 \begin{align}
     \cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp \_
@@ -115,7 +154,7 @@ $$
 
 </div>
 
-## Define sound static analysis (in math form)
+## [2/4] Define sound static analysis (in math form)
 ### Case 1.
 If $\mathbb{S}^\sharp$ is of finite height (every chain is finite) and $F^\sharp$ is monotone or extensive,
 
@@ -174,10 +213,11 @@ $\triangledown$ is a widening operator
 > \right.
 > $$
 
-## Check soundness
-
+## [3/4] Check soundness
 ### Theorem 4.2 (Sound static analysis by $F^\sharp$)
-Given a program, $F$, $F^\sharp$, if
+Given a program, $F$, $F^\sharp$ (defined as above),
+
+If
 - $\mathbb{S}^\sharp$ is of finite height (every chain $\mathbb{S}^\sharp$ is finite) and
 - $F^\sharp$ is monotone or extensive
 
@@ -188,10 +228,10 @@ $$
 \end{align}
 $$
 
-is finitely computable and over-approximates $\textbf{lfp} F$:
+is finitely computable and over-approximates $\textbf{lfp} F$ (= concrete semantics)
 $$
 \begin{align}
-    \textbf{lfp} F \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i} (\bot))
+    \textbf{lfp} F \subseteq \gamma\left(\bigsqcup_{i \geq 0} F^{\sharp^i} (\bot)\right)
 \end{align}
 $$
 <!-- \left( \iff \alpha (\textbf{lfp}F) \sqsubseteq \bigsqcup_{i \geq 0} F^{\sharp^i} (\bot) \right) -->
@@ -199,17 +239,17 @@ $$
 <details style="background-color: var(--quote-bg);">
 <summary>Proof</summary>
 
-Overview:
+#### Overview
 $$
 \begin{align}
     \text{The condition}
         &\implies F \circ \gamma \subseteq \gamma \circ F^\sharp \label{eq:b1}\\
         &\implies \forall n \geq 0 : F^n(\bot) \subseteq \gamma(F^{\sharp^n}(\bot)) \label{eq:b2}\\
-        &\implies \textbf{lfp}F \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i}(\bot)) \label{eq:b3}
+        &\implies \textbf{lfp}F \subseteq \gamma\left(\bigsqcup_{i \geq 0} F^{\sharp^i}(\bot)\right) \label{eq:b3}
 \end{align}
 $$
 
-#### Proof$\eqref{eq:b1}$
+#### Proof $\eqref{eq:b1}$
 $$F \circ \gamma \subseteq \gamma \circ F^\sharp$$
 
 From the condition:
@@ -234,7 +274,7 @@ $$
 \end{align}
 $$
 
-#### Proof$\eqref{eq:b1}$
+#### Proof $\eqref{eq:b2}$
 $$\forall n \geq 0 : F^n(\bot) \subseteq \gamma(F^{\sharp^n}(\bot))$$
 
 Use induction on $n$.
@@ -252,7 +292,7 @@ $$
 \end{align}
 $$
 
-#### Proof$\eqref{eq:b3}$
+#### Proof $\eqref{eq:b3}$
 $$\textbf{lfp}F = \bigsqcup_{i \geq 0} F^i \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i}(\bot))$$
 
 ##### Existence of $\quad \textbf{lfp}F, \quad \bigsqcup_{i \geq 0} \gamma(F^{\sharp^i}(\bot))$
@@ -273,11 +313,11 @@ $$
 \end{align}
 $$
 
-(monotonicity $\implies$ continuous)
+(monotonic $\implies$ continuous)
 </details>
 
-### Theorem 4.3 (Sound static analysis by $F^\sharp$ and widening operator $\triangledown$)
-Given a program, $F$, $F^\sharp$, $\triangledown$ (defined in **definition 3.11**):
+### Theorem 4.3 (Sound static analysis by $F^\sharp$ and $\triangledown$)
+Given a program, $F$, $F^\sharp$  (defined as above), $\triangledown$ (defined in definition 3.11):
 
 Then the following chain $Y_0 \sqsubseteq Y_1 \sqsubseteq \cdots$
 $$
@@ -297,9 +337,12 @@ $$
 <details style="background-color: var(--quote-bg);">
 <summary>Proof</summary>
 
-#### Step1
-Goal :  $\{ Y_i \}$ is a chain
+#### Overview
+1. Prove a sequence $\{ Y_i \}$ is a chain.
+2. Prove $\forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n)$
+3. Prove $\textbf{lfp} F = \bigcup_{i=0}^{\infty} F^i (\bot) \subseteq \gamma(Y_{\text{lim}})$
 
+#### Step1 : $\{ Y_i \}$ is a chain
 From the definition of $\triangledown$ (Def. 3.11)
 $$
 \begin{align}
@@ -324,21 +367,11 @@ $$
 \end{align}
 $$
 
-#### Step2.
+#### Step2 : $\forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n)$
+Use induction on $n$.
 
-Goal : Prove,
-
-$$
-\begin{align}
-    \forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n) \label{eq:t4.3step2}
-\end{align}
-$$
-
-Use induction on $k$.
-##### [$k=0$]
-Obvious.
-
-##### [assume @ $k$ and prove @ $k+1$]
+- The case $n=0$ is obvious.
+- Assume about $n=k$ and think about $k+1$
 $$
 \begin{align}
     \bigcup_{i=0}^{k+1} F^i(\bot)
@@ -353,12 +386,12 @@ $$
 \end{align}
 $$
 
-#### Step3.
+#### Step3 : $\textbf{lfp} F = \bigcup_{i=0}^{\infty} F^i (\bot) \subseteq \gamma(Y_{\text{lim}})$
 From the definition of $\triangledown$ (Def. 3.11), $\{ Y_i \}$ is ultimately stationary.
 
 Let the last element be $Y_{\text{lim}}$.
 
-By step1 and step2,
+By Step1 and Step2,
 $$
 \begin{align}
     \forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n) \subseteq \gamma(Y_{\text{lim}})
@@ -421,7 +454,7 @@ repeat
     R ← C
     C ← C ▽ F#(C.filter_by(WorkList))
     WorkList ← {l | C(l) ⊐ R(l), l ∈ L}
-until WorkList = ∅
+until WorkList.is_empty()
 return R
 ```
 
@@ -432,6 +465,6 @@ return R
 > repeat
 >     C ← C ▽ F#(C\R)
 >     R ← C
-> until C\R = ∅
+> until (C\R).is_empty()
 > return R
 > ```

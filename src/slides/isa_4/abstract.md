@@ -42,41 +42,38 @@ $$
 \end{align}
 $$
 
-<details style="background-color: var(--quote-bg);">
-<summary>Example (Figure 4.1)</summary>
+> **Example (Figure 4.1)**
+> $$
+> \begin{align*}
+>     {\Large\wp}(\mathbb{L} \times \mathbb{M})
+>         &\ni \text{collection of all states}
+>         && \begin{cases}
+>             (0, m_0), (0, m'_0), \cdots, \text{ at } 0\\
+>             (1, m_1), (1, m'_1), \cdots, \text{ at } 1\\
+>             \quad \vdots\\
+>             (n, m_n), (n, m'_n), \cdots, \text{ at } n
+>         \end{cases}\\
+>     \\
+>     \mathbb{L} \rightarrow {\Large\wp}\mathbb{M})
+>         &\ni \text{label-wise collection}
+>         && \begin{cases}
+>             (0, m_0, m'_0, \cdots)\\
+>             (1, m_1, m'_1, \cdots)\\
+>             \quad \vdots\\
+>             (n, m_n, m'_n, \cdots)
+>         \end{cases}\\
+>     \\
+>     \mathbb{L} \rightarrow \mathbb{M}^\sharp
+>         &\ni \text{label-wise abstraction}
+>         && \begin{cases}
+>             (0, M^\sharp_0)\\
+>             (1, M^\sharp_1)\\
+>             \quad \vdots\\
+>             (n, M^\sharp_n)
+>         \end{cases}
+> \end{align*}
+> $$
 
-$$
-\begin{align*}
-    {\Large\wp}(\mathbb{L} \times \mathbb{M})
-        &\ni \text{collection of all states}
-        && \begin{cases}
-            (0, m_0), (0, m'_0), \cdots, \text{ at } 0\\
-            (1, m_1), (1, m'_1), \cdots, \text{ at } 1\\
-            \quad \vdots\\
-            (n, m_n), (n, m'_n), \cdots, \text{ at } n
-        \end{cases}\\
-    \\
-    \mathbb{L} \rightarrow {\Large\wp}\mathbb{M})
-        &\ni \text{label-wise collection}
-        && \begin{cases}
-            (0, m_0, m'_0, \cdots)\\
-            (1, m_1, m'_1, \cdots)\\
-            \quad \vdots\\
-            (n, m_n, m'_n, \cdots)
-        \end{cases}\\
-    \\
-    \mathbb{L} \rightarrow \mathbb{M}^\sharp
-        &\ni \text{label-wise abstraction}
-        && \begin{cases}
-            (0, M^\sharp_0)\\
-            (1, M^\sharp_1)\\
-            \quad \vdots\\
-            (n, M^\sharp_n)
-        \end{cases}
-\end{align*}
-$$
-
-</details>
 
 We define abstract domain $\mathbb{S}^\sharp$:
 $$
@@ -94,8 +91,8 @@ Before we continue, we briefly define the notations.
 
 #### Implicit type conversion
 - A map $A \rightarrow B$ is interchangeably an element in ${\Large\wp}(A\times B)$
-- A relation $f \subseteq A \times B$ is interchangeably a function $f \in A \rightarrow {\Large\wp}(B)$ defined as:
-    $$ f(a) = \{ b | (a, b) \in \text{relation} f \} $$
+- A relation $f \subseteq A \times B$ is interchangeably a function $g \in A \rightarrow {\Large\wp}(B)$ defined as:
+    $$ g(a) = \{ b | (a, b) \in f \} $$
 
 #### New notations
 - For functions $f : A \rightarrow B$, we write ${\Large\wp}(f)$ for its powerset version:
@@ -159,7 +156,7 @@ $$
 \end{align}
 $$
 
-#### Explanation of $\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$:
+#### Explanation of $\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$ :
 - $\breve{\Large\wp}(\hookrightarrow^\sharp)$ : Compute next states
 - $\pi$ : Partition the result by the labels.
     - Result can be convert into $\mathbb{L} \rightarrow {\Large\wp}(M^\sharp)$

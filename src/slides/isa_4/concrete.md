@@ -7,7 +7,7 @@
 
 ## [1/4] Define the set of states: $\mathbb{S}$
 A state $s \in \mathbb{S}$ is a pair $(l, m)$.
-- $l \in \mathbb{L}$ : program label which denotes the next operator.
+- $l \in \mathbb{L}$ : program label which denotes the **next** operator.
 - $m \in \mathbb{M}$ : machine state at $l$ (before exec $l$).
     - That would consist of:
         - memory : `Map<Addr, Value>`
@@ -28,6 +28,49 @@ $$
 >     - ex. `goto`, func-ptr, ...
 >     - In those cases, $l'$ is an evaluation result from the current state $(l, m)$.
 
+> **Example 4.1 (Concrete transition sequence)**
+>
+> Consider the program:
+>
+> <div>
+> <div style="float:left; width:50%">
+>
+> ```py
+> # 0: (label)
+> input(x)
+> # 1
+> while (x <= 99)
+>     # 2
+>     x += 1
+> # 3
+> ```
+>
+> </div>
+> <div style="text-align:center">
+>
+> ![](./fig/ex4.1.drawio.svg)
+>
+> </div>
+> </div>
+>
+> Assumptions:
+> - Initial state : empty memory $\emptyset$
+> - Inputs are only 0, 99 and 100
+>
+> Transition sequence for the inputs are :
+> $$
+> \begin{align}
+>     &(0, \emptyset)\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)\\
+>     &(0, \emptyset)\hookrightarrow (1, x \mapsto 99)\hookrightarrow  (1, x \mapsto 99)\hookrightarrow (\textcolor{green}{\textbf{Q. Fill the rest.}})\\
+>     &(0, \emptyset)\hookrightarrow (1, x \mapsto 0)\hookrightarrow (2, x \mapsto 0)\hookrightarrow (1, x \mapsto 1)\hookrightarrow \cdots\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)
+> \end{align}
+> $$
+>
+> <details>
+> <summary>Answer</summary>
+> $$(0, \emptyset)\hookrightarrow (1, x \mapsto 99)\hookrightarrow (2, x \mapsto 99)\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)$$
+> </details>
+
 ## [3/4] Define $\textit{Step}$
 $\textit{Step}$ is a natural powerset-lifted version of $\hookrightarrow$
 $$
@@ -41,51 +84,31 @@ $$
 - **We restrict our analysis interest to computing the set of reachable states.**
 - So, we define the concrete semantics as the set of all the reachable states of the program.
 
-
-<details style="background-color: var(--quote-bg);">
-<summary>Example 4.2 (Reachable states)</summary>
-
-Consider the program:
-
-<div>
-<div style="float:left; width:50%">
-
-```py
-# 0: (label)
-input(x)
-# 1
-while (x <= 99)
-    # 2
-    x += 1
-# 3
-```
-
-</div>
-
-<div style="text-align:center">
-
-![](./fig/ex4.1.drawio.svg)
-
-</div>
-
-</div>
-
-
-
-Assumptions:
-- Initial state : empty memory $\emptyset$
-- Inputs are only 0, 99 and 100
-
-Concrete semantics of the program is:
-$$
-\begin{align}
-              & \{(0, \emptyset), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
-    \cup \quad& \{(0, \emptyset), (1, x \mapsto 99), (2, x \mapsto 99), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
-    \cup \quad& \{(0, \emptyset), (1, x \mapsto 0), (2, x \mapsto 0), (1, x \mapsto 1), \cdots, (1, x \mapsto 100), (3, x \mapsto 100)\}
-\end{align}
-$$
-
-</details>
+> **Example 4.2 (Reachable states)**
+>
+> Consider the program:
+> ```py
+> # 0: (label)
+> input(x)
+> # 1
+> while (x <= 99)
+>     # 2
+>     x += 1
+> # 3
+> ```
+>
+> Assumptions:
+> - Initial state : empty memory $\emptyset$
+> - Inputs are only 0, 99 and 100
+>
+> Concrete semantics of the program is:
+> $$
+> \begin{align}
+>            & \{(0, \emptyset), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
+>     \cup \ & \{(0, \emptyset), (1, x \mapsto 99), (2, x \mapsto 99), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
+>     \cup \ & \{(0, \emptyset), (1, x \mapsto 0), (2, x \mapsto 0), (1, x \mapsto 1), \cdots, (1, x \mapsto 100), (3, x \mapsto 100)\}
+> \end{align}
+> $$
 
 
 ### Accumulate all reachable states
