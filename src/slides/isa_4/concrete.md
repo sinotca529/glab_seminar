@@ -62,7 +62,8 @@ $$
 > \begin{align}
 >     &(0, \emptyset)\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)\\
 >     &(0, \emptyset)\hookrightarrow (1, x \mapsto 99)\hookrightarrow  (1, x \mapsto 99)\hookrightarrow (\textcolor{green}{\textbf{Q. Fill the rest.}})\\
->     &(0, \emptyset)\hookrightarrow (1, x \mapsto 0)\hookrightarrow (2, x \mapsto 0)\hookrightarrow (1, x \mapsto 1)\hookrightarrow \cdots\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)
+>     &(0, \emptyset)\hookrightarrow (1, x \mapsto 0)\hookrightarrow (2, x \mapsto 0)\hookrightarrow (1, x \mapsto 1)\hookrightarrow \nonumber\\
+>     &\qquad\qquad\quad\cdots\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)
 > \end{align}
 > $$
 >

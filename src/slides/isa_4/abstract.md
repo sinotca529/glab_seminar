@@ -165,8 +165,8 @@ $$
 \begin{align}
     \mathbb{L} \rightarrow \mathbb{M}^\sharp
         &\xrightarrow{\text{implicit convert}}                       && {\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)\\
-        &\xrightarrow{\ \breve{\Large\wp}(\hookrightarrow^\sharp)\ } && {\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)\\
-        &\xrightarrow{\quad\pi\quad}                                 && {\Large\wp}(\mathbb{L} \times {\Large\wp}(M^\sharp))\\
+        &\xrightarrow{\quad\breve{\Large\wp}(\hookrightarrow^\sharp)\quad} && {\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)\\
+        &\xrightarrow{\qquad\pi\qquad}                                 && {\Large\wp}(\mathbb{L} \times {\Large\wp}(M^\sharp))\\
         &\xrightarrow{\ {\Large\wp}((\text{id}, \cup^\sharp_M))\ }   && {\Large\wp}(\mathbb{L} \times \mathbb{M}^\sharp)\\
         &\xrightarrow{\text{implicit convert}}                       && \mathbb{L} \rightarrow \mathbb{M}^\sharp \label{eq:implicit-convert}
 \end{align}
