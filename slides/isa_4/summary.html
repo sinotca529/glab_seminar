@@ -3,8 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title></title>
-        <base href="/">
+        <title>Summary - glab_seminar</title>
         <!-- Custom HTML head -->
 <script type="text/javascript">
     window.MathJax = {
@@ -28,27 +27,27 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="theme/custom.css">
+        <link rel="stylesheet" href="../../theme/custom.css">
     </head>
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
-            var path_to_root = "";
+            var path_to_root = "../../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
@@ -94,7 +93,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="index.html">Home</a></li><li class="chapter-item "><a href="slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="slides/isa_4/summary.html">Summary</a></li><li class="chapter-item "><a href="slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/summary.html" class="active">Summary</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -126,7 +125,7 @@
                     <h1 class="menu-title">glab_seminar</h1>
 
                     <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                     </div>
@@ -153,19 +152,90 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="document-not-found-404"><a class="header" href="#document-not-found-404">Document not found (404)</a></h1>
-<p>This URL is invalid, sorry. Please use the navigation bar or search to continue.</p>
+                        <h1 id="summary"><a class="header" href="#summary">Summary</a></h1>
+<h2 id="about-concrete-semantics"><a class="header" href="#about-concrete-semantics">About concrete semantics</a></h2>
+<p>Given a program and a target semantic property,</p>
+<p>Define</p>
+<ul>
+<li>Memory state : $\mathbb{M}$</li>
+<li>Transition relation : $\hookrightarrow \ (\subseteq \mathbb{S} \times \mathbb{S})$</li>
+</ul>
+<p>Then, followings can be derived automatically :</p>
+<ul>
+<li>Labels : $\mathbb{L}$</li>
+<li>Concrete domain : ${\Large\wp}(\mathbb{S}) = {\Large\wp}(\mathbb{L} \times \mathbb{M})$</li>
+<li>Concrete semantic function $F(X) = I \cup \textit{Step}(X)$</li>
+<li>Concrete semantics : $\textbf{lfp}(F)$</li>
+<li>$\textit{Step} = \breve{\Large\wp}(\hookrightarrow)$</li>
+</ul>
+<h2 id="about-abstract-semantics"><a class="header" href="#about-abstract-semantics">About abstract semantics</a></h2>
+<p>Given a program and a target semantic property, after define about concrete semantics,</p>
+<p>Define</p>
+<ul>
+<li>Abstract memory state : $\mathbb{M}^\sharp$</li>
+<li>Abstract transition relation : $\hookrightarrow^\sharp \ \subseteq (\mathbb{L}\times\mathbb{M}^\sharp)\times(\mathbb{L}\times\mathbb{M}^\sharp)$</li>
+<li>Abstract union over $\mathbb{S}^\sharp$ : $\cup^\sharp$</li>
+<li>Abstract union over $\mathbb{M}^\sharp$ : $\cup^\sharp_M$</li>
+</ul>
+<p>Then, followings can be derived automatically :</p>
+<ul>
+<li>Abstract domain : $\mathbb{S}^\sharp = \mathbb{L} \rightarrow \mathbb{M}^\sharp$</li>
+<li>Abstract semantic function : $F^\sharp(X^\sharp) = \alpha(I) \cup^\sharp \textit{Step}^\sharp(X^\sharp)$</li>
+<li>$\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$</li>
+</ul>
+<p>If the following conditions are satisfied :</p>
+<ul>
+<li>$\mathbb{S}^\sharp$ and $\mathbb{M}^\sharp$ are CPO</li>
+<li>$\mathbb{M}^\sharp$ satisfy:
+$$({\Large\wp}(\mathbb{M}), \subseteq) \quad \overset{\gamma_M}{\underset{\alpha_M}{\leftrightarrows}} \quad (\mathbb{M}^\sharp, \sqsubseteq_M)$$</li>
+<li>$\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup^\sharp_M$ satisfy :
+$$
+\begin{align*}
+\breve{\Large\wp}(\hookrightarrow) \circ \gamma \subseteq \gamma \circ \breve{\Large\wp}(\hookrightarrow^\sharp)\\
+\cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp \_ \\
+\cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp_M \_
+\end{align*}
+$$</li>
+</ul>
+<p>Then, the sound static analysis are defined :</p>
+<ul>
+<li>
+<p>If $\mathbb{S}^\sharp$ is of finite height (every chain is finite) and $F^\sharp$ is monotone or extensive,
+$$\bigsqcup_{i\geq 0} F^{\sharp^i}(\bot)$$</p>
+</li>
+<li>
+<p>Otherwise,
+$$Y_{\infty} \quad (Y_0 = \bot, Y_{i+1} = Y_i \triangledown F^\sharp(Y_i))$$</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>[Note]</strong></p>
+<p>Many static analysis tools are parametric in the choice of the abstract domains and semantic operators.
+(Practical discussion is in section 6.2)</p>
+</blockquote>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../slides/isa_4/analysis.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../../slides/isa_4/ex_framework.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../slides/isa_4/analysis.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../../slides/isa_4/ex_framework.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>
@@ -173,12 +243,12 @@
         <script type="text/javascript">
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
     </body>

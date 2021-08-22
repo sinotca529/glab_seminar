@@ -94,7 +94,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="index.html">Home</a></li><li class="chapter-item "><a href="slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="index.html">Home</a></li><li class="chapter-item "><a href="slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="slides/isa_4/summary.html">Summary</a></li><li class="chapter-item "><a href="slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -171,6 +171,7 @@
 <li><a href="slides/isa_4/./concrete.html">Define concrete semantic</a></li>
 <li><a href="slides/isa_4/./abstract.html">Define abstract semantic</a></li>
 <li><a href="slides/isa_4/./analysis.html">Define sound analysis</a></li>
+<li><a href="slides/isa_4/./summary.html">Summary</a></li>
 <li><a href="slides/isa_4/./ex_framework.html">Example of the framework</a></li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="define-concrete-transitional-semantics"><a class="header" href="#define-concrete-transitional-semantics">Define concrete transitional semantics</a></h1>
@@ -184,7 +185,7 @@
 <h2 id="14-define-the-set-of-states-mathbbs"><a class="header" href="#14-define-the-set-of-states-mathbbs">[1/4] Define the set of states: $\mathbb{S}$</a></h2>
 <p>A state $s \in \mathbb{S}$ is a pair $(l, m)$.</p>
 <ul>
-<li>$l \in \mathbb{L}$ : program label which denotes the next operator.</li>
+<li>$l \in \mathbb{L}$ : program label which denotes the <strong>next</strong> operator.</li>
 <li>$m \in \mathbb{M}$ : machine state at $l$ (before exec $l$).
 <ul>
 <li>That would consist of:
@@ -216,21 +217,8 @@ $$</p>
 </li>
 </ul>
 </blockquote>
-<h2 id="34-define-textitstep"><a class="header" href="#34-define-textitstep">[3/4] Define $\textit{Step}$</a></h2>
-<p>$\textit{Step}$ is a natural powerset-lifted version of $\hookrightarrow$
-$$
-\begin{align}
-\textit{Step} \ &amp;:\  {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S}) \\
-\textit{Step}(X) &amp;= \{ s' | s \hookrightarrow s', s \in X \}
-\end{align}
-$$</p>
-<h2 id="44-define-a-concrete-semantics"><a class="header" href="#44-define-a-concrete-semantics">[4/4] Define a concrete semantics.</a></h2>
-<ul>
-<li><strong>We restrict our analysis interest to computing the set of reachable states.</strong></li>
-<li>So, we define the concrete semantics as the set of all the reachable states of the program.</li>
-</ul>
-<details style="background-color: var(--quote-bg);">
-<summary>Example 4.2 (Reachable states)</summary>
+<blockquote>
+<p><strong>Example 4.1 (Concrete transition sequence)</strong></p>
 <p>Consider the program:</p>
 <div>
 <div style="float:left; width:50%">
@@ -252,15 +240,57 @@ while (x &lt;= 99)
 <li>Initial state : empty memory $\emptyset$</li>
 <li>Inputs are only 0, 99 and 100</li>
 </ul>
+<p>Transition sequence for the inputs are :
+$$
+\begin{align}
+&amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)\\
+&amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 99)\hookrightarrow  (1, x \mapsto 99)\hookrightarrow (\textcolor{green}{\textbf{Q. Fill the rest.}})\\
+&amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 0)\hookrightarrow (2, x \mapsto 0)\hookrightarrow (1, x \mapsto 1)\hookrightarrow \cdots\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)
+\end{align}
+$$</p>
+<details>
+<summary>Answer</summary>
+$$(0, \emptyset)\hookrightarrow (1, x \mapsto 99)\hookrightarrow (2, x \mapsto 99)\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)$$
+</details>
+</blockquote>
+<h2 id="34-define-textitstep"><a class="header" href="#34-define-textitstep">[3/4] Define $\textit{Step}$</a></h2>
+<p>$\textit{Step}$ is a natural powerset-lifted version of $\hookrightarrow$
+$$
+\begin{align}
+\textit{Step} \ &amp;:\  {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S}) \\
+\textit{Step}(X) &amp;= \{ s' | s \hookrightarrow s', s \in X \}
+\end{align}
+$$</p>
+<h2 id="44-define-a-concrete-semantics"><a class="header" href="#44-define-a-concrete-semantics">[4/4] Define a concrete semantics.</a></h2>
+<ul>
+<li><strong>We restrict our analysis interest to computing the set of reachable states.</strong></li>
+<li>So, we define the concrete semantics as the set of all the reachable states of the program.</li>
+</ul>
+<blockquote>
+<p><strong>Example 4.2 (Reachable states)</strong></p>
+<p>Consider the program:</p>
+<pre><code class="language-py"># 0: (label)
+input(x)
+# 1
+while (x &lt;= 99)
+    # 2
+    x += 1
+# 3
+</code></pre>
+<p>Assumptions:</p>
+<ul>
+<li>Initial state : empty memory $\emptyset$</li>
+<li>Inputs are only 0, 99 and 100</li>
+</ul>
 <p>Concrete semantics of the program is:
 $$
 \begin{align}
 &amp; \{(0, \emptyset), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
-\cup \quad&amp; \{(0, \emptyset), (1, x \mapsto 99), (2, x \mapsto 99), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
-\cup \quad&amp; \{(0, \emptyset), (1, x \mapsto 0), (2, x \mapsto 0), (1, x \mapsto 1), \cdots, (1, x \mapsto 100), (3, x \mapsto 100)\}
+\cup \ &amp; \{(0, \emptyset), (1, x \mapsto 99), (2, x \mapsto 99), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
+\cup \ &amp; \{(0, \emptyset), (1, x \mapsto 0), (2, x \mapsto 0), (1, x \mapsto 1), \cdots, (1, x \mapsto 100), (3, x \mapsto 100)\}
 \end{align}
 $$</p>
-</details>
+</blockquote>
 <h3 id="accumulate-all-reachable-states"><a class="header" href="#accumulate-all-reachable-states">Accumulate all reachable states</a></h3>
 <p>Reachable states of a program is:
 $$
@@ -382,9 +412,9 @@ $$
 (\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})) &amp;\quad \xrightarrow{\text{abstraction}} &amp; &amp;(\mathbb{L} \rightarrow \mathbb{M}^\sharp)
 \end{align}
 $$</p>
-<details style="background-color: var(--quote-bg);">
-<summary>Example (Figure 4.1)</summary>
-<p>$$
+<blockquote>
+<p><strong>Example (Figure 4.1)</strong>
+$$
 \begin{align*}
 {\Large\wp}(\mathbb{L} \times \mathbb{M})
 &amp;\ni \text{collection of all states}
@@ -414,7 +444,7 @@ $$</p>
 \end{cases}
 \end{align*}
 $$</p>
-</details>
+</blockquote>
 <p>We define abstract domain $\mathbb{S}^\sharp$:
 $$
 \begin{align}
@@ -433,8 +463,8 @@ $$</p>
 <h4 id="implicit-type-conversion"><a class="header" href="#implicit-type-conversion">Implicit type conversion</a></h4>
 <ul>
 <li>A map $A \rightarrow B$ is interchangeably an element in ${\Large\wp}(A\times B)$</li>
-<li>A relation $f \subseteq A \times B$ is interchangeably a function $f \in A \rightarrow {\Large\wp}(B)$ defined as:
-$$ f(a) = \{ b | (a, b) \in \text{relation} f \} $$</li>
+<li>A relation $f \subseteq A \times B$ is interchangeably a function $g \in A \rightarrow {\Large\wp}(B)$ defined as:
+$$ g(a) = \{ b | (a, b) \in f \} $$</li>
 </ul>
 <h4 id="new-notations"><a class="header" href="#new-notations">New notations</a></h4>
 <ul>
@@ -501,7 +531,7 @@ $$
 &amp;\hookrightarrow^\sharp \quad\subseteq\quad (\mathbb{L} \times \mathbb{M}^\sharp) \times (\mathbb{L} \times \mathbb{M}^\sharp)
 \end{align}
 $$</p>
-<h4 id="explanation-of-textitstepsharp--largewptextid-cupsharp_m-circ-pi-circ-brevelargewphookrightarrowsharp"><a class="header" href="#explanation-of-textitstepsharp--largewptextid-cupsharp_m-circ-pi-circ-brevelargewphookrightarrowsharp">Explanation of $\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$:</a></h4>
+<h4 id="explanation-of-textitstepsharp--largewptextid-cupsharp_m-circ-pi-circ-brevelargewphookrightarrowsharp-"><a class="header" href="#explanation-of-textitstepsharp--largewptextid-cupsharp_m-circ-pi-circ-brevelargewphookrightarrowsharp-">Explanation of $\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$ :</a></h4>
 <ul>
 <li>$\breve{\Large\wp}(\hookrightarrow^\sharp)$ : Compute next states</li>
 <li>$\pi$ : Partition the result by the labels.
@@ -533,7 +563,7 @@ Because the result of ${\Large\wp}((\text{id}, \cup^\sharp_M))$ has exactly one 
 <li>Check soundness</li>
 <li>Implement the analysis (pseudo code)</li>
 </ol>
-<h2 id="make-assumptions-for-soundness"><a class="header" href="#make-assumptions-for-soundness">Make assumptions for soundness</a></h2>
+<h2 id="14-make-assumptions-for-soundness"><a class="header" href="#14-make-assumptions-for-soundness">[1/4] Make assumptions for soundness</a></h2>
 <h3 id="mathbbssharp-is-cpo"><a class="header" href="#mathbbssharp-is-cpo">$\mathbb{S^\sharp}$ is CPO</a></h3>
 <p>We assume an abstract domain $\mathbb{S}^\sharp$ is CPO.</p>
 <blockquote>
@@ -557,7 +587,9 @@ Galois connection capture this concept.</p>
 <p>We design an abstract domain as a CPO that is Galois connection with the concrete domain.</p>
 <p>$$
 \begin{align}
-({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq) \overset{\gamma}{\underset{\alpha}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
+(\underset{{\Large\wp}(\mathbb{S})}{\underline{{\Large\wp}(\mathbb{L}\times\mathbb{M})}}, \subseteq)
+\overset{\gamma}{\underset{\alpha}{\leftrightarrows}}
+(\underset{\mathbb{S}^\sharp}{\underline{(\mathbb{L} \rightarrow \mathbb{M}^\sharp)}}, \sqsubseteq)
 \end{align}
 $$</p>
 <p>where:</p>
@@ -582,7 +614,7 @@ $$</p>
 <p>If $\mathbb{C}$ and $\mathbb{A}$ satisfies
 $$
 \begin{align}
-\forall c \in \mathbb{C}, \forall a \in \mathbb{A}, \alpha(c) \sqsubseteq a \iff c \subseteq \gamma(a)
+\forall (c, a) \in (\mathbb{C}, \mathbb{A}), \quad \alpha(c) \sqsubseteq a \iff c \subseteq \gamma(a)
 \end{align}
 $$</p>
 <p>then, tha pair of $\mathbb{C}$ and $\mathbb{A}$ is a Galois connection and we write :
@@ -601,19 +633,64 @@ $$
 \begin{align}
 ({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq)
 &amp;\overset{\gamma_0}{\underset{\alpha_0}{\leftrightarrows}} ((\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})), \sqsubseteq)
-&amp;&amp; \sqsubseteq \text{ is the label-wise } \subseteq\\
+&amp;&amp; (\sqsubseteq \text{ is the label-wise } \subseteq)\\
 &amp;\overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
-&amp;&amp; \sqsubseteq \text{ is the label-wise } \sqsubseteq_{M}
+&amp;&amp; (\sqsubseteq \text{ is the label-wise } \sqsubseteq_{M})
 \end{align}
 $$</p>
-<p>This second Galois connection pair boils down to :
+<h4 id="the-first-part"><a class="header" href="#the-first-part">The first part</a></h4>
+<p>$$
+({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq)
+\overset{\gamma_0}{\underset{\alpha_0}{\leftrightarrows}} ((\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})), \sqsubseteq)
+\quad (\sqsubseteq \text{ is the label-wise } \subseteq)\\
+$$</p>
+<ul>
+<li>
+<p>Collects the memories for each label :
+$$
+\alpha_0 \left\{
+\begin{array}{l}
+(0, m_0), (0, m'_0), \cdots,\\
+(1, m_1), (1, m'_1), \cdots,\\
+\vdots\\
+(n, m_n), (n, m'_n), \cdots,
+\end{array}
+\right\} = \left\{
+\begin{array}{l}
+(0, \{m_0, m'_0, \cdots\}),\\
+(1, \{m_1, m'_1, \cdots\}),\\
+\vdots\\
+(n, \{m_n, m'_n, \cdots\}),
+\end{array}
+\right\}
+$$</p>
+</li>
+<li>
+<p>$\alpha_0 \circ \gamma_0 \equiv \text{id}$</p>
+</li>
+<li>
+<p>This relation satisfies the conditions of Galois connection.</p>
+</li>
+</ul>
+<h4 id="the-second-part"><a class="header" href="#the-second-part">The second part</a></h4>
+<p>$$
+((\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})), \sqsubseteq)
+\overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
+\quad (\sqsubseteq \text{ is the label-wise } \sqsubseteq_{M})
+$$</p>
+<ul>
+<li>This second Galois connection pair boils down to :
 $$
 \begin{align}
-({\Large\wp}(\mathbb{M}), \subseteq) \overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} (\mathbb{M}^\sharp, \sqsubseteq_M)
+({\Large\wp}(\mathbb{M}), \subseteq) \overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} (\mathbb{M}^\sharp, \sqsubseteq_M) \label{eq:abst_m}
 \end{align}
-$$</p>
+$$</li>
+</ul>
+<blockquote>
+<p>So, we can define $\mathbb{S}^\sharp$ which Galois connection with the concrete domain by defining $\mathbb{M}^\sharp$ which satisfy $\eqref{eq:abst_m}$</p>
+</blockquote>
 <h3 id="assumption-for-hookrightarrowsharp-cupsharp-and-cup_msharp"><a class="header" href="#assumption-for-hookrightarrowsharp-cupsharp-and-cup_msharp">Assumption for $\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup_M^\sharp$</a></h3>
-<p>The abstract one-step transition relation $\hookrightarrow^\sharp$ must satisfy, as a function:
+<p>The abstract one-step transition relation $\hookrightarrow^\sharp$ must satisfy, as a function :
 $$
 \begin{align}
 \breve{\Large\wp}(\hookrightarrow) \circ \gamma \subseteq \gamma \circ \breve{\Large\wp}(\hookrightarrow^\sharp)
@@ -622,7 +699,7 @@ $$</p>
 <div style="text-align: center">
 <p><img src="slides/isa_4/./fig/sound_abs_trans.drawio.svg" alt="Figure 4.2" /></p>
 </div>
-<p>The abstract union $\cup^\sharp$ and $\cup_M^\sharp$ must satisfy:
+<p>The abstract union $\cup^\sharp$ and $\cup_M^\sharp$ must satisfy :
 $$
 \begin{align}
 \cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp \_
@@ -631,7 +708,7 @@ $$</p>
 <div style="text-align: center">
 <p><img src="slides/isa_4/./fig/sound_abs_union.drawio.svg" alt="Figure 4.2b" /></p>
 </div>
-<h2 id="define-sound-static-analysis-in-math-form"><a class="header" href="#define-sound-static-analysis-in-math-form">Define sound static analysis (in math form)</a></h2>
+<h2 id="24-define-sound-static-analysis-in-math-form"><a class="header" href="#24-define-sound-static-analysis-in-math-form">[2/4] Define sound static analysis (in math form)</a></h2>
 <h3 id="case-1"><a class="header" href="#case-1">Case 1.</a></h3>
 <p>If $\mathbb{S}^\sharp$ is of finite height (every chain is finite) and $F^\sharp$ is monotone or extensive,</p>
 <p>the analysis computes:
@@ -682,9 +759,10 @@ a'_{n+1} &amp;= a_n' \triangledown a_n
 \right.
 $$</p>
 </blockquote>
-<h2 id="check-soundness"><a class="header" href="#check-soundness">Check soundness</a></h2>
+<h2 id="34-check-soundness"><a class="header" href="#34-check-soundness">[3/4] Check soundness</a></h2>
 <h3 id="theorem-42-sound-static-analysis-by-fsharp"><a class="header" href="#theorem-42-sound-static-analysis-by-fsharp">Theorem 4.2 (Sound static analysis by $F^\sharp$)</a></h3>
-<p>Given a program, $F$, $F^\sharp$, if</p>
+<p>Given a program, $F$, $F^\sharp$ (defined as above),</p>
+<p>If</p>
 <ul>
 <li>$\mathbb{S}^\sharp$ is of finite height (every chain $\mathbb{S}^\sharp$ is finite) and</li>
 <li>$F^\sharp$ is monotone or extensive</li>
@@ -695,25 +773,25 @@ $$
 \bigsqcup_{i \geq 0} F^{\sharp^i} (\bot)
 \end{align}
 $$</p>
-<p>is finitely computable and over-approximates $\textbf{lfp} F$:
+<p>is finitely computable and over-approximates $\textbf{lfp} F$ (= concrete semantics)
 $$
 \begin{align}
-\textbf{lfp} F \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i} (\bot))
+\textbf{lfp} F \subseteq \gamma\left(\bigsqcup_{i \geq 0} F^{\sharp^i} (\bot)\right)
 \end{align}
 $$</p>
 <!-- \left( \iff \alpha (\textbf{lfp}F) \sqsubseteq \bigsqcup_{i \geq 0} F^{\sharp^i} (\bot) \right) -->
 <details style="background-color: var(--quote-bg);">
 <summary>Proof</summary>
-<p>Overview:
-$$
+<h4 id="overview"><a class="header" href="#overview">Overview</a></h4>
+<p>$$
 \begin{align}
 \text{The condition}
 &amp;\implies F \circ \gamma \subseteq \gamma \circ F^\sharp \label{eq:b1}\\
 &amp;\implies \forall n \geq 0 : F^n(\bot) \subseteq \gamma(F^{\sharp^n}(\bot)) \label{eq:b2}\\
-&amp;\implies \textbf{lfp}F \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i}(\bot)) \label{eq:b3}
+&amp;\implies \textbf{lfp}F \subseteq \gamma\left(\bigsqcup_{i \geq 0} F^{\sharp^i}(\bot)\right) \label{eq:b3}
 \end{align}
 $$</p>
-<h4 id="proofeqrefeqb1"><a class="header" href="#proofeqrefeqb1">Proof$\eqref{eq:b1}$</a></h4>
+<h4 id="proof-eqrefeqb1"><a class="header" href="#proof-eqrefeqb1">Proof $\eqref{eq:b1}$</a></h4>
 <p>$$F \circ \gamma \subseteq \gamma \circ F^\sharp$$</p>
 <p>From the condition:
 $$
@@ -735,7 +813,7 @@ $$
 &amp;= (F\circ\gamma)(X)
 \end{align}
 $$</p>
-<h4 id="proofeqrefeqb1-1"><a class="header" href="#proofeqrefeqb1-1">Proof$\eqref{eq:b1}$</a></h4>
+<h4 id="proof-eqrefeqb2"><a class="header" href="#proof-eqrefeqb2">Proof $\eqref{eq:b2}$</a></h4>
 <p>$$\forall n \geq 0 : F^n(\bot) \subseteq \gamma(F^{\sharp^n}(\bot))$$</p>
 <p>Use induction on $n$.</p>
 <h5 id="step-1-n--0"><a class="header" href="#step-1-n--0">step 1: $n = 0$</a></h5>
@@ -749,7 +827,7 @@ F(F^k(\bot))
 &amp;\subseteq \gamma(F^\sharp(F^{\sharp^k}(\bot))) &amp;&amp; \text{by } F \circ \gamma \subseteq \gamma \circ F^\sharp
 \end{align}
 $$</p>
-<h4 id="proofeqrefeqb3"><a class="header" href="#proofeqrefeqb3">Proof$\eqref{eq:b3}$</a></h4>
+<h4 id="proof-eqrefeqb3"><a class="header" href="#proof-eqrefeqb3">Proof $\eqref{eq:b3}$</a></h4>
 <p>$$\textbf{lfp}F = \bigsqcup_{i \geq 0} F^i \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i}(\bot))$$</p>
 <h5 id="existence-of-quad-textbflfpf-quad-bigsqcup_i-geq-0-gammafsharpibot"><a class="header" href="#existence-of-quad-textbflfpf-quad-bigsqcup_i-geq-0-gammafsharpibot">Existence of $\quad \textbf{lfp}F, \quad \bigsqcup_{i \geq 0} \gamma(F^{\sharp^i}(\bot))$</a></h5>
 <p>$\bigsqcup_{i \geq 0} F^i$ is exist because:</p>
@@ -769,10 +847,10 @@ $$</p>
 &amp;\subseteq \gamma(\bigsqcup_{i\geq 0} F^{\sharp^i}(\bot)) &amp;&amp; \text{by the monotonicity of } \gamma
 \end{align}
 $$</p>
-<p>(monotonicity $\implies$ continuous)</p>
+<p>(monotonic $\implies$ continuous)</p>
 </details>
-<h3 id="theorem-43-sound-static-analysis-by-fsharp-and-widening-operator-triangledown"><a class="header" href="#theorem-43-sound-static-analysis-by-fsharp-and-widening-operator-triangledown">Theorem 4.3 (Sound static analysis by $F^\sharp$ and widening operator $\triangledown$)</a></h3>
-<p>Given a program, $F$, $F^\sharp$, $\triangledown$ (defined in <strong>definition 3.11</strong>):</p>
+<h3 id="theorem-43-sound-static-analysis-by-fsharp-and-triangledown"><a class="header" href="#theorem-43-sound-static-analysis-by-fsharp-and-triangledown">Theorem 4.3 (Sound static analysis by $F^\sharp$ and $\triangledown$)</a></h3>
+<p>Given a program, $F$, $F^\sharp$  (defined as above), $\triangledown$ (defined in definition 3.11):</p>
 <p>Then the following chain $Y_0 \sqsubseteq Y_1 \sqsubseteq \cdots$
 $$
 \begin{align}
@@ -788,8 +866,13 @@ $$
 $$</p>
 <details style="background-color: var(--quote-bg);">
 <summary>Proof</summary>
-<h4 id="step1"><a class="header" href="#step1">Step1</a></h4>
-<p>Goal :  $\{ Y_i \}$ is a chain</p>
+<h4 id="overview-1"><a class="header" href="#overview-1">Overview</a></h4>
+<ol>
+<li>Prove a sequence $\{ Y_i \}$ is a chain.</li>
+<li>Prove $\forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n)$</li>
+<li>Prove $\textbf{lfp} F = \bigcup_{i=0}^{\infty} F^i (\bot) \subseteq \gamma(Y_{\text{lim}})$</li>
+</ol>
+<h4 id="step1---y_i--is-a-chain"><a class="header" href="#step1---y_i--is-a-chain">Step1 : $\{ Y_i \}$ is a chain</a></h4>
 <p>From the definition of $\triangledown$ (Def. 3.11)
 $$
 \begin{align}
@@ -811,18 +894,12 @@ $$
 \forall k,\quad Y_k \sqsubseteq Y_{k+1} = Y_k \triangledown F^\sharp(Y_k)
 \end{align}
 $$</p>
-<h4 id="step2"><a class="header" href="#step2">Step2.</a></h4>
-<p>Goal : Prove,</p>
-<p>$$
-\begin{align}
-\forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n) \label{eq:t4.3step2}
-\end{align}
-$$</p>
-<p>Use induction on $k$.</p>
-<h5 id="k0"><a class="header" href="#k0">[$k=0$]</a></h5>
-<p>Obvious.</p>
-<h5 id="assume--k-and-prove--k1"><a class="header" href="#assume--k-and-prove--k1">[assume @ $k$ and prove @ $k+1$]</a></h5>
-<p>$$
+<h4 id="step2--forall-n-geq-0quad-bigcup_i0n-fi-bot-subseteq-gammay_n"><a class="header" href="#step2--forall-n-geq-0quad-bigcup_i0n-fi-bot-subseteq-gammay_n">Step2 : $\forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n)$</a></h4>
+<p>Use induction on $n$.</p>
+<ul>
+<li>The case $n=0$ is obvious.</li>
+<li>Assume about $n=k$ and think about $k+1$
+$$
 \begin{align}
 \bigcup_{i=0}^{k+1} F^i(\bot)
 &amp;= \bigcup_{i=0}^k F^i(\bot) \cup F^{k+1}(\bot)\\
@@ -834,11 +911,12 @@ $$</p>
 &amp;\subseteq \gamma(Y_k \triangledown F^\sharp(Y_k)) &amp;&amp; \text{by the condition of } \triangledown\\
 &amp;= \gamma(Y_{k+1})
 \end{align}
-$$</p>
-<h4 id="step3"><a class="header" href="#step3">Step3.</a></h4>
+$$</li>
+</ul>
+<h4 id="step3--textbflfp-f--bigcup_i0infty-fi-bot-subseteq-gammay_textlim"><a class="header" href="#step3--textbflfp-f--bigcup_i0infty-fi-bot-subseteq-gammay_textlim">Step3 : $\textbf{lfp} F = \bigcup_{i=0}^{\infty} F^i (\bot) \subseteq \gamma(Y_{\text{lim}})$</a></h4>
 <p>From the definition of $\triangledown$ (Def. 3.11), $\{ Y_i \}$ is ultimately stationary.</p>
 <p>Let the last element be $Y_{\text{lim}}$.</p>
-<p>By step1 and step2,
+<p>By Step1 and Step2,
 $$
 \begin{align}
 \forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n) \subseteq \gamma(Y_{\text{lim}})
@@ -891,7 +969,7 @@ repeat
     R ← C
     C ← C ▽ F#(C.filter_by(WorkList))
     WorkList ← {l | C(l) ⊐ R(l), l ∈ L}
-until WorkList = ∅
+until WorkList.is_empty()
 return R
 </code></pre>
 <blockquote>
@@ -901,9 +979,70 @@ R ← ⊥
 repeat
     C ← C ▽ F#(C\R)
     R ← C
-until C\R = ∅
+until (C\R).is_empty()
 return R
 </code></pre>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="summary-1"><a class="header" href="#summary-1">Summary</a></h1>
+<h2 id="about-concrete-semantics"><a class="header" href="#about-concrete-semantics">About concrete semantics</a></h2>
+<p>Given a program and a target semantic property,</p>
+<p>Define</p>
+<ul>
+<li>Memory state : $\mathbb{M}$</li>
+<li>Transition relation : $\hookrightarrow \ (\subseteq \mathbb{S} \times \mathbb{S})$</li>
+</ul>
+<p>Then, followings can be derived automatically :</p>
+<ul>
+<li>Labels : $\mathbb{L}$</li>
+<li>Concrete domain : ${\Large\wp}(\mathbb{S}) = {\Large\wp}(\mathbb{L} \times \mathbb{M})$</li>
+<li>Concrete semantic function $F(X) = I \cup \textit{Step}(X)$</li>
+<li>Concrete semantics : $\textbf{lfp}(F)$</li>
+<li>$\textit{Step} = \breve{\Large\wp}(\hookrightarrow)$</li>
+</ul>
+<h2 id="about-abstract-semantics"><a class="header" href="#about-abstract-semantics">About abstract semantics</a></h2>
+<p>Given a program and a target semantic property, after define about concrete semantics,</p>
+<p>Define</p>
+<ul>
+<li>Abstract memory state : $\mathbb{M}^\sharp$</li>
+<li>Abstract transition relation : $\hookrightarrow^\sharp \ \subseteq (\mathbb{L}\times\mathbb{M}^\sharp)\times(\mathbb{L}\times\mathbb{M}^\sharp)$</li>
+<li>Abstract union over $\mathbb{S}^\sharp$ : $\cup^\sharp$</li>
+<li>Abstract union over $\mathbb{M}^\sharp$ : $\cup^\sharp_M$</li>
+</ul>
+<p>Then, followings can be derived automatically :</p>
+<ul>
+<li>Abstract domain : $\mathbb{S}^\sharp = \mathbb{L} \rightarrow \mathbb{M}^\sharp$</li>
+<li>Abstract semantic function : $F^\sharp(X^\sharp) = \alpha(I) \cup^\sharp \textit{Step}^\sharp(X^\sharp)$</li>
+<li>$\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$</li>
+</ul>
+<p>If the following conditions are satisfied :</p>
+<ul>
+<li>$\mathbb{S}^\sharp$ and $\mathbb{M}^\sharp$ are CPO</li>
+<li>$\mathbb{M}^\sharp$ satisfy:
+$$({\Large\wp}(\mathbb{M}), \subseteq) \quad \overset{\gamma_M}{\underset{\alpha_M}{\leftrightarrows}} \quad (\mathbb{M}^\sharp, \sqsubseteq_M)$$</li>
+<li>$\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup^\sharp_M$ satisfy :
+$$
+\begin{align*}
+\breve{\Large\wp}(\hookrightarrow) \circ \gamma \subseteq \gamma \circ \breve{\Large\wp}(\hookrightarrow^\sharp)\\
+\cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp \_ \\
+\cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp_M \_
+\end{align*}
+$$</li>
+</ul>
+<p>Then, the sound static analysis are defined :</p>
+<ul>
+<li>
+<p>If $\mathbb{S}^\sharp$ is of finite height (every chain is finite) and $F^\sharp$ is monotone or extensive,
+$$\bigsqcup_{i\geq 0} F^{\sharp^i}(\bot)$$</p>
+</li>
+<li>
+<p>Otherwise,
+$$Y_{\infty} \quad (Y_0 = \bot, Y_{i+1} = Y_i \triangledown F^\sharp(Y_i))$$</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>[Note]</strong></p>
+<p>Many static analysis tools are parametric in the choice of the abstract domains and semantic operators.
+(Practical discussion is in section 6.2)</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="example-of-the-framework"><a class="header" href="#example-of-the-framework">Example of the framework</a></h1>
 <h2 id="syntax-of-a-target-language"><a class="header" href="#syntax-of-a-target-language">Syntax of a target language</a></h2>
@@ -923,18 +1062,36 @@ E ::&amp;= &amp;&amp; \text{expression}\\
 &amp;|\quad x &amp;&amp; \text{variable}\\
 &amp;|\quad E + E &amp;&amp; \text{addition}\\
 B ::&amp;= &amp;&amp; \text{Boolean expression}\\
-&amp;|\quad \textbf{true} | \textbf{false}\\
+&amp;|\quad \textbf{true} \ |\  \textbf{false}\\
 &amp;|\quad E &lt; E &amp;&amp; \text{comparison}\\
 &amp;|\quad E = E &amp;&amp; \text{equality}\\
 P ::&amp;= C &amp;&amp; \text{program}
 \end{align*}
 $$</p>
+<blockquote>
+<p>This syntax contains <code>goto</code> whose target label is not fixed statically.<br>
+So, this language can't be handled by compositional style.</p>
+</blockquote>
 <h2 id="program-labels"><a class="header" href="#program-labels">Program Labels</a></h2>
 <ul>
 <li>Each statements $C$ of the given program has a unique label.</li>
 <li>The label is a natural number.</li>
 <li>$\text{label}(C)$ means the label of statement $C$.</li>
 </ul>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
+<p>Think about the code :</p>
+<pre><code>C0;
+while (B) {
+    C1; C2
+}
+</code></pre>
+<div style="text-align:center">
+<p><img src="slides/isa_4/./fig/stmt_label.drawio.svg" alt="" /></p>
+</div>
+<blockquote>
+<p>The 6'th label is not a label for a statement.<br>
+However this label is necessary because it will be used as $l_{\text{end}}$</p>
+</blockquote>
 <h2 id="execution-order-control-flow"><a class="header" href="#execution-order-control-flow">Execution Order (control flow)</a></h2>
 <p>Given a statement $C$ and the label $l'$ (the next label to continue after executing $C$),</p>
 <p>For all $C'$ which is an element of $C$, the function $\llangle C, l' \rrangle$ computes:</p>
@@ -955,27 +1112,36 @@ $$</p>
 </ul>
 </li>
 </ul>
+<blockquote>
 <p>$$
 \begin{align*}
 \llangle C, l' \rrangle = \text{case } C \text{ of} &amp; \quad(\text{let } l \text{ be } \text{label}(C))\\
-\textbf{skip}                           \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
-C; C                                    \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
-x := E                                  \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
-\textbf{input}(x)                       \quad&amp;:\quad \{ \text{next}(l) = \text{label}(C_1) \} \cup \llangle C_1, \text{label}(C_2) \rrangle \cup \llangle C_2, l' \rrangle\\
-\textbf{if}(B)\{C\} \textbf{else} \{C\} \quad&amp;:\quad \{ \text{nextTrue}(l) = \text{label}(C_1), \text{nextFalse}(l) = \text{label}(C_2) \} \cup\\
-&amp;\quad\quad  \llangle C_1, l' \rrangle \cup \llangle C_2, l' \rrangle\\
-\textbf{while}(B) \{C\}                 \quad&amp;:\quad \{ \text{nextTrue}(l) = \text{label}(C), \text{nextFalse}(l) = l' \} \cup \llangle C, l \rrangle\\
-\textbf{goto} E                         \quad&amp;:\quad \{\}\quad (\text{to be determined at run-time by evaluating } E)\\
+\textbf{skip}                           \ &amp;:\  \{ \text{next}(l) = l' \}\\
+C; C                                    \ &amp;:\  \{ \text{next}(l) = l' \}\\
+x := E                                  \ &amp;:\  \{ \text{next}(l) = l' \}\\
+\textbf{input}(x)                       \ &amp;:\  \{ \text{next}(l) = \text{label}(C_1) \} \cup \llangle C_1, \text{label}(C_2) \rrangle \cup \llangle C_2, l' \rrangle\\
+\textbf{if}(B)\{C\} \textbf{else} \{C\} \ &amp;:\  \{ \text{nextTrue}(l) = \text{label}(C_1), \text{nextFalse}(l) = \text{label}(C_2) \} \cup\\
+&amp; \ \quad  \llangle C_1, l' \rrangle \cup \llangle C_2, l' \rrangle\\
+\textbf{while}(B) \{C\}                 \ &amp;:\  \{ \text{nextTrue}(l) = \text{label}(C), \text{nextFalse}(l) = l' \} \cup \llangle C, l \rrangle\\
+\textbf{goto} E                         \ &amp;:\  \{\}\quad (\text{to be determined at run-time by evaluating } E)\\
 \end{align*}
 $$</p>
+</blockquote>
 <p>Thus, given a program $p$ and the end label of the program $l_{\text{end}}$, $\llangle C, l_{\text{end}} \rrangle$ collects whole $\text{next, nextTrue, nextFalse}$</p>
+<div style="text-align:center">
+<p><img src="slides/isa_4/./fig/next.drawio.svg" alt="" /></p>
+</div>
+<details>
+<summary>Q. What is nextTrue(2) and nextFalse(2)?</summary>
+A. nextTrue(2) = 3, nextFalse(2) = 6
+</details>
 <h2 id="concrete-state-transition-semantics"><a class="header" href="#concrete-state-transition-semantics">Concrete state transition semantics</a></h2>
 <p>Given a program $p$ and</p>
 <ul>
-<li>$\mathbb{X}$ is the finite set of its variables.</li>
-<li>each statement of the program is uniquely labeled.</li>
-<li>$\text{next, nextTrue, nextFalse}$ is computed by $\llangle C, l_{\text{end}} \rrangle$.</li>
-<li>$I$ is the set of input states.</li>
+<li>$\mathbb{X}$ : the finite set of its variables.</li>
+<li>$\mathbb{L}$ : the finite set of statement's unique label.</li>
+<li>$I$ : the set of input states.</li>
+<li>$\text{next, nextTrue, nextFalse}$ : computed by $\llangle C, l_{\text{end}} \rrangle$.</li>
 </ul>
 <p>Then the concrete semantics of the program is:
 $$
@@ -986,33 +1152,35 @@ $$</p>
 <p>where:
 $$
 \begin{align}
-\mathbb{S} &amp;= \mathbb{L} \times \mathbb{M}\\
-\text{values} \quad \mathbb{V} &amp;= \mathbb{Z} \cup \mathbb{L}\\
-\text{memories} \quad \mathbb{M} &amp;= \mathbb{X} \rightarrow \mathbb{V}
-\end{align}
-$$</p>
-<p>and</p>
-<p>$$
-\begin{align}
 &amp;F : {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S})\\
 &amp;F(X) = I \cup \textit{Step}(X)\\
 &amp;\text{Step}(X) = \breve{\Large\wp}(\hookrightarrow)
 \end{align}
 $$</p>
+<p>and
+$$
+\begin{align}
+\mathbb{S} &amp;= \mathbb{L} \times \mathbb{M}\\
+\text{memories} \quad \mathbb{M} &amp;= \mathbb{X} \rightarrow \mathbb{V}\\
+\text{values} \quad \mathbb{V} &amp;= \mathbb{Z} \cup \mathbb{L}
+\end{align}
+$$</p>
 <p>$\hookrightarrow$ is defined as:</p>
+<blockquote>
 <p>$$
 \begin{align*}
-\textbf{skip}                             \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), m)\\
-\textbf{input}(x)                         \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, z)) &amp;&amp; \text{for an input integer} z\\
-x := E                                    \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, \textit{eval}_E(m)))\\
-C_1; C_2                                  \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), m)\\
-\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \quad&amp;:\quad (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
-\quad&amp;:\quad (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
-\textbf{while}(B) \{C\}                   \quad&amp;:\quad (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
-\quad&amp;:\quad (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
-\textbf{goto} E                           \quad&amp;:\quad (l, m) \hookrightarrow (\textit{eval}_E(m), m)\\
+\textbf{skip}                             \ &amp;:\ (l, m) \hookrightarrow (\text{next}(l), m)\\
+\textbf{input}(x)                         \ &amp;:\ (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, z)) \quad (\text{for an input integer } z)\\
+x := E                                    \ &amp;:\ (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, \textit{eval}_E(m)))\\
+C_1; C_2                                  \ &amp;:\ (l, m) \hookrightarrow (\text{next}(l), m)\\
+\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \ &amp;:\ (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
+\ &amp;:\ (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
+\textbf{while}(B) \{C\}                   \ &amp;:\ (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
+\ &amp;:\ (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
+\textbf{goto} E                           \ &amp;:\ (l, m) \hookrightarrow (\textit{eval}_E(m), m)\\
 \end{align*}
 $$</p>
+</blockquote>
 <p>where</p>
 <ul>
 <li>$\textit{update}_x(m, x)$
@@ -1098,21 +1266,23 @@ $$</p>
 </ol>
 </blockquote>
 <h2 id="abstract-state-transition-semantics"><a class="header" href="#abstract-state-transition-semantics">Abstract state transition semantics</a></h2>
-<p>We define the abstract state transition relation $(l, M^\sharp) \hookrightarrow^\sharp (l', {M^\sharp}')$ :
+<p>We define the abstract state transition relation $(l, M^\sharp) \hookrightarrow^\sharp (l', {M^\sharp}')$ :</p>
+<blockquote>
+<p>Case: The $l$-labeled statement of
 $$
 \begin{align*}
-\text{Case: The } l \text{-labeled statement of}\\
-\textbf{skip}                             \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
-\textbf{input}(x)                         \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, z)) &amp;&amp; \text{for an input integer} z\\
-x := E                                    \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, \textit{eval}_E^\sharp(M^\sharp)))\\
-C_1; C_2                                  \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
-\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
-\quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
-\textbf{while}(B) \{C\}                   \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
-\quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
-\textbf{goto} E                           \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\textit{eval}_E^\sharp(M^\sharp), M^\sharp)\\
+\textbf{skip}                             \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
+\textbf{input}(x)                         \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, z)) \quad \text{for an input integer } z\\
+x := E                                    \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, \textit{eval}_E^\sharp(M^\sharp)))\\
+C_1; C_2                                  \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
+\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
+\ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
+\textbf{while}(B) \{C\}                   \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
+\ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
+\textbf{goto} E                           \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\textit{eval}_E^\sharp(M^\sharp), M^\sharp)\\
 \end{align*}
 $$</p>
+</blockquote>
 <p>Let $F^\sharp$ be defined as the framework :
 $$
 \begin{align}
@@ -1137,7 +1307,8 @@ $$</p>
 <li>$\textit{filter}_{\neg B}^\sharp$</li>
 </ul>
 <p>If all of them are sound abstraction, then $\hookrightarrow^\sharp$ is a sound abstraction.</p>
-<h3 id="theorem-44-soundness-of-hookrightarrowsharp"><a class="header" href="#theorem-44-soundness-of-hookrightarrowsharp">Theorem 4.4 (Soundness of $\hookrightarrow^\sharp$)</a></h3>
+<blockquote>
+<p><strong>Theorem 4.4 (Soundness of $\hookrightarrow^\sharp$)</strong></p>
 <p>If the following conditions are satisfied,
 $$
 \begin{align}
@@ -1152,7 +1323,9 @@ $$
 \begin{align}
 \breve{\Large\wp}(\hookrightarrow)\circ\gamma \sqsubseteq \gamma\circ\breve{\Large\wp}(\hookrightarrow^\sharp)
 \end{align}
-$$</p>
+$$
+(The $\times$ is the Cartesian product operator of two sets.)</p>
+</blockquote>
 <h2 id="defining-sound-cupsharp-cupsharp_m"><a class="header" href="#defining-sound-cupsharp-cupsharp_m">Defining sound $\cup^\sharp, \cup^\sharp_M$</a></h2>
 <h3 id="for-a-sound-cupsharp"><a class="header" href="#for-a-sound-cupsharp">For a sound $\cup^\sharp$</a></h3>
 <p>One candidate is the least-upper-bound operator $\sqcup$ if $\mathbb{S}$ is closed by $\sqcup$.</p>
@@ -1168,6 +1341,30 @@ $$</p>
 <h3 id="for-a-sound-cupsharp_m"><a class="header" href="#for-a-sound-cupsharp_m">For a sound $\cup^\sharp_M$</a></h3>
 <p>Same as above (replace $\sqcup$ to $\sqcup_M$, and $\cup^\sharp$ to $\cup^\sharp_M$).</p>
 <hr />
+<p>Now, we defined</p>
+<ul>
+<li>Memory state : $\mathbb{M}$</li>
+<li>Transition relation : $\hookrightarrow \ (\subseteq \mathbb{S} \times \mathbb{S})$</li>
+<li>Abstract memory state : $\mathbb{M}^\sharp$</li>
+<li>Abstract transition relation : $\hookrightarrow^\sharp \ \subseteq (\mathbb{L}\times\mathbb{M}^\sharp)\times(\mathbb{L}\times\mathbb{M}^\sharp)$</li>
+<li>Abstract union over $\mathbb{S}^\sharp$ : $\cup^\sharp$</li>
+<li>Abstract union over $\mathbb{M}^\sharp$ : $\cup^\sharp_M$</li>
+</ul>
+<p>And checked</p>
+<ul>
+<li>$\mathbb{S}^\sharp$ and $\mathbb{M}^\sharp$ are CPO</li>
+<li>$\mathbb{M}^\sharp$ satisfy:
+$$({\Large\wp}(\mathbb{M}), \subseteq) \quad \overset{\gamma_M}{\underset{\alpha_M}{\leftrightarrows}} \quad (\mathbb{M}^\sharp, \sqsubseteq_M)$$</li>
+<li>$\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup^\sharp_M$ satisfy :
+$$
+\begin{align*}
+\breve{\Large\wp}(\hookrightarrow) \circ \gamma \subseteq \gamma \circ \breve{\Large\wp}(\hookrightarrow^\sharp)\\
+\cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp \_ \\
+\cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp_M \_
+\end{align*}
+$$</li>
+</ul>
+<p>Thus, we can make a sound static analyzer.</p>
 
                     </main>
 

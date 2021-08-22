@@ -93,7 +93,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/concrete.html" class="active">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/concrete.html" class="active">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/summary.html">Summary</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -163,7 +163,7 @@
 <h2 id="14-define-the-set-of-states-mathbbs"><a class="header" href="#14-define-the-set-of-states-mathbbs">[1/4] Define the set of states: $\mathbb{S}$</a></h2>
 <p>A state $s \in \mathbb{S}$ is a pair $(l, m)$.</p>
 <ul>
-<li>$l \in \mathbb{L}$ : program label which denotes the next operator.</li>
+<li>$l \in \mathbb{L}$ : program label which denotes the <strong>next</strong> operator.</li>
 <li>$m \in \mathbb{M}$ : machine state at $l$ (before exec $l$).
 <ul>
 <li>That would consist of:
@@ -195,21 +195,8 @@ $$</p>
 </li>
 </ul>
 </blockquote>
-<h2 id="34-define-textitstep"><a class="header" href="#34-define-textitstep">[3/4] Define $\textit{Step}$</a></h2>
-<p>$\textit{Step}$ is a natural powerset-lifted version of $\hookrightarrow$
-$$
-\begin{align}
-\textit{Step} \ &amp;:\  {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S}) \\
-\textit{Step}(X) &amp;= \{ s' | s \hookrightarrow s', s \in X \}
-\end{align}
-$$</p>
-<h2 id="44-define-a-concrete-semantics"><a class="header" href="#44-define-a-concrete-semantics">[4/4] Define a concrete semantics.</a></h2>
-<ul>
-<li><strong>We restrict our analysis interest to computing the set of reachable states.</strong></li>
-<li>So, we define the concrete semantics as the set of all the reachable states of the program.</li>
-</ul>
-<details style="background-color: var(--quote-bg);">
-<summary>Example 4.2 (Reachable states)</summary>
+<blockquote>
+<p><strong>Example 4.1 (Concrete transition sequence)</strong></p>
 <p>Consider the program:</p>
 <div>
 <div style="float:left; width:50%">
@@ -231,15 +218,57 @@ while (x &lt;= 99)
 <li>Initial state : empty memory $\emptyset$</li>
 <li>Inputs are only 0, 99 and 100</li>
 </ul>
+<p>Transition sequence for the inputs are :
+$$
+\begin{align}
+&amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)\\
+&amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 99)\hookrightarrow  (1, x \mapsto 99)\hookrightarrow (\textcolor{green}{\textbf{Q. Fill the rest.}})\\
+&amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 0)\hookrightarrow (2, x \mapsto 0)\hookrightarrow (1, x \mapsto 1)\hookrightarrow \cdots\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)
+\end{align}
+$$</p>
+<details>
+<summary>Answer</summary>
+$$(0, \emptyset)\hookrightarrow (1, x \mapsto 99)\hookrightarrow (2, x \mapsto 99)\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)$$
+</details>
+</blockquote>
+<h2 id="34-define-textitstep"><a class="header" href="#34-define-textitstep">[3/4] Define $\textit{Step}$</a></h2>
+<p>$\textit{Step}$ is a natural powerset-lifted version of $\hookrightarrow$
+$$
+\begin{align}
+\textit{Step} \ &amp;:\  {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S}) \\
+\textit{Step}(X) &amp;= \{ s' | s \hookrightarrow s', s \in X \}
+\end{align}
+$$</p>
+<h2 id="44-define-a-concrete-semantics"><a class="header" href="#44-define-a-concrete-semantics">[4/4] Define a concrete semantics.</a></h2>
+<ul>
+<li><strong>We restrict our analysis interest to computing the set of reachable states.</strong></li>
+<li>So, we define the concrete semantics as the set of all the reachable states of the program.</li>
+</ul>
+<blockquote>
+<p><strong>Example 4.2 (Reachable states)</strong></p>
+<p>Consider the program:</p>
+<pre><code class="language-py"># 0: (label)
+input(x)
+# 1
+while (x &lt;= 99)
+    # 2
+    x += 1
+# 3
+</code></pre>
+<p>Assumptions:</p>
+<ul>
+<li>Initial state : empty memory $\emptyset$</li>
+<li>Inputs are only 0, 99 and 100</li>
+</ul>
 <p>Concrete semantics of the program is:
 $$
 \begin{align}
 &amp; \{(0, \emptyset), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
-\cup \quad&amp; \{(0, \emptyset), (1, x \mapsto 99), (2, x \mapsto 99), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
-\cup \quad&amp; \{(0, \emptyset), (1, x \mapsto 0), (2, x \mapsto 0), (1, x \mapsto 1), \cdots, (1, x \mapsto 100), (3, x \mapsto 100)\}
+\cup \ &amp; \{(0, \emptyset), (1, x \mapsto 99), (2, x \mapsto 99), (1, x \mapsto 100), (3, x \mapsto 100)\}\\
+\cup \ &amp; \{(0, \emptyset), (1, x \mapsto 0), (2, x \mapsto 0), (1, x \mapsto 1), \cdots, (1, x \mapsto 100), (3, x \mapsto 100)\}
 \end{align}
 $$</p>
-</details>
+</blockquote>
 <h3 id="accumulate-all-reachable-states"><a class="header" href="#accumulate-all-reachable-states">Accumulate all reachable states</a></h3>
 <p>Reachable states of a program is:
 $$

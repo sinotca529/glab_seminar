@@ -93,7 +93,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/analysis.html" class="active">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/analysis.html" class="active">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/summary.html">Summary</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -160,7 +160,7 @@
 <li>Check soundness</li>
 <li>Implement the analysis (pseudo code)</li>
 </ol>
-<h2 id="make-assumptions-for-soundness"><a class="header" href="#make-assumptions-for-soundness">Make assumptions for soundness</a></h2>
+<h2 id="14-make-assumptions-for-soundness"><a class="header" href="#14-make-assumptions-for-soundness">[1/4] Make assumptions for soundness</a></h2>
 <h3 id="mathbbssharp-is-cpo"><a class="header" href="#mathbbssharp-is-cpo">$\mathbb{S^\sharp}$ is CPO</a></h3>
 <p>We assume an abstract domain $\mathbb{S}^\sharp$ is CPO.</p>
 <blockquote>
@@ -184,7 +184,9 @@ Galois connection capture this concept.</p>
 <p>We design an abstract domain as a CPO that is Galois connection with the concrete domain.</p>
 <p>$$
 \begin{align}
-({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq) \overset{\gamma}{\underset{\alpha}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
+(\underset{{\Large\wp}(\mathbb{S})}{\underline{{\Large\wp}(\mathbb{L}\times\mathbb{M})}}, \subseteq)
+\overset{\gamma}{\underset{\alpha}{\leftrightarrows}}
+(\underset{\mathbb{S}^\sharp}{\underline{(\mathbb{L} \rightarrow \mathbb{M}^\sharp)}}, \sqsubseteq)
 \end{align}
 $$</p>
 <p>where:</p>
@@ -209,7 +211,7 @@ $$</p>
 <p>If $\mathbb{C}$ and $\mathbb{A}$ satisfies
 $$
 \begin{align}
-\forall c \in \mathbb{C}, \forall a \in \mathbb{A}, \alpha(c) \sqsubseteq a \iff c \subseteq \gamma(a)
+\forall (c, a) \in (\mathbb{C}, \mathbb{A}), \quad \alpha(c) \sqsubseteq a \iff c \subseteq \gamma(a)
 \end{align}
 $$</p>
 <p>then, tha pair of $\mathbb{C}$ and $\mathbb{A}$ is a Galois connection and we write :
@@ -228,19 +230,64 @@ $$
 \begin{align}
 ({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq)
 &amp;\overset{\gamma_0}{\underset{\alpha_0}{\leftrightarrows}} ((\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})), \sqsubseteq)
-&amp;&amp; \sqsubseteq \text{ is the label-wise } \subseteq\\
+&amp;&amp; (\sqsubseteq \text{ is the label-wise } \subseteq)\\
 &amp;\overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
-&amp;&amp; \sqsubseteq \text{ is the label-wise } \sqsubseteq_{M}
+&amp;&amp; (\sqsubseteq \text{ is the label-wise } \sqsubseteq_{M})
 \end{align}
 $$</p>
-<p>This second Galois connection pair boils down to :
+<h4 id="the-first-part"><a class="header" href="#the-first-part">The first part</a></h4>
+<p>$$
+({\Large\wp}(\mathbb{L}\times\mathbb{M}), \subseteq)
+\overset{\gamma_0}{\underset{\alpha_0}{\leftrightarrows}} ((\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})), \sqsubseteq)
+\quad (\sqsubseteq \text{ is the label-wise } \subseteq)\\
+$$</p>
+<ul>
+<li>
+<p>Collects the memories for each label :
+$$
+\alpha_0 \left\{
+\begin{array}{l}
+(0, m_0), (0, m'_0), \cdots,\\
+(1, m_1), (1, m'_1), \cdots,\\
+\vdots\\
+(n, m_n), (n, m'_n), \cdots,
+\end{array}
+\right\} = \left\{
+\begin{array}{l}
+(0, \{m_0, m'_0, \cdots\}),\\
+(1, \{m_1, m'_1, \cdots\}),\\
+\vdots\\
+(n, \{m_n, m'_n, \cdots\}),
+\end{array}
+\right\}
+$$</p>
+</li>
+<li>
+<p>$\alpha_0 \circ \gamma_0 \equiv \text{id}$</p>
+</li>
+<li>
+<p>This relation satisfies the conditions of Galois connection.</p>
+</li>
+</ul>
+<h4 id="the-second-part"><a class="header" href="#the-second-part">The second part</a></h4>
+<p>$$
+((\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})), \sqsubseteq)
+\overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} ((\mathbb{L} \rightarrow \mathbb{M}^\sharp), \sqsubseteq)
+\quad (\sqsubseteq \text{ is the label-wise } \sqsubseteq_{M})
+$$</p>
+<ul>
+<li>This second Galois connection pair boils down to :
 $$
 \begin{align}
-({\Large\wp}(\mathbb{M}), \subseteq) \overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} (\mathbb{M}^\sharp, \sqsubseteq_M)
+({\Large\wp}(\mathbb{M}), \subseteq) \overset{\gamma_1}{\underset{\alpha_1}{\leftrightarrows}} (\mathbb{M}^\sharp, \sqsubseteq_M) \label{eq:abst_m}
 \end{align}
-$$</p>
+$$</li>
+</ul>
+<blockquote>
+<p>So, we can define $\mathbb{S}^\sharp$ which Galois connection with the concrete domain by defining $\mathbb{M}^\sharp$ which satisfy $\eqref{eq:abst_m}$</p>
+</blockquote>
 <h3 id="assumption-for-hookrightarrowsharp-cupsharp-and-cup_msharp"><a class="header" href="#assumption-for-hookrightarrowsharp-cupsharp-and-cup_msharp">Assumption for $\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup_M^\sharp$</a></h3>
-<p>The abstract one-step transition relation $\hookrightarrow^\sharp$ must satisfy, as a function:
+<p>The abstract one-step transition relation $\hookrightarrow^\sharp$ must satisfy, as a function :
 $$
 \begin{align}
 \breve{\Large\wp}(\hookrightarrow) \circ \gamma \subseteq \gamma \circ \breve{\Large\wp}(\hookrightarrow^\sharp)
@@ -249,7 +296,7 @@ $$</p>
 <div style="text-align: center">
 <p><img src="./fig/sound_abs_trans.drawio.svg" alt="Figure 4.2" /></p>
 </div>
-<p>The abstract union $\cup^\sharp$ and $\cup_M^\sharp$ must satisfy:
+<p>The abstract union $\cup^\sharp$ and $\cup_M^\sharp$ must satisfy :
 $$
 \begin{align}
 \cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp \_
@@ -258,7 +305,7 @@ $$</p>
 <div style="text-align: center">
 <p><img src="./fig/sound_abs_union.drawio.svg" alt="Figure 4.2b" /></p>
 </div>
-<h2 id="define-sound-static-analysis-in-math-form"><a class="header" href="#define-sound-static-analysis-in-math-form">Define sound static analysis (in math form)</a></h2>
+<h2 id="24-define-sound-static-analysis-in-math-form"><a class="header" href="#24-define-sound-static-analysis-in-math-form">[2/4] Define sound static analysis (in math form)</a></h2>
 <h3 id="case-1"><a class="header" href="#case-1">Case 1.</a></h3>
 <p>If $\mathbb{S}^\sharp$ is of finite height (every chain is finite) and $F^\sharp$ is monotone or extensive,</p>
 <p>the analysis computes:
@@ -309,9 +356,10 @@ a'_{n+1} &amp;= a_n' \triangledown a_n
 \right.
 $$</p>
 </blockquote>
-<h2 id="check-soundness"><a class="header" href="#check-soundness">Check soundness</a></h2>
+<h2 id="34-check-soundness"><a class="header" href="#34-check-soundness">[3/4] Check soundness</a></h2>
 <h3 id="theorem-42-sound-static-analysis-by-fsharp"><a class="header" href="#theorem-42-sound-static-analysis-by-fsharp">Theorem 4.2 (Sound static analysis by $F^\sharp$)</a></h3>
-<p>Given a program, $F$, $F^\sharp$, if</p>
+<p>Given a program, $F$, $F^\sharp$ (defined as above),</p>
+<p>If</p>
 <ul>
 <li>$\mathbb{S}^\sharp$ is of finite height (every chain $\mathbb{S}^\sharp$ is finite) and</li>
 <li>$F^\sharp$ is monotone or extensive</li>
@@ -322,25 +370,25 @@ $$
 \bigsqcup_{i \geq 0} F^{\sharp^i} (\bot)
 \end{align}
 $$</p>
-<p>is finitely computable and over-approximates $\textbf{lfp} F$:
+<p>is finitely computable and over-approximates $\textbf{lfp} F$ (= concrete semantics)
 $$
 \begin{align}
-\textbf{lfp} F \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i} (\bot))
+\textbf{lfp} F \subseteq \gamma\left(\bigsqcup_{i \geq 0} F^{\sharp^i} (\bot)\right)
 \end{align}
 $$</p>
 <!-- \left( \iff \alpha (\textbf{lfp}F) \sqsubseteq \bigsqcup_{i \geq 0} F^{\sharp^i} (\bot) \right) -->
 <details style="background-color: var(--quote-bg);">
 <summary>Proof</summary>
-<p>Overview:
-$$
+<h4 id="overview"><a class="header" href="#overview">Overview</a></h4>
+<p>$$
 \begin{align}
 \text{The condition}
 &amp;\implies F \circ \gamma \subseteq \gamma \circ F^\sharp \label{eq:b1}\\
 &amp;\implies \forall n \geq 0 : F^n(\bot) \subseteq \gamma(F^{\sharp^n}(\bot)) \label{eq:b2}\\
-&amp;\implies \textbf{lfp}F \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i}(\bot)) \label{eq:b3}
+&amp;\implies \textbf{lfp}F \subseteq \gamma\left(\bigsqcup_{i \geq 0} F^{\sharp^i}(\bot)\right) \label{eq:b3}
 \end{align}
 $$</p>
-<h4 id="proofeqrefeqb1"><a class="header" href="#proofeqrefeqb1">Proof$\eqref{eq:b1}$</a></h4>
+<h4 id="proof-eqrefeqb1"><a class="header" href="#proof-eqrefeqb1">Proof $\eqref{eq:b1}$</a></h4>
 <p>$$F \circ \gamma \subseteq \gamma \circ F^\sharp$$</p>
 <p>From the condition:
 $$
@@ -362,7 +410,7 @@ $$
 &amp;= (F\circ\gamma)(X)
 \end{align}
 $$</p>
-<h4 id="proofeqrefeqb1-1"><a class="header" href="#proofeqrefeqb1-1">Proof$\eqref{eq:b1}$</a></h4>
+<h4 id="proof-eqrefeqb2"><a class="header" href="#proof-eqrefeqb2">Proof $\eqref{eq:b2}$</a></h4>
 <p>$$\forall n \geq 0 : F^n(\bot) \subseteq \gamma(F^{\sharp^n}(\bot))$$</p>
 <p>Use induction on $n$.</p>
 <h5 id="step-1-n--0"><a class="header" href="#step-1-n--0">step 1: $n = 0$</a></h5>
@@ -376,7 +424,7 @@ F(F^k(\bot))
 &amp;\subseteq \gamma(F^\sharp(F^{\sharp^k}(\bot))) &amp;&amp; \text{by } F \circ \gamma \subseteq \gamma \circ F^\sharp
 \end{align}
 $$</p>
-<h4 id="proofeqrefeqb3"><a class="header" href="#proofeqrefeqb3">Proof$\eqref{eq:b3}$</a></h4>
+<h4 id="proof-eqrefeqb3"><a class="header" href="#proof-eqrefeqb3">Proof $\eqref{eq:b3}$</a></h4>
 <p>$$\textbf{lfp}F = \bigsqcup_{i \geq 0} F^i \subseteq \gamma(\bigsqcup_{i \geq 0} F^{\sharp^i}(\bot))$$</p>
 <h5 id="existence-of-quad-textbflfpf-quad-bigsqcup_i-geq-0-gammafsharpibot"><a class="header" href="#existence-of-quad-textbflfpf-quad-bigsqcup_i-geq-0-gammafsharpibot">Existence of $\quad \textbf{lfp}F, \quad \bigsqcup_{i \geq 0} \gamma(F^{\sharp^i}(\bot))$</a></h5>
 <p>$\bigsqcup_{i \geq 0} F^i$ is exist because:</p>
@@ -396,10 +444,10 @@ $$</p>
 &amp;\subseteq \gamma(\bigsqcup_{i\geq 0} F^{\sharp^i}(\bot)) &amp;&amp; \text{by the monotonicity of } \gamma
 \end{align}
 $$</p>
-<p>(monotonicity $\implies$ continuous)</p>
+<p>(monotonic $\implies$ continuous)</p>
 </details>
-<h3 id="theorem-43-sound-static-analysis-by-fsharp-and-widening-operator-triangledown"><a class="header" href="#theorem-43-sound-static-analysis-by-fsharp-and-widening-operator-triangledown">Theorem 4.3 (Sound static analysis by $F^\sharp$ and widening operator $\triangledown$)</a></h3>
-<p>Given a program, $F$, $F^\sharp$, $\triangledown$ (defined in <strong>definition 3.11</strong>):</p>
+<h3 id="theorem-43-sound-static-analysis-by-fsharp-and-triangledown"><a class="header" href="#theorem-43-sound-static-analysis-by-fsharp-and-triangledown">Theorem 4.3 (Sound static analysis by $F^\sharp$ and $\triangledown$)</a></h3>
+<p>Given a program, $F$, $F^\sharp$  (defined as above), $\triangledown$ (defined in definition 3.11):</p>
 <p>Then the following chain $Y_0 \sqsubseteq Y_1 \sqsubseteq \cdots$
 $$
 \begin{align}
@@ -415,8 +463,13 @@ $$
 $$</p>
 <details style="background-color: var(--quote-bg);">
 <summary>Proof</summary>
-<h4 id="step1"><a class="header" href="#step1">Step1</a></h4>
-<p>Goal :  $\{ Y_i \}$ is a chain</p>
+<h4 id="overview-1"><a class="header" href="#overview-1">Overview</a></h4>
+<ol>
+<li>Prove a sequence $\{ Y_i \}$ is a chain.</li>
+<li>Prove $\forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n)$</li>
+<li>Prove $\textbf{lfp} F = \bigcup_{i=0}^{\infty} F^i (\bot) \subseteq \gamma(Y_{\text{lim}})$</li>
+</ol>
+<h4 id="step1---y_i--is-a-chain"><a class="header" href="#step1---y_i--is-a-chain">Step1 : $\{ Y_i \}$ is a chain</a></h4>
 <p>From the definition of $\triangledown$ (Def. 3.11)
 $$
 \begin{align}
@@ -438,18 +491,12 @@ $$
 \forall k,\quad Y_k \sqsubseteq Y_{k+1} = Y_k \triangledown F^\sharp(Y_k)
 \end{align}
 $$</p>
-<h4 id="step2"><a class="header" href="#step2">Step2.</a></h4>
-<p>Goal : Prove,</p>
-<p>$$
-\begin{align}
-\forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n) \label{eq:t4.3step2}
-\end{align}
-$$</p>
-<p>Use induction on $k$.</p>
-<h5 id="k0"><a class="header" href="#k0">[$k=0$]</a></h5>
-<p>Obvious.</p>
-<h5 id="assume--k-and-prove--k1"><a class="header" href="#assume--k-and-prove--k1">[assume @ $k$ and prove @ $k+1$]</a></h5>
-<p>$$
+<h4 id="step2--forall-n-geq-0quad-bigcup_i0n-fi-bot-subseteq-gammay_n"><a class="header" href="#step2--forall-n-geq-0quad-bigcup_i0n-fi-bot-subseteq-gammay_n">Step2 : $\forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n)$</a></h4>
+<p>Use induction on $n$.</p>
+<ul>
+<li>The case $n=0$ is obvious.</li>
+<li>Assume about $n=k$ and think about $k+1$
+$$
 \begin{align}
 \bigcup_{i=0}^{k+1} F^i(\bot)
 &amp;= \bigcup_{i=0}^k F^i(\bot) \cup F^{k+1}(\bot)\\
@@ -461,11 +508,12 @@ $$</p>
 &amp;\subseteq \gamma(Y_k \triangledown F^\sharp(Y_k)) &amp;&amp; \text{by the condition of } \triangledown\\
 &amp;= \gamma(Y_{k+1})
 \end{align}
-$$</p>
-<h4 id="step3"><a class="header" href="#step3">Step3.</a></h4>
+$$</li>
+</ul>
+<h4 id="step3--textbflfp-f--bigcup_i0infty-fi-bot-subseteq-gammay_textlim"><a class="header" href="#step3--textbflfp-f--bigcup_i0infty-fi-bot-subseteq-gammay_textlim">Step3 : $\textbf{lfp} F = \bigcup_{i=0}^{\infty} F^i (\bot) \subseteq \gamma(Y_{\text{lim}})$</a></h4>
 <p>From the definition of $\triangledown$ (Def. 3.11), $\{ Y_i \}$ is ultimately stationary.</p>
 <p>Let the last element be $Y_{\text{lim}}$.</p>
-<p>By step1 and step2,
+<p>By Step1 and Step2,
 $$
 \begin{align}
 \forall n \geq 0,\quad \bigcup_{i=0}^n F^i (\bot) \subseteq \gamma(Y_n) \subseteq \gamma(Y_{\text{lim}})
@@ -518,7 +566,7 @@ repeat
     R ← C
     C ← C ▽ F#(C.filter_by(WorkList))
     WorkList ← {l | C(l) ⊐ R(l), l ∈ L}
-until WorkList = ∅
+until WorkList.is_empty()
 return R
 </code></pre>
 <blockquote>
@@ -528,7 +576,7 @@ R ← ⊥
 repeat
     C ← C ▽ F#(C\R)
     R ← C
-until C\R = ∅
+until (C\R).is_empty()
 return R
 </code></pre>
 </blockquote>
@@ -540,7 +588,7 @@ return R
                             <a rel="prev" href="../../slides/isa_4/abstract.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
-                            <a rel="next" href="../../slides/isa_4/ex_framework.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../../slides/isa_4/summary.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
@@ -552,7 +600,7 @@ return R
                     <a rel="prev" href="../../slides/isa_4/abstract.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
-                    <a rel="next" href="../../slides/isa_4/ex_framework.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../../slides/isa_4/summary.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

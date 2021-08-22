@@ -93,7 +93,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/abstract.html" class="active">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/abstract.html" class="active">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/summary.html">Summary</a></li><li class="chapter-item "><a href="../../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -191,9 +191,9 @@ $$
 (\mathbb{L} \rightarrow {\Large\wp}(\mathbb{M})) &amp;\quad \xrightarrow{\text{abstraction}} &amp; &amp;(\mathbb{L} \rightarrow \mathbb{M}^\sharp)
 \end{align}
 $$</p>
-<details style="background-color: var(--quote-bg);">
-<summary>Example (Figure 4.1)</summary>
-<p>$$
+<blockquote>
+<p><strong>Example (Figure 4.1)</strong>
+$$
 \begin{align*}
 {\Large\wp}(\mathbb{L} \times \mathbb{M})
 &amp;\ni \text{collection of all states}
@@ -223,7 +223,7 @@ $$</p>
 \end{cases}
 \end{align*}
 $$</p>
-</details>
+</blockquote>
 <p>We define abstract domain $\mathbb{S}^\sharp$:
 $$
 \begin{align}
@@ -242,8 +242,8 @@ $$</p>
 <h4 id="implicit-type-conversion"><a class="header" href="#implicit-type-conversion">Implicit type conversion</a></h4>
 <ul>
 <li>A map $A \rightarrow B$ is interchangeably an element in ${\Large\wp}(A\times B)$</li>
-<li>A relation $f \subseteq A \times B$ is interchangeably a function $f \in A \rightarrow {\Large\wp}(B)$ defined as:
-$$ f(a) = \{ b | (a, b) \in \text{relation} f \} $$</li>
+<li>A relation $f \subseteq A \times B$ is interchangeably a function $g \in A \rightarrow {\Large\wp}(B)$ defined as:
+$$ g(a) = \{ b | (a, b) \in f \} $$</li>
 </ul>
 <h4 id="new-notations"><a class="header" href="#new-notations">New notations</a></h4>
 <ul>
@@ -310,7 +310,7 @@ $$
 &amp;\hookrightarrow^\sharp \quad\subseteq\quad (\mathbb{L} \times \mathbb{M}^\sharp) \times (\mathbb{L} \times \mathbb{M}^\sharp)
 \end{align}
 $$</p>
-<h4 id="explanation-of-textitstepsharp--largewptextid-cupsharp_m-circ-pi-circ-brevelargewphookrightarrowsharp"><a class="header" href="#explanation-of-textitstepsharp--largewptextid-cupsharp_m-circ-pi-circ-brevelargewphookrightarrowsharp">Explanation of $\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$:</a></h4>
+<h4 id="explanation-of-textitstepsharp--largewptextid-cupsharp_m-circ-pi-circ-brevelargewphookrightarrowsharp-"><a class="header" href="#explanation-of-textitstepsharp--largewptextid-cupsharp_m-circ-pi-circ-brevelargewphookrightarrowsharp-">Explanation of $\textit{Step}^\sharp = {\Large\wp}((\text{id}, \cup^\sharp_M)) \circ \pi \circ \breve{\Large\wp}(\hookrightarrow^\sharp)$ :</a></h4>
 <ul>
 <li>$\breve{\Large\wp}(\hookrightarrow^\sharp)$ : Compute next states</li>
 <li>$\pi$ : Partition the result by the labels.

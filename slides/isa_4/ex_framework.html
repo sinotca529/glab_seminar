@@ -93,7 +93,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/ex_framework.html" class="active">Example of the framework</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../../index.html">Home</a></li><li class="chapter-item expanded "><a href="../../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="../../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../../slides/isa_4/summary.html">Summary</a></li><li class="chapter-item expanded "><a href="../../slides/isa_4/ex_framework.html" class="active">Example of the framework</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -170,18 +170,36 @@ E ::&amp;= &amp;&amp; \text{expression}\\
 &amp;|\quad x &amp;&amp; \text{variable}\\
 &amp;|\quad E + E &amp;&amp; \text{addition}\\
 B ::&amp;= &amp;&amp; \text{Boolean expression}\\
-&amp;|\quad \textbf{true} | \textbf{false}\\
+&amp;|\quad \textbf{true} \ |\  \textbf{false}\\
 &amp;|\quad E &lt; E &amp;&amp; \text{comparison}\\
 &amp;|\quad E = E &amp;&amp; \text{equality}\\
 P ::&amp;= C &amp;&amp; \text{program}
 \end{align*}
 $$</p>
+<blockquote>
+<p>This syntax contains <code>goto</code> whose target label is not fixed statically.<br>
+So, this language can't be handled by compositional style.</p>
+</blockquote>
 <h2 id="program-labels"><a class="header" href="#program-labels">Program Labels</a></h2>
 <ul>
 <li>Each statements $C$ of the given program has a unique label.</li>
 <li>The label is a natural number.</li>
 <li>$\text{label}(C)$ means the label of statement $C$.</li>
 </ul>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
+<p>Think about the code :</p>
+<pre><code>C0;
+while (B) {
+    C1; C2
+}
+</code></pre>
+<div style="text-align:center">
+<p><img src="./fig/stmt_label.drawio.svg" alt="" /></p>
+</div>
+<blockquote>
+<p>The 6'th label is not a label for a statement.<br>
+However this label is necessary because it will be used as $l_{\text{end}}$</p>
+</blockquote>
 <h2 id="execution-order-control-flow"><a class="header" href="#execution-order-control-flow">Execution Order (control flow)</a></h2>
 <p>Given a statement $C$ and the label $l'$ (the next label to continue after executing $C$),</p>
 <p>For all $C'$ which is an element of $C$, the function $\llangle C, l' \rrangle$ computes:</p>
@@ -202,27 +220,36 @@ $$</p>
 </ul>
 </li>
 </ul>
+<blockquote>
 <p>$$
 \begin{align*}
 \llangle C, l' \rrangle = \text{case } C \text{ of} &amp; \quad(\text{let } l \text{ be } \text{label}(C))\\
-\textbf{skip}                           \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
-C; C                                    \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
-x := E                                  \quad&amp;:\quad \{ \text{next}(l) = l' \}\\
-\textbf{input}(x)                       \quad&amp;:\quad \{ \text{next}(l) = \text{label}(C_1) \} \cup \llangle C_1, \text{label}(C_2) \rrangle \cup \llangle C_2, l' \rrangle\\
-\textbf{if}(B)\{C\} \textbf{else} \{C\} \quad&amp;:\quad \{ \text{nextTrue}(l) = \text{label}(C_1), \text{nextFalse}(l) = \text{label}(C_2) \} \cup\\
-&amp;\quad\quad  \llangle C_1, l' \rrangle \cup \llangle C_2, l' \rrangle\\
-\textbf{while}(B) \{C\}                 \quad&amp;:\quad \{ \text{nextTrue}(l) = \text{label}(C), \text{nextFalse}(l) = l' \} \cup \llangle C, l \rrangle\\
-\textbf{goto} E                         \quad&amp;:\quad \{\}\quad (\text{to be determined at run-time by evaluating } E)\\
+\textbf{skip}                           \ &amp;:\  \{ \text{next}(l) = l' \}\\
+C; C                                    \ &amp;:\  \{ \text{next}(l) = l' \}\\
+x := E                                  \ &amp;:\  \{ \text{next}(l) = l' \}\\
+\textbf{input}(x)                       \ &amp;:\  \{ \text{next}(l) = \text{label}(C_1) \} \cup \llangle C_1, \text{label}(C_2) \rrangle \cup \llangle C_2, l' \rrangle\\
+\textbf{if}(B)\{C\} \textbf{else} \{C\} \ &amp;:\  \{ \text{nextTrue}(l) = \text{label}(C_1), \text{nextFalse}(l) = \text{label}(C_2) \} \cup\\
+&amp; \ \quad  \llangle C_1, l' \rrangle \cup \llangle C_2, l' \rrangle\\
+\textbf{while}(B) \{C\}                 \ &amp;:\  \{ \text{nextTrue}(l) = \text{label}(C), \text{nextFalse}(l) = l' \} \cup \llangle C, l \rrangle\\
+\textbf{goto} E                         \ &amp;:\  \{\}\quad (\text{to be determined at run-time by evaluating } E)\\
 \end{align*}
 $$</p>
+</blockquote>
 <p>Thus, given a program $p$ and the end label of the program $l_{\text{end}}$, $\llangle C, l_{\text{end}} \rrangle$ collects whole $\text{next, nextTrue, nextFalse}$</p>
+<div style="text-align:center">
+<p><img src="./fig/next.drawio.svg" alt="" /></p>
+</div>
+<details>
+<summary>Q. What is nextTrue(2) and nextFalse(2)?</summary>
+A. nextTrue(2) = 3, nextFalse(2) = 6
+</details>
 <h2 id="concrete-state-transition-semantics"><a class="header" href="#concrete-state-transition-semantics">Concrete state transition semantics</a></h2>
 <p>Given a program $p$ and</p>
 <ul>
-<li>$\mathbb{X}$ is the finite set of its variables.</li>
-<li>each statement of the program is uniquely labeled.</li>
-<li>$\text{next, nextTrue, nextFalse}$ is computed by $\llangle C, l_{\text{end}} \rrangle$.</li>
-<li>$I$ is the set of input states.</li>
+<li>$\mathbb{X}$ : the finite set of its variables.</li>
+<li>$\mathbb{L}$ : the finite set of statement's unique label.</li>
+<li>$I$ : the set of input states.</li>
+<li>$\text{next, nextTrue, nextFalse}$ : computed by $\llangle C, l_{\text{end}} \rrangle$.</li>
 </ul>
 <p>Then the concrete semantics of the program is:
 $$
@@ -233,33 +260,35 @@ $$</p>
 <p>where:
 $$
 \begin{align}
-\mathbb{S} &amp;= \mathbb{L} \times \mathbb{M}\\
-\text{values} \quad \mathbb{V} &amp;= \mathbb{Z} \cup \mathbb{L}\\
-\text{memories} \quad \mathbb{M} &amp;= \mathbb{X} \rightarrow \mathbb{V}
-\end{align}
-$$</p>
-<p>and</p>
-<p>$$
-\begin{align}
 &amp;F : {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S})\\
 &amp;F(X) = I \cup \textit{Step}(X)\\
 &amp;\text{Step}(X) = \breve{\Large\wp}(\hookrightarrow)
 \end{align}
 $$</p>
+<p>and
+$$
+\begin{align}
+\mathbb{S} &amp;= \mathbb{L} \times \mathbb{M}\\
+\text{memories} \quad \mathbb{M} &amp;= \mathbb{X} \rightarrow \mathbb{V}\\
+\text{values} \quad \mathbb{V} &amp;= \mathbb{Z} \cup \mathbb{L}
+\end{align}
+$$</p>
 <p>$\hookrightarrow$ is defined as:</p>
+<blockquote>
 <p>$$
 \begin{align*}
-\textbf{skip}                             \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), m)\\
-\textbf{input}(x)                         \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, z)) &amp;&amp; \text{for an input integer} z\\
-x := E                                    \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, \textit{eval}_E(m)))\\
-C_1; C_2                                  \quad&amp;:\quad (l, m) \hookrightarrow (\text{next}(l), m)\\
-\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \quad&amp;:\quad (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
-\quad&amp;:\quad (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
-\textbf{while}(B) \{C\}                   \quad&amp;:\quad (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
-\quad&amp;:\quad (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
-\textbf{goto} E                           \quad&amp;:\quad (l, m) \hookrightarrow (\textit{eval}_E(m), m)\\
+\textbf{skip}                             \ &amp;:\ (l, m) \hookrightarrow (\text{next}(l), m)\\
+\textbf{input}(x)                         \ &amp;:\ (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, z)) \quad (\text{for an input integer } z)\\
+x := E                                    \ &amp;:\ (l, m) \hookrightarrow (\text{next}(l), \textit{update}_x(m, \textit{eval}_E(m)))\\
+C_1; C_2                                  \ &amp;:\ (l, m) \hookrightarrow (\text{next}(l), m)\\
+\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \ &amp;:\ (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
+\ &amp;:\ (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
+\textbf{while}(B) \{C\}                   \ &amp;:\ (l, m) \hookrightarrow (\text{nextTrue}(l), \textit{filter}_B(m))\\
+\ &amp;:\ (l, m) \hookrightarrow (\text{nextFalse}(l), \textit{filter}_{\neg B}(m))\\
+\textbf{goto} E                           \ &amp;:\ (l, m) \hookrightarrow (\textit{eval}_E(m), m)\\
 \end{align*}
 $$</p>
+</blockquote>
 <p>where</p>
 <ul>
 <li>$\textit{update}_x(m, x)$
@@ -345,21 +374,23 @@ $$</p>
 </ol>
 </blockquote>
 <h2 id="abstract-state-transition-semantics"><a class="header" href="#abstract-state-transition-semantics">Abstract state transition semantics</a></h2>
-<p>We define the abstract state transition relation $(l, M^\sharp) \hookrightarrow^\sharp (l', {M^\sharp}')$ :
+<p>We define the abstract state transition relation $(l, M^\sharp) \hookrightarrow^\sharp (l', {M^\sharp}')$ :</p>
+<blockquote>
+<p>Case: The $l$-labeled statement of
 $$
 \begin{align*}
-\text{Case: The } l \text{-labeled statement of}\\
-\textbf{skip}                             \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
-\textbf{input}(x)                         \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, z)) &amp;&amp; \text{for an input integer} z\\
-x := E                                    \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, \textit{eval}_E^\sharp(M^\sharp)))\\
-C_1; C_2                                  \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
-\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
-\quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
-\textbf{while}(B) \{C\}                   \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
-\quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
-\textbf{goto} E                           \quad&amp;:\quad (l, M^\sharp) \hookrightarrow^\sharp (\textit{eval}_E^\sharp(M^\sharp), M^\sharp)\\
+\textbf{skip}                             \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
+\textbf{input}(x)                         \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, z)) \quad \text{for an input integer } z\\
+x := E                                    \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, \textit{eval}_E^\sharp(M^\sharp)))\\
+C_1; C_2                                  \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
+\textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
+\ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
+\textbf{while}(B) \{C\}                   \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
+\ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{nextFalse}(l), \textit{filter}_{\neg B}^\sharp(M^\sharp))\\
+\textbf{goto} E                           \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\textit{eval}_E^\sharp(M^\sharp), M^\sharp)\\
 \end{align*}
 $$</p>
+</blockquote>
 <p>Let $F^\sharp$ be defined as the framework :
 $$
 \begin{align}
@@ -384,7 +415,8 @@ $$</p>
 <li>$\textit{filter}_{\neg B}^\sharp$</li>
 </ul>
 <p>If all of them are sound abstraction, then $\hookrightarrow^\sharp$ is a sound abstraction.</p>
-<h3 id="theorem-44-soundness-of-hookrightarrowsharp"><a class="header" href="#theorem-44-soundness-of-hookrightarrowsharp">Theorem 4.4 (Soundness of $\hookrightarrow^\sharp$)</a></h3>
+<blockquote>
+<p><strong>Theorem 4.4 (Soundness of $\hookrightarrow^\sharp$)</strong></p>
 <p>If the following conditions are satisfied,
 $$
 \begin{align}
@@ -399,7 +431,9 @@ $$
 \begin{align}
 \breve{\Large\wp}(\hookrightarrow)\circ\gamma \sqsubseteq \gamma\circ\breve{\Large\wp}(\hookrightarrow^\sharp)
 \end{align}
-$$</p>
+$$
+(The $\times$ is the Cartesian product operator of two sets.)</p>
+</blockquote>
 <h2 id="defining-sound-cupsharp-cupsharp_m"><a class="header" href="#defining-sound-cupsharp-cupsharp_m">Defining sound $\cup^\sharp, \cup^\sharp_M$</a></h2>
 <h3 id="for-a-sound-cupsharp"><a class="header" href="#for-a-sound-cupsharp">For a sound $\cup^\sharp$</a></h3>
 <p>One candidate is the least-upper-bound operator $\sqcup$ if $\mathbb{S}$ is closed by $\sqcup$.</p>
@@ -415,12 +449,36 @@ $$</p>
 <h3 id="for-a-sound-cupsharp_m"><a class="header" href="#for-a-sound-cupsharp_m">For a sound $\cup^\sharp_M$</a></h3>
 <p>Same as above (replace $\sqcup$ to $\sqcup_M$, and $\cup^\sharp$ to $\cup^\sharp_M$).</p>
 <hr />
+<p>Now, we defined</p>
+<ul>
+<li>Memory state : $\mathbb{M}$</li>
+<li>Transition relation : $\hookrightarrow \ (\subseteq \mathbb{S} \times \mathbb{S})$</li>
+<li>Abstract memory state : $\mathbb{M}^\sharp$</li>
+<li>Abstract transition relation : $\hookrightarrow^\sharp \ \subseteq (\mathbb{L}\times\mathbb{M}^\sharp)\times(\mathbb{L}\times\mathbb{M}^\sharp)$</li>
+<li>Abstract union over $\mathbb{S}^\sharp$ : $\cup^\sharp$</li>
+<li>Abstract union over $\mathbb{M}^\sharp$ : $\cup^\sharp_M$</li>
+</ul>
+<p>And checked</p>
+<ul>
+<li>$\mathbb{S}^\sharp$ and $\mathbb{M}^\sharp$ are CPO</li>
+<li>$\mathbb{M}^\sharp$ satisfy:
+$$({\Large\wp}(\mathbb{M}), \subseteq) \quad \overset{\gamma_M}{\underset{\alpha_M}{\leftrightarrows}} \quad (\mathbb{M}^\sharp, \sqsubseteq_M)$$</li>
+<li>$\hookrightarrow^\sharp$, $\cup^\sharp$ and $\cup^\sharp_M$ satisfy :
+$$
+\begin{align*}
+\breve{\Large\wp}(\hookrightarrow) \circ \gamma \subseteq \gamma \circ \breve{\Large\wp}(\hookrightarrow^\sharp)\\
+\cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp \_ \\
+\cup \circ (\gamma \_ , \gamma \_ ) \subseteq \gamma \_ \circ \cup^\sharp_M \_
+\end{align*}
+$$</li>
+</ul>
+<p>Thus, we can make a sound static analyzer.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../slides/isa_4/analysis.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../slides/isa_4/summary.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         <div style="clear: both"></div>
@@ -429,7 +487,7 @@ $$</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../slides/isa_4/analysis.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../slides/isa_4/summary.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
             </nav>
