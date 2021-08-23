@@ -283,7 +283,7 @@ $$</p>
 <p>We define the function $F$ :
 $$
 \begin{align}
-&amp;F: \mathscr{\mathbb{S}} \rightarrow \mathscr{\mathbb{S}}\\
+&amp;F: {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S})\\
 &amp;F(X) = I \cup \textit{Step}(X)
 \end{align}
 $$</p>
@@ -297,7 +297,7 @@ F^i(\emptyset) =
 \end{cases}
 \end{align}
 $$</p>
-<p>$F$ has a least fix point:
+<p>(When ${\Large\wp}(\mathbb{S})$ is finite height,) $F$ has a least fix point :
 $$
 \begin{align}
 \textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset)
@@ -305,18 +305,18 @@ $$
 $$</p>
 <p>Because</p>
 <ul>
-<li>$F$ is a monotonic function over $({\Large\wp}(\mathbb{S}), \subseteq)$ and $\mathbb{S}$ is finite height
+<li>$F$ is a monotonic function and ${\Large\wp}(\mathbb{S})$ is finite height.
 <ul>
-<li>→　$F$ is a continuous function over $({\Large\wp}(\mathbb{S}), \subseteq)$</li>
+<li>→　$F$ is a continuous function over $({\Large\wp}(\mathbb{S}), \subseteq)$.</li>
 </ul>
 </li>
-<li>$\mathbb{S}$ has a infimum $\emptyset$</li>
+<li>$\emptyset$ is the infimum of ${\Large\wp}(\mathbb{S})$.</li>
 </ul>
 <p>(We will skip the proof because we already saw it in ModelChecking)</p>
 <blockquote>
 <p><strong>Continuous</strong></p>
 <p>A function $f : A \rightarrow B$ is continuous when :</p>
-<p>For all chain $\{ a_i \}$ on $A$,
+<p>For all <a href="./analysis.html#14-make-assumptions-for-soundness">chain</a> $\{ a_i \}$ on $A$,
 $$
 \begin{align}
 \sqcup\{ f(a_i) \} = f(\sqcup \{a_i\})
