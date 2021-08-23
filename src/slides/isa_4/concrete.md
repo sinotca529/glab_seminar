@@ -123,7 +123,7 @@ $$
 We define the function $F$ :
 $$
 \begin{align}
-    &F: \mathscr{\mathbb{S}} \rightarrow \mathscr{\mathbb{S}}\\
+    &F: {\Large\wp}(\mathbb{S}) \rightarrow {\Large\wp}(\mathbb{S})\\
     &F(X) = I \cup \textit{Step}(X)
 \end{align}
 $$
@@ -139,7 +139,7 @@ $$
 \end{align}
 $$
 
-$F$ has a least fix point:
+(When ${\Large\wp}(\mathbb{S})$ is finite height,) $F$ has a least fix point :
 $$
 \begin{align}
     \textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset)
@@ -147,9 +147,9 @@ $$
 $$
 
 Because
-- $F$ is a monotonic function over $({\Large\wp}(\mathbb{S}), \subseteq)$ and $\mathbb{S}$ is finite height
-    - →　$F$ is a continuous function over $({\Large\wp}(\mathbb{S}), \subseteq)$
-- $\mathbb{S}$ has a infimum $\emptyset$
+- $F$ is a monotonic function and ${\Large\wp}(\mathbb{S})$ is finite height.
+    - →　$F$ is a continuous function over $({\Large\wp}(\mathbb{S}), \subseteq)$.
+- $\emptyset$ is the infimum of ${\Large\wp}(\mathbb{S})$.
 
 (We will skip the proof because we already saw it in ModelChecking)
 
@@ -157,7 +157,7 @@ Because
 >
 > A function $f : A \rightarrow B$ is continuous when :
 >
-> For all chain $\{ a_i \}$ on $A$,
+> For all [chain](./analysis.md#14-make-assumptions-for-soundness) $\{ a_i \}$ on $A$,
 > $$
 > \begin{align}
 >     \sqcup\{ f(a_i) \} = f(\sqcup \{a_i\})
