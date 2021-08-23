@@ -139,7 +139,7 @@ $$
 \end{align}
 $$
 
-(When ${\Large\wp}(\mathbb{S})$ is finite height,) $F$ has a least fix point :
+$F$ has a least fix point :
 $$
 \begin{align}
     \textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset)
@@ -147,11 +147,8 @@ $$
 $$
 
 Because
-- $F$ is a monotonic function and ${\Large\wp}(\mathbb{S})$ is finite height.
-    - →　$F$ is a continuous function over $({\Large\wp}(\mathbb{S}), \subseteq)$.
-- $\emptyset$ is the infimum of ${\Large\wp}(\mathbb{S})$.
-
-(We will skip the proof because we already saw it in ModelChecking)
+- ${\Large\wp}(\mathbb{S})$ is [CPO](./analysis.md#14-make-assumptions-for-soundness) with infimum $\emptyset$.
+- $F$ is continuous
 
 > **Continuous**
 >
@@ -163,7 +160,94 @@ Because
 >     \sqcup\{ f(a_i) \} = f(\sqcup \{a_i\})
 > \end{align}
 > $$
+> (if $f$ is continuous, then $f$ is monotone.)
 
+> **Theorem A.1 (Kleene's fixpoint theorem)**<br>
+> If $f : E \rightarrow E$ is continuous and E is a CPO with infimum $\bot$, $f$ has a least fixpoint :
+> $$
+> \begin{align}
+>     \textbf{lfp} f = \bigcup_{n = 0}^\infty f^n(\bot)
+> \end{align}
+> $$
+
+<details style="background-color: var(--quote-bg);">
+<summary>Proof</summary>
+As $\bot$ is the infimum of $E$ :
+$$
+\begin{align}
+    \bot \preceq f(\bot)
+\end{align}
+$$
+
+#### [Step1 : $\bigcup_{n = 0}^\infty f^n(\bot)$ is a fixpoint ]
+Since $f$ is continuous, it is also monotone. Thus,
+$$
+\begin{align}
+    f^n(\bot) \preceq f^{n+1}(\bot)
+\end{align}
+$$
+
+Therefore, a sequence $\{f^n(\bot)\ | n \in \mathbb{N}\}$ forms a chain.
+
+As $E$ is a CPO, it has a least upper bound.
+$$
+\begin{align}
+    X \ :=\  \sqcup \{f^n(\bot)\ | n \in \mathbb{N}\} \ \left(= \bigcup_{n = 0}^\infty f^n(\bot)\right)
+\end{align}
+$$
+
+Since $f$ is continuous and $\{f^n(\bot)\ | n \in \mathbb{N}\}$ forms a chain,
+$$
+\begin{align}
+    \underset{X}{\underline{\sqcup \{ f(f^n(\bot)) | n\in\mathbb{N}\}}} =
+    \underset{f(X)}{\underline{f(\sqcup \{f^n(\bot)\ | n \in \mathbb{N}\})}}
+\end{align}
+$$
+
+So, $X$ is a fixpoint of $f$
+
+#### [Step2 : $\bigcup_{n = 0}^\infty f^n(\bot)$ is a least fixpoint ]
+Assume $X'$ is a fixpoint of $f$.<br>
+
+Since $\bot$ is a infimum,
+$$
+\begin{align}
+    \bot \preceq X'
+\end{align}
+$$
+
+Since $f$ monotone,
+$$
+\begin{align}
+    f^n(\bot) \preceq f^n(X') \ (= X')
+\end{align}
+$$
+
+So,
+$$
+\begin{align}
+    \bigcup_{n = 0}^\infty f^n(\bot) \preceq X'
+\end{align}
+$$
+
+This indicates $X$ is a least fixpoint.
+</details>
+
+> #### Note
+> I think we **must** assume $\mathbb{S}$ is finite set (${\Large\wp}(\mathbb{S})$ is finite height).<br>
+> Because, if ${\Large\wp}(\mathbb{S})$ is infinite height, then we can't find $\textbf{lfp} f$.
+>
+> For example, consider $f$ :
+> $$
+> \begin{align}
+>     &f : (\mathbb{N}, \leq) \rightarrow (\mathbb{N}, \leq)\\
+>     &f(x) = x + 1
+> \end{align}
+> $$
+>
+> Since $\mathbb{N}$ is CPO and $f$ is continuous, from Theorem A.1, there is a $\textbf{lfp} f$.<br>
+> However, there is no $x$ which satisfies $x = f(x)$.<br>
+> (定理的には $\textbf{lfp}f= \bigcup_{i=0}^\infty f(0) = \infty$ になりそうだけれど...??)
 
 The $\textbf{lfp} F$ is equal to the reachable states $\eqref{eq:reachable}$ :
 $$
