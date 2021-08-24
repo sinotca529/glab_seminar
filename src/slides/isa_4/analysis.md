@@ -208,7 +208,7 @@ $\triangledown$ is a widening operator
 > \left\{
 > \begin{array}{ll}
 >         a'_0 &= a_0\\
->         a'_{n+1} &= a_n' \triangledown a_n
+>         a'_{n+1} &= a_n' \triangledown a_{n+1}
 > \end{array}
 > \right.
 > $$
