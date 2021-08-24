@@ -258,7 +258,7 @@ This indicates $X$ is a least fixpoint.
 >
 > Since $\mathbb{N}$ is CPO and $f$ is continuous, from Theorem A.1, there is a $\textbf{lfp} f$.<br>
 > However, there is no $x$ which satisfies $x = f(x)$.<br>
-> (定理的には $\textbf{lfp}f= \bigcup_{i=0}^\infty f(0) = \infty$ になりそうだけれど...??)
+> (定理的には $\textbf{lfp}f= \bigcup_{i=0}^\infty f(0) = \infty$ になりそうだけれど...?? infinite heightなときはWideningするので問題にならない？)
 
 ## Summary
 > **Def. 4.1 (Concrete semantics, the set of reachable states)**
