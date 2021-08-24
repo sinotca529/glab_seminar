@@ -149,6 +149,14 @@ $$
 Because
 - ${\Large\wp}(\mathbb{S})$ is [CPO](./analysis.md#14-make-assumptions-for-soundness) with infimum $\emptyset$.
 - $F$ is continuous
+- →　Theorem A.1
+
+The $\textbf{lfp} F$ is equal to the reachable states $\eqref{eq:reachable}$ :
+$$
+\begin{align}
+    \textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset) = \bigcup_{i=0}^\infty \textit{Step}^i(I)
+\end{align}
+$$
 
 > **Continuous**
 >
@@ -160,6 +168,9 @@ Because
 >     \sqcup\{ f(a_i) \} = f(\sqcup \{a_i\})
 > \end{align}
 > $$
+> - chain means : $a_0 \preceq a_1 \preceq a_2 \preceq \cdots$
+> - $\sqcup$ means least upper bound in this context.
+>
 > (if $f$ is continuous, then $f$ is monotone.)
 
 > **Theorem A.1 (Kleene's fixpoint theorem)**<br>
@@ -248,13 +259,6 @@ This indicates $X$ is a least fixpoint.
 > Since $\mathbb{N}$ is CPO and $f$ is continuous, from Theorem A.1, there is a $\textbf{lfp} f$.<br>
 > However, there is no $x$ which satisfies $x = f(x)$.<br>
 > (定理的には $\textbf{lfp}f= \bigcup_{i=0}^\infty f(0) = \infty$ になりそうだけれど...??)
-
-The $\textbf{lfp} F$ is equal to the reachable states $\eqref{eq:reachable}$ :
-$$
-\begin{align}
-    \textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset) = \bigcup_{i=0}^\infty \textit{Step}^i(I)
-\end{align}
-$$
 
 ## Summary
 > **Def. 4.1 (Concrete semantics, the set of reachable states)**
