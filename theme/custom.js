@@ -1,4 +1,6 @@
 (function registerEventListeners() {
+    loadAndSetContentMaxWidth();
+    loadAndSetFontSize();
     document
         .getElementById('expand-button')
         .addEventListener('click', function () {
@@ -7,7 +9,23 @@
         });
 })();
 
-// --content-max-wdith を変更する (750px と 1300px を交互に行き来)
+function loadAndSetContentMaxWidth() {
+    var width;
+    try { width = localStorage.getItem('mdbook-content-max-width'); } catch (e) { }
+    if (!(width === null || width === undefined)) {
+        document.documentElement.style.setProperty('--content-max-width', width);
+    }
+}
+
+function loadAndSetFontSize() {
+    var size;
+    try { size = localStorage.getItem('mdbook-font-size'); } catch (e) { }
+    if (!(size === null || size === undefined)) {
+        document.documentElement.style.setProperty('font-size', size);
+    }
+}
+
+// --content-max-width を変更する (750px と 1300px を交互に行き来)
 function changeContentMaxWidth() {
     const style = document.documentElement.style;
     // note : 初回は currentWidth が取得できない。
@@ -16,9 +34,10 @@ function changeContentMaxWidth() {
     const wideWidth = '1300px';
     var newWidth = (currentWidth == wideWidth) ? defaultWidth : wideWidth;
     document.documentElement.style.setProperty('--content-max-width', newWidth);
+    try { localStorage.setItem('mdbook-content-max-width', newWidth); } catch (e) { }
 }
 
-// --font-size を変更する (62.5% と 100% を交互に行き来)
+// font-size を変更する (62.5% と 100% を交互に行き来)
 function changeFontSize() {
     const style = document.documentElement.style;
     // note : 初回は currentSize が取得できない。
@@ -27,4 +46,5 @@ function changeFontSize() {
     const largeSize = '100%'
     var newSize = (currentSize == largeSize) ? defaultSize : largeSize;
     document.documentElement.style.setProperty('font-size', newSize);
+    try { localStorage.setItem('mdbook-font-size', newSize); } catch (e) { }
 }
