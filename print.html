@@ -329,7 +329,14 @@ $$</p>
 <ul>
 <li>${\Large\wp}(\mathbb{S})$ is <a href="slides/isa_4/./analysis.html#14-make-assumptions-for-soundness">CPO</a> with infimum $\emptyset$.</li>
 <li>$F$ is continuous</li>
+<li>→　Theorem A.1</li>
 </ul>
+<p>The $\textbf{lfp} F$ is equal to the reachable states $\eqref{eq:reachable}$ :
+$$
+\begin{align}
+\textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset) = \bigcup_{i=0}^\infty \textit{Step}^i(I)
+\end{align}
+$$</p>
 <blockquote>
 <p><strong>Continuous</strong></p>
 <p>A function $f : A \rightarrow B$ is continuous when :</p>
@@ -338,8 +345,12 @@ $$
 \begin{align}
 \sqcup\{ f(a_i) \} = f(\sqcup \{a_i\})
 \end{align}
-$$
-(if $f$ is continuous, then $f$ is monotone.)</p>
+$$</p>
+<ul>
+<li>chain means : $a_0 \preceq a_1 \preceq a_2 \preceq \cdots$</li>
+<li>$\sqcup$ means least upper bound in this context.</li>
+</ul>
+<p>(if $f$ is continuous, then $f$ is monotone.)</p>
 </blockquote>
 <blockquote>
 <p><strong>Theorem A.1 (Kleene's fixpoint theorem)</strong><br>
@@ -417,12 +428,6 @@ $$</p>
 However, there is no $x$ which satisfies $x = f(x)$.<br>
 (定理的には $\textbf{lfp}f= \bigcup_{i=0}^\infty f(0) = \infty$ になりそうだけれど...??)</p>
 </blockquote>
-<p>The $\textbf{lfp} F$ is equal to the reachable states $\eqref{eq:reachable}$ :
-$$
-\begin{align}
-\textbf{lfp} F = \bigcup_{i=0}^\infty F^i(\emptyset) = \bigcup_{i=0}^\infty \textit{Step}^i(I)
-\end{align}
-$$</p>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <blockquote>
 <p><strong>Def. 4.1 (Concrete semantics, the set of reachable states)</strong>
