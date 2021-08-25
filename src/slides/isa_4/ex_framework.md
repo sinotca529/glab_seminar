@@ -46,8 +46,8 @@ while (B) {
 
 </div>
 
-> The 6'th label is not a label for a statement.<br>
-> However this label is necessary because it will be used as $l_{\text{end}}$
+> The label ⑥ is not a label for a statement.<br>
+> However this label is necessary because it will be used as $l_{\text{end}}$ (see below)
 
 ## Execution Order (control flow)
 Given a statement $C$ and the label $l'$ (the next label to continue after executing $C$),
@@ -178,6 +178,13 @@ where
 - $\mathbb{Z}^\sharp$ : a CPO that is Galois connected with ${\Large\wp}(\mathbb{Z})$
 - $\mathbb{L}^\sharp = {\Large\wp}(\mathbb{L})$
 
+And, design abstract state as
+$$
+\begin{align}
+    \mathbb{S}^\sharp = \mathbb{L} \rightarrow \mathbb{M}^\sharp
+\end{align}
+$$
+
 > ### Note
 > All abstract domains ($\mathbb{Z}^\sharp, \mathbb{L}^\sharp, \mathbb{M}^\sharp, \mathbb{V}^\sharp, \mathbb{S}^\sharp$) are Galois connected CPOs.
 >
@@ -207,7 +214,7 @@ We define the abstract state transition relation $(l, M^\sharp) \hookrightarrow^
 > $$
 > \begin{align*}
 >     \textbf{skip}                             \ &:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
->     \textbf{input}(x)                         \ &:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, z)) \quad \text{for an input integer } z\\
+>     \textbf{input}(x)                         \ &:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, z)) \quad (\text{for an input integer } z)\\
 >     x := E                                    \ &:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, \textit{eval}_E^\sharp(M^\sharp)))\\
 >     C_1; C_2                                  \ &:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
 >     \textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \ &:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\

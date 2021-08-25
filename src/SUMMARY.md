@@ -1,7 +1,7 @@
 # Summary
 - [Home](./index.md)
 - [輪講](./slides/slides.md)
-    - [ISA Ch.4](./slides/isa_4/main.md)
+    - [ISA Ch.4 (2021/8/24)](./slides/isa_4/main.md)
         - [Concrete semantics](./slides/isa_4/concrete.md)
         - [Abstract semantics](./slides/isa_4/abstract.md)
         - [Define sound analysis](./slides/isa_4/analysis.md)

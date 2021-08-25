@@ -15,7 +15,7 @@ We assume an abstract domain $\mathbb{S}^\sharp$ is CPO.
 > A partial order $E$ is CPO when $E$ satisfies:
 > - $E$ has infimum (bottom, $\bot$) and,
 > - Any totally ordered subset of $E$ (called **chain**) has a least upper bound in $E$
->
+>     - $\omega$-chain ($\simeq$ infinite length chain) is included
 > <div style="text-align: center">
 >
 > ![](./fig/cpo.drawio.svg)
