@@ -94,7 +94,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="index.html">Home</a></li><li class="chapter-item "><a href="slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/main.html">ISA Ch.4</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="slides/isa_4/summary.html">Summary</a></li><li class="chapter-item "><a href="slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="index.html">Home</a></li><li class="chapter-item "><a href="slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/main.html">ISA Ch.4 (2021/8/24)</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="slides/isa_4/summary.html">Summary</a></li><li class="chapter-item "><a href="slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -247,7 +247,7 @@ while (x &lt;= 99)
 $$
 \begin{align}
 &amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)\\
-&amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 99)\hookrightarrow  (1, x \mapsto 99)\hookrightarrow (\textcolor{green}{\textbf{Q. Fill the rest.}})\\
+&amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 99)\hookrightarrow (\textcolor{green}{\textbf{Q. Fill the rest.}})\\
 &amp;(0, \emptyset)\hookrightarrow (1, x \mapsto 0)\hookrightarrow (2, x \mapsto 0)\hookrightarrow (1, x \mapsto 1)\hookrightarrow \nonumber\\
 &amp;\qquad\qquad\quad\cdots\hookrightarrow (1, x \mapsto 100)\hookrightarrow (3, x \mapsto 100)
 \end{align}
@@ -427,6 +427,10 @@ $$</p>
 <p>Since $\mathbb{N}$ is CPO and $f$ is continuous, from Theorem A.1, there is a $\textbf{lfp} f$.<br>
 However, there is no $x$ which satisfies $x = f(x)$.<br>
 (定理的には $\textbf{lfp}f= \bigcup_{i=0}^\infty f(0) = \infty$ になりそうだけれど...?? infinite heightなときはWideningするので問題にならない？)</p>
+<div style="color:red;">
+<p>[追記] CPOは、任意の($\omega-$chain = 無限長chainを含む)chainがleast upper boundを持つことが条件なので、$\mathbb{N}$はCPOにはならない。
+<a href="https://mitpress.mit.edu/books/formal-semantics-programming-languages">この本</a>が詳しいらしい。</p>
+</div>
 </blockquote>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <blockquote>
@@ -652,7 +656,11 @@ Because the result of ${\Large\wp}((\text{id}, \cup^\sharp_M))$ has exactly one 
 <p>A partial order $E$ is CPO when $E$ satisfies:</p>
 <ul>
 <li>$E$ has infimum (bottom, $\bot$) and,</li>
-<li>Any totally ordered subset of $E$ (called <strong>chain</strong>) has a least upper bound in $E$</li>
+<li>Any totally ordered subset of $E$ (called <strong>chain</strong>) has a least upper bound in $E$
+<ul>
+<li>$\omega$-chain ($\simeq$ infinite length chain) is included</li>
+</ul>
+</li>
 </ul>
 <div style="text-align: center">
 <p><img src="slides/isa_4/./fig/cpo.drawio.svg" alt="" /></p>
@@ -1170,8 +1178,8 @@ while (B) {
 <p><img src="slides/isa_4/./fig/stmt_label.drawio.svg" alt="" /></p>
 </div>
 <blockquote>
-<p>The 6'th label is not a label for a statement.<br>
-However this label is necessary because it will be used as $l_{\text{end}}$</p>
+<p>The label ⑥ is not a label for a statement.<br>
+However this label is necessary because it will be used as $l_{\text{end}}$ (see below)</p>
 </blockquote>
 <h2 id="execution-order-control-flow"><a class="header" href="#execution-order-control-flow">Execution Order (control flow)</a></h2>
 <p>Given a statement $C$ and the label $l'$ (the next label to continue after executing $C$),</p>
@@ -1311,6 +1319,12 @@ $$</p>
 <li>$\mathbb{Z}^\sharp$ : a CPO that is Galois connected with ${\Large\wp}(\mathbb{Z})$</li>
 <li>$\mathbb{L}^\sharp = {\Large\wp}(\mathbb{L})$</li>
 </ul>
+<p>And, design abstract state as
+$$
+\begin{align}
+\mathbb{S}^\sharp = \mathbb{L} \rightarrow \mathbb{M}^\sharp
+\end{align}
+$$</p>
 <blockquote>
 <h3 id="note-1"><a class="header" href="#note-1">Note</a></h3>
 <p>All abstract domains ($\mathbb{Z}^\sharp, \mathbb{L}^\sharp, \mathbb{M}^\sharp, \mathbb{V}^\sharp, \mathbb{S}^\sharp$) are Galois connected CPOs.</p>
@@ -1353,7 +1367,7 @@ $$</p>
 $$
 \begin{align*}
 \textbf{skip}                             \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
-\textbf{input}(x)                         \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, z)) \quad \text{for an input integer } z\\
+\textbf{input}(x)                         \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, z)) \quad (\text{for an input integer } z)\\
 x := E                                    \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), \textit{update}_x^\sharp(M^\sharp, \textit{eval}_E^\sharp(M^\sharp)))\\
 C_1; C_2                                  \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{next}(l), M^\sharp)\\
 \textbf{if}(B)\{C_1\}\textbf{else}\{C_2\} \ &amp;:\ (l, M^\sharp) \hookrightarrow^\sharp (\text{nextTrue}(l), \textit{filter}_B^\sharp(M^\sharp))\\
