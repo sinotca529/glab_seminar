@@ -12,7 +12,16 @@ iframe[src$=".pdf"] {
 
 .content h2 {
     border-bottom: 1px solid var(--fg);
+    border-left: 5px solid;
+    padding-left: 10px;
     margin-top: 1.0em;
+}
+
+.content h3,
+h4,
+h5,
+h6 {
+    border-bottom: 1px solid var(--fg);
 }
 
 
@@ -52,4 +61,46 @@ pre .hljs:after {
 
 pre .hljs {
     padding-left: 3.0em;
+}
+
+note {
+    position: relative;
+    background-color: whitesmoke;
+    display: block;
+    border: 1px solid;
+    padding-top: 0.25em;
+    padding-left: 2em;
+    padding-bottom: 0.25em;
+}
+
+note:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: 0.25em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-family: "FontAwesome";
+    content: '\f27b';
+}
+
+ps {
+    display: block;
+    position: relative;
+    border: 1px solid;
+    padding-top: 1.25em;
+    padding-bottom: 0.25em;
+    margin-bottom: 1em;
+    padding-left: 2.0em;
+    color: darkred;
+}
+
+ps:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-family: "FontAwesome";
+    content: "\f27b\A\Ap.s.";
 }
