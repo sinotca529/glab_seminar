@@ -93,7 +93,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item "><a href="../index.html">Home</a></li><li class="chapter-item "><a href="../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../slides/isa_4/main.html">ISA Ch.4 (2021/8/24)</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../slides/isa_4/summary.html">Summary</a></li><li class="chapter-item "><a href="../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../paper/paper.html">論文読み</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../paper/link.html">リンク集</a></li><li class="chapter-item expanded "><a href="../paper/mcfi.html" class="active">MCFI</a></li></ol></li><li class="chapter-item "><a href="../memo.html">メモ</a></li><li class="chapter-item "><a href="../jargon.html">用語集</a></li></ol>
+                <ol class="chapter"><li class="chapter-item "><a href="../index.html">Home</a></li><li class="chapter-item "><a href="../slides/slides.html">輪講</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../slides/isa_4/main.html">ISA Ch.4 (2021/8/24)</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../slides/isa_4/concrete.html">Concrete semantics</a></li><li class="chapter-item "><a href="../slides/isa_4/abstract.html">Abstract semantics</a></li><li class="chapter-item "><a href="../slides/isa_4/analysis.html">Define sound analysis</a></li><li class="chapter-item "><a href="../slides/isa_4/summary.html">Summary</a></li><li class="chapter-item "><a href="../slides/isa_4/ex_framework.html">Example of the framework</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../paper/paper.html">論文読み</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../paper/link.html">リンク集</a></li><li class="chapter-item expanded "><a href="../paper/mcfi.html" class="active">MCFI</a></li></ol></li><li class="chapter-item "><a href="../jargon.html">用語集</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -156,17 +156,61 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="mcfi-wip"><a class="header" href="#mcfi-wip">MCFI (WIP)</a></h1>
-<p><strong>Abstract</strong></p>
+<h2 id="abstract"><a class="header" href="#abstract">Abstract</a></h2>
 <ul>
 <li>従来のCFIは、分割コンパイルをサポートしていなかった</li>
-<li>MCFIはモジュール毎に個別に計装し、それを静的/動的にリンクできる</li>
+<li>MCFIはモジュール毎に個別に計装し、それを静的/動的にリンクできる
+<ul>
+<li>計装済みのモジュールをよしなに扱う自作ランタイムを使う</li>
+<li>ただし、C言語限定</li>
+<li>coarse grained</li>
+</ul>
+</li>
+</ul>
+<h2 id="感想"><a class="header" href="#感想">感想</a></h2>
+<ul>
+<li>末尾呼び出しに関するCFGの作り方がよくわからない</li>
+<li>関数ポインタの指し先として認める条件がよくわからない
+<ul>
+<li>&quot;The function's address is taken in the code.&quot; ってなに？</li>
+</ul>
+</li>
+<li>x86に依存した部分が多いのが気になる
+<ul>
+<li>最適化のために仕方ないのはわかるが</li>
+</ul>
+</li>
+<li>もっとオーバーヘッド減らせる気がする
+<ul>
+<li>indirect call / inter-proceduralなindirect jumpについて :
+<ul>
+<li>MCFIは、structurally equivalentな型に、実行のたびに固有の番号を計算して割り当てている（たぶん）</li>
+<li>型情報をハッシュして初めから埋めとけば良くないか？</li>
+</ul>
+</li>
+<li>return
+<ul>
+<li>入力のソースコードをハッシュすればモジュール固有の識別子が作れる気がする</li>
+<li>ただそれを使おうにもcall graphが動的に生成される(→動的な計算が必要)ので辛い。</li>
+<li>forwardの保護が完璧なら、戻りアドレスのやり取りをスタックではなくレジスタで行うことでなんとかなるかも</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <h1 id="1-introduction"><a class="header" href="#1-introduction">1. Introduction</a></h1>
 <h2 id="従来のcfiについて"><a class="header" href="#従来のcfiについて">従来のCFIについて</a></h2>
 <ul>
-<li>従来のCFIは計装時に、ライブラリを含めたすべてのモジュールが揃っている必要があった</li>
-<li>つまり、各プログラムは、それ用に軽装されたライブラリを使う必要があった</li>
-<li>これはDLLの、使い回せるという利点を駄目にするもの</li>
+<li>従来のCFIは計装時にライブラリを含め全モジュールが揃っている必要があった
+<ul>
+<li>関数をグループ分けする際のグループ番号(ECN)が一意である必要があるので</li>
+</ul>
+</li>
+<li>→ 各プログラムはそのプログラム専用に計装されたライブラリを使う必要があった
+<ul>
+<li>DLLが使い回せない</li>
+</ul>
+</li>
 </ul>
 <h2 id="mcfiについて"><a class="header" href="#mcfiについて">MCFIについて</a></h2>
 <ul>
@@ -175,7 +219,11 @@
 <ul>
 <li>code</li>
 <li>data</li>
-<li>auxiliary information (他のモジュールとリンクする際に、モジュールのCFGを作るために使う)</li>
+<li>auxiliary information
+<ul>
+<li>他のモジュールとリンクする際に、リンク後のCFGを作るために使う</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>control-flow policyがリンク時に変化する
@@ -185,15 +233,8 @@
 </li>
 </ul>
 <h2 id="mcfiを実現する上での課題"><a class="header" href="#mcfiを実現する上での課題">MCFIを実現する上での課題</a></h2>
-<ol>
-<li>マルチスレッド環境下で、安全・効率的にpolicyをアップデートする方法
-<ul>
-<li>あるスレッドでコードがロードされpolicyが更新される場合も、他スレッドは更新前のpolicyを使い続けたい</li>
-</ul>
-</li>
-<li>モジュールの結合時に、高いprecisionで新たなpolicyを作る方法</li>
-</ol>
-<h2 id="マルチスレッド環境下で安全効率的にpolicyをアップデートする方法について"><a class="header" href="#マルチスレッド環境下で安全効率的にpolicyをアップデートする方法について">マルチスレッド環境下で、安全・効率的にpolicyをアップデートする方法について</a></h2>
+<h3 id="マルチスレッド環境下で安全効率的にpolicyをアップデートするには"><a class="header" href="#マルチスレッド環境下で安全効率的にpolicyをアップデートするには">マルチスレッド環境下で、安全・効率的にpolicyをアップデートするには？</a></h3>
+<p>あるスレッドでコードがロードされpolicyが更新される場合も、他スレッドはpolicyを使ってindirect branchをチェックしたい（更新終わるまで待ちたくない）</p>
 <ul>
 <li>CFGをコード領域とは別の領域に作る</li>
 <li>policyの更新時は、table-checkとtable-updateトランザクションをする
@@ -203,7 +244,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="モジュールの結合時に高いprecisionで新たなpolicyを作る方法について"><a class="header" href="#モジュールの結合時に高いprecisionで新たなpolicyを作る方法について">モジュールの結合時に、高いprecisionで新たなpolicyを作る方法について</a></h2>
+<h3 id="モジュールの結合時に高いprecisionで新たなpolicyを作るには"><a class="header" href="#モジュールの結合時に高いprecisionで新たなpolicyを作るには">モジュールの結合時に、高いprecisionで新たなpolicyを作るには？</a></h3>
 <ul>
 <li>モジュールをauxiliary type informationを使って拡張
 <ul>
@@ -218,24 +259,24 @@
 <li>x86のC言語に計装をする比較ツールチェーンを作った</li>
 </ul>
 <h1 id="2-background-cfi"><a class="header" href="#2-background-cfi">2. Background: CFI</a></h1>
-<p>CFIの肝は、いかにindirect branchを計装するか。</p>
+<p>クラシカルなCFIは次のような感じ。</p>
 <ol>
-<li>indirect branch targetの集合を<em>equivalence class</em>に分割する。
+<li>indirect branch targetの集合を<em>equivalence class (EC)</em> に分割する。
 <ul>
 <li>2つのtargetが同値になる条件は、その2つに飛びうるindirect branch命令が存在すること。</li>
-<li>あるindirect branchは、同じequivalence classに属するtargetならどこでも飛んで良いとみなす</li>
-<li>もし2つのindirect branchが指すtargetの集合に共通部分があるなら、その2集合はマージして、1つのequivalence classにする。
+<li>あるindirect branchは、特定のECに属する全てのtargetに飛んで良いとみなす。</li>
+<li>もし2つのindirect branchが指すtargetの集合に共通部分があるなら、その2集合はマージして、1つのECにする。
 <ul>
 <li>これが原因でprecisionが下がる</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>各equivalence classにユニークに番号を振る (ECN : Equivalence-Class Number)
+<li>各ECに一意の番号 <em>Equivalence-Class Number (ECN)</em> を振る
 <ul>
-<li>address's ECN : そのアドレスが属するequivalent classの番号</li>
-<li>branch ECN : branchの飛び先として許されるequivalent classの番号</li>
-<li>target ECN : 実行時のある状態において、実際の飛び先が属するequivalent classの番号</li>
+<li>address's ECN : そのアドレスが属するECの番号</li>
+<li>branch ECN : branchの飛び先として許されるECの番号</li>
+<li>target ECN : 実行時の実際の飛び先が属するECの番号</li>
 </ul>
 </li>
 <li>動的にチェックするコードを計装する
@@ -247,23 +288,26 @@
 </ul>
 </li>
 </ol>
-<pre><code class="language-x86asm">ret # go to `retaddr:`
+<h2 id="例"><a class="header" href="#例">例</a></h2>
+<p>次のコードを考える。</p>
+<pre><code class="language-x86asm">ret ; go to `retaddr:`
 </code></pre>
-<pre><code class="language-x86asm">    # Pop the return addr
+<p>これは次のように計装される。</p>
+<pre><code class="language-x86asm">    ; 戻り先をpop
     popq %rcx
 
-    # 第1オペランド`$ECN`    : branch ECN
-    # 第2オペランド`4(%rcx)` : target ECN
-    # branch ECN と target ECN が一致しないなら、エラー
+    ; 第1オペランド`$ECN`    : branch ECN
+    ; 第2オペランド`4(%rcx)` : target ECN
+    ; branch ECN と target ECN が一致しないなら、エラー
     cmpl $ECN, 4(%rcx)
     jne  error
 
-    # branch ECN と target ECN が一致するなら、ジャンプ
+    ; branch ECN と target ECN が一致するなら、ジャンプ
     jmpq *%rcx # go to `retaddr:`
 
 retaddr:
-    # 副作用のない形でretaddrの address's ECN を埋め込む
-    # 副作用さえなければ、`prefetchnta`命令でなくても良い
+    ; 副作用のない形でretaddrの address's ECN を埋め込む
+    ; 副作用さえなければ、`prefetchnta`命令でなくても良い
     prefetchnta ECN
 </code></pre>
 <h1 id="3-related-work"><a class="header" href="#3-related-work">3. Related Work</a></h1>
@@ -276,12 +320,16 @@ retaddr:
 <ul>
 <li>各indirect branchが飛びうるアドレスを持つテーブルを静的に作り、実行時に変更できない場所に置く</li>
 <li>プログラムは、飛び先アドレスを直接使うのではなく、テーブルを参照する形で飛び先アドレスを得るよう改変される</li>
-<li>上の例のようなCFIより精度が良い (多分ECのマージをしないから)</li>
+<li>クラシカルなCFIより精度が良い (多分ECのマージをしないから)</li>
 <li>プログラム全体の解析が必要なので、分割コンパイルに非対応</li>
 </ul>
 <h3 id="wits-cfi"><a class="header" href="#wits-cfi">WIT's CFI</a></h3>
 <ul>
-<li>color tableを使う (疑問 : ECNと何が違うの？)</li>
+<li>color tableを使う
+<ul>
+<li><note>ECNとの違いは？名前だけ？</note></li>
+</ul>
+</li>
 <li>各indirect callに静的に色をつける</li>
 <li>indirect callが指しうる関数には、そのcallと同じ色をつける</li>
 <li>MCFIのtableに似ているが、WITはプログラム全体を解析する必要がある</li>
@@ -317,8 +365,7 @@ retaddr:
 <li>チャンクを可変長に拡張</li>
 <li>各チャンクは内部にindirect branchを持たない
 <ul>
-<li>お尻には持つ（はず）</li>
-<li>ベーシックブロックみたいな感じ</li>
+<li>お尻には持つ（はず）。 ベーシックブロックみたいな感じかと。</li>
 </ul>
 </li>
 <li>計装により、indirect branchが飛び先としてチャンクの先頭しか取れないようにする</li>
@@ -338,9 +385,9 @@ retaddr:
 <p>CFI's concurrent attacker modelを使う</p>
 <ul>
 <li>user threadとconcurrentに動くthreadから攻撃が行われることを考える</li>
-<li>攻撃者は任意の2命令の間でメモリを上書きできる
+<li>攻撃者はuser thread内の任意の2命令の間でメモリを上書きできる
 <ul>
-<li>ただし、memory page protectionの範囲で</li>
+<li>ただし、memory page protectionで許可された場所のみ</li>
 </ul>
 </li>
 <li>攻撃者はレジスタを直接上書きできない
@@ -351,25 +398,25 @@ retaddr:
 <li>メモリ領域がwritableかつexecutableになることはない
 <ul>
 <li>任意コード実行を防ぐ目的</li>
-<li>trusted MCFI runtimeでアプリがロードされるとこれが保証される（ように作る）</li>
+<li>trusted MCFI runtimeでアプリがロードされるとこれが保証されるように作る</li>
 </ul>
 </li>
 </ul>
 <h2 id="id-tables"><a class="header" href="#id-tables">ID tables</a></h2>
 <p>global uniqueness requirementを満たすため、ECNはコードセクションではなく、実行時のデータ構造(ID table)として持つ</p>
 <ul>
-<li>Branch ID table (Bary table) : <code>Map&lt;indirect-branchのアドレス, 飛び先として許すbranchのID&gt;</code></li>
-<li>Target ID table (Tary table) : <code>Map&lt;アドレス, そのアドレスが属しているECのID&gt;</code></li>
+<li>Branch ID table (Bary table) : <code>Map&lt;indirect-branchのアドレス, branchID&gt;</code></li>
+<li>Target ID table (Tary table) : <code>Map&lt;アドレス, targetID&gt;</code></li>
 </ul>
 <p>IDをコードから分離する利点 :</p>
 <ol>
 <li>テーブル内のIDがコードセクションの番号と重複できるので、従来のCFIにおけるグローバルIDの一意性の仮定が不要になる(?)</li>
-<li>indirect branchのチェックがID tablesによってパラメタ化され、一度ロードされたらそれが保たれる
+<li>indirect branchのチェックが、プロセス固有のID tablesによってパラメタ化される
 <ul>
-<li>よって、アプリケーションやライブラリのコードページをプロセス間で共有することができ、メモリやアプリケーションの起動時間を節約できる(?)</li>
+<li>DLLのcode領域は汚れないので、プロセス間でDLLを共有できる</li>
 </ul>
 </li>
-<li>IDテーブルが集中しているため、メモリキャッシュ効果が高く、CPUの並列メモリコピー機構を利用してテーブルを高速に更新することができる</li>
+<li>IDテーブルが空間的に集中しているため、キャッシュ効果などが良い</li>
 </ol>
 <h2 id="table-access-transactions"><a class="header" href="#table-access-transactions">Table access transactions</a></h2>
 <ul>
@@ -385,14 +432,14 @@ retaddr:
 </ul>
 <p>2種類のトランザクションを使う</p>
 <ol>
-<li>Check transaction (TxCheck)
+<li>Check transaction : <code>TxCheck</code>
 <ul>
 <li>indirect branchの前に実行される</li>
 <li>indirect branchのあるアドレスと、飛び先のアドレスを元に、branch ID と target IDをテーブルから読んで比較する</li>
 <li>テーブルには読みアクセスしかしない</li>
 </ul>
 </li>
-<li>Update transaction (TxUpdate)
+<li>Update transaction : <code>TxUpdate</code>
 <ul>
 <li>動的リンク時に実行される</li>
 <li>ライブラリのリンク後に作られた新たなCFGにおける新たなIDをつかってテーブルを更新する</li>
@@ -413,15 +460,11 @@ retaddr:
 <li>IDは4Byte長</li>
 <li>4Byte境界に置く
 <ul>
-<li>readが1回のメモリアクセスで済むように</li>
-<li>2回かかってしまうとその合間に攻撃されかねないから(だと思う)</li>
+<li>read/writeがアトミックになるように</li>
+<li><note>2回かかってしまうとその合間に攻撃されかねないからだと思う</note></li>
 </ul>
 </li>
-<li>valid ID : 各ByteのLSBが上位Byteから順に 0,0,0,1 になっているもの
-<ul>
-<li>なんでこれがいるの？</li>
-</ul>
-</li>
+<li>valid ID : 各ByteのLSBが上位Byteから順に 0,0,0,1 になっているもの</li>
 <li>ECNはクラシカルなCFIと同じ
 <ul>
 <li>$2^{14} = 16384$種まで扱える（これだけあれば十分とのこと）</li>
@@ -429,7 +472,7 @@ retaddr:
 </li>
 <li>Versionはトランザクションを扱うためのもの
 <ul>
-<li>TxCheckはこれを使って、abort and retryをするか判断する</li>
+<li><code>TxCheck</code>はこれを使って、indirect branchのチェックをやり直すか判断</li>
 </ul>
 </li>
 </ul>
@@ -449,12 +492,13 @@ retaddr:
 <p>BaryもTaryも配列を使うことにした。</p>
 <h4 id="taryテーブル"><a class="header" href="#taryテーブル">Taryテーブル</a></h4>
 <ul>
-<li><code>Map&lt;アドレス, そのアドレスが属しているECのID&gt;</code></li>
+<li>target IDの配列</li>
+<li>インデックスはindirect branch命令のあるアドレス</li>
 <li>indirect-branch targetになり得ないエントリはゼロ埋め</li>
 </ul>
 <p>空間効率性を上げるために工夫する。</p>
 <ul>
-<li>IDは4Byteなので、愚直にやると1つのテーブルを作るのにコード領域の4倍のサイズが必要</li>
+<li>IDは4Byteなので、愚直にやるとコード領域の4倍のサイズが必要</li>
 <li>工夫 : nopを挿入して全ての飛び先を4バイト境界に配置
 <ul>
 <li>Tary tableのエントリ数は1/4 (= コード領域と同じサイズ)に削減される</li>
@@ -465,17 +509,20 @@ retaddr:
 <h4 id="baryテーブル"><a class="header" href="#baryテーブル">Baryテーブル</a></h4>
 <p>一度ロードされたら、その命令のアドレスは変化しない。</p>
 <ul>
-<li>そこで、モジュールをロードするときにBaryテーブルの固定のインデックスを埋め込む</li>
+<li>そこで、モジュールをロードするときにBaryテーブルの固定のインデックスを埋め込む
+<ul>
+<li><note>Taryテーブルではこれ出来ないの？</note></li>
+</ul>
+</li>
 <li>この設計ではBaryテーブルは無効なエントリを持たない</li>
 <li>この設計では無効なIDが読まれることもない</li>
 </ul>
 <h3 id="アプリのコードがテーブルに書き込めないよう保護する"><a class="header" href="#アプリのコードがテーブルに書き込めないよう保護する">アプリのコードがテーブルに書き込めないよう保護する</a></h3>
 <ul>
-<li>x86-64なら、メモリに書き込む命令に軽装して、$[0, 4GB)$までしか書けなくする。別な4GBをテーブルのために使う。
+<li>x86-64なら、メモリに書き込む命令に計装して、<code>[0, 4GB)</code>までしか書けなくする。別な4GBをテーブルのために使う。
 <ul>
 <li>その他、x86-64特有の最適化をちょっとやる</li>
-<li>仮想メモリがうまいことやってくれるはずなので、8GB消費するなんてことにはならなそう</li>
-<li>ただ、4GB以上のメモリアクセスが必要なアプリは動かなくなるはず。</li>
+<li><note>4GB以上のメモリアクセスが必要なアプリは動かなくなるはず。</note></li>
 </ul>
 </li>
 </ul>
@@ -488,15 +535,19 @@ retaddr:
 <li>branchの飛び先として許される（新たな）ECの番号を返す</li>
 <li>対応するECNが無い場合は負値を返す
 <ul>
-<li>使えるECNの数が半分になりません...?</li>
+<li><note>使えるECNの数が半分になりません...?</note></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><code>getTaryECN(TargetAddr) -&gt; ECN</code>
 <ul>
-<li>branchの飛び先になりうる箇所のアドレスについて、それが属すECの番号を返す</li>
-<li>対応するECNがない場合は負値を返す</li>
+<li>branchの飛び先になりうる箇所のアドレスについて、それが属す（新たな）ECの番号を返す</li>
+<li>対応するECNがない場合は負値を返す
+<ul>
+<li><note>使えるECNの数が半分になりません...?</note></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -589,13 +640,256 @@ Halt:
 </li>
 </ul>
 <h3 id="procedure-linkage-table-plt"><a class="header" href="#procedure-linkage-table-plt">Procedure Linkage Table (PLT)</a></h3>
+<p>PLTとGOTの概念は、PBAに載ってる</p>
+<ul>
+<li>GOTのエントリの更新（ライブラリ関数のアドレスの解決）は、<code>sfence</code>と<code>updTaryTable</code>の間に行われる。
+<ul>
+<li>追加のメモリバリアもつける</li>
+</ul>
+</li>
+<li>PLT内部のindirect jumpも検査が必要。
+<ul>
+<li>その飛び先は<code>TxUpdate</code>によって動的に変化する</li>
+<li>ので、トランザクションを再試行する際は、target addressをリロードする必要がある
+<ul>
+<li>上の<code>TxUpdate</code>は<code>Try</code>に戻るのでtarget addressがリロードされない</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 <h1 id="6-module-linking"><a class="header" href="#6-module-linking">6. Module Linking</a></h1>
+<ul>
+<li>リンク時にCFGを再構築するための付加情報(auxiliary information)は、precisionとefficiencyのトレードオフがある</li>
+<li>MCFIは、付加情報として、関数・関数ポインタの型を使う
+<ul>
+<li>coarse-grained CFGよりprecise</li>
+<li>モジュールごとの型情報はコンパイラを少し弄れば生成できる</li>
+</ul>
+</li>
+</ul>
+<h2 id="type-matching-cfg-generation"><a class="header" href="#type-matching-cfg-generation">Type-matching CFG generation</a></h2>
+<p>注意点 :</p>
+<ul>
+<li>モジュールは、より小さなモジュールをリンクして作られたものかもしれない</li>
+<li><strong>C言語製のモジュールしか考えていない</strong>
+<ul>
+<li>C++言語に対応するには、exceptionとか動的ディスパッチを考慮する必要あり</li>
+</ul>
+</li>
+</ul>
+<h3 id="τ型の関数ポインタ由来のindirect-call"><a class="header" href="#τ型の関数ポインタ由来のindirect-call"><code>*τ</code>型の関数ポインタ由来のindirect call</a></h3>
+<p>次を両方満たすものを、飛び先として許可</p>
+<ul>
+<li>The function's address is taken in the code.</li>
+<li>飛び先の関数の型<code>τ'</code>が、<code>τ</code>と構造的に等しい(structurally equivalent) 。
+<ul>
+<li><note>構造体の名前が違っても、メンバの型と順序が同じなら、同じとみなされるということか？</note></li>
+<li>structurally equivalent ruleはCコードを一部破壊する</li>
+</ul>
+</li>
+</ul>
+<h3 id="intra-proceduralなindirect-jump"><a class="header" href="#intra-proceduralなindirect-jump">intra-proceduralなindirect jump</a></h3>
+<ul>
+<li>LLVMがswitchやindirect gotoをコンパイルする際に使われる</li>
+<li>飛び先はハードコードされた読み専用のジャンプテーブルから構成される</li>
+<li>静的に解析できる</li>
+</ul>
+<h3 id="inter-proceduralなindirect-jump"><a class="header" href="#inter-proceduralなindirect-jump">inter-proceduralなindirect jump</a></h3>
+<ul>
+<li>indirect tail callに使われる（→末尾呼び出し最適化）</li>
+<li>飛び先の関数の型<code>τ'</code>が、<code>τ</code>と構造的に等しい(structurally equivalent) ときだけ許可</li>
+</ul>
+<h3 id="return命令について"><a class="header" href="#return命令について">return命令について</a></h3>
+<ul>
+<li>
+<p>合法な飛び先を得るためにcall graphを作成</p>
+</li>
+<li>
+<p><note><code>call node</code>ってなんだ？</note></p>
+</li>
+</ul>
+<h3 id="ちょっとの例外"><a class="header" href="#ちょっとの例外">ちょっとの例外</a></h3>
+<ul>
+<li><code>longjmp</code>
+<ul>
+<li><code>set jmp</code>callで飛び先が決定される</li>
+<li>C言語のライブラリ関数らしい。</li>
+<li>対策済みっぽい</li>
+</ul>
+</li>
+<li>可変長引数を持つ関数
+<ul>
+<li><code>*τ = int (*)(int, ...)</code>のとき、whose address is takenで、返り値と第1引数がintな関数は全部許可</li>
+</ul>
+</li>
+<li>シグナルハンドラはアプリのコードにreturnしない
+<ul>
+<li>システムコールはアプリへreturnする代わりに、<code>sigreturn</code>システムコールを呼ぶ小さなcode snippetへreturnする</li>
+<li>code snippetをインライン化することで、この問題に対応した</li>
+</ul>
+</li>
+<li>インラインasm
+<ul>
+<li>インラインasm中の関数ポインタと関数には手でアノテーションを付ける必要がある</li>
+</ul>
+</li>
+</ul>
+<h3 id="conditions-for-type-matching-cfg-generation"><a class="header" href="#conditions-for-type-matching-cfg-generation">Conditions for type-matching CFG generation</a></h3>
+<p>入力のCプログラムは、事前処理され、以下を満たしているとする</p>
+<h4 id="c1-関数ポインタへのからのキャストが明示暗黙を問わずない"><a class="header" href="#c1-関数ポインタへのからのキャストが明示暗黙を問わずない">C1 関数ポインタへの/からのキャストが明示・暗黙を問わずない</a></h4>
+<p>関数ポインタ型を含むunionも禁止。関数ポインタを含むstructへのキャストも禁止。</p>
+<note>
+関数ポインタ「から」のキャストは許して良くないか？
+</note>
+<p>ただし、一部例外は許可。</p>
+<ul>
+<li>Upcast (UC)
+<ul>
+<li>C言語で継承や多態を頑張って書くときに使われる</li>
+</ul>
+</li>
+<li>Safe downcast (DC)
+<ul>
+<li>C言語で継承や多態を頑張って書くときに使われる</li>
+<li>downcastは基本非安全だけど、注意深く書いてあるなら平気</li>
+</ul>
+</li>
+<li>Malloc and free (MF)
+<ul>
+<li><code>malloc</code>, <code>free</code>は<code>void*</code>を受け取るので</li>
+</ul>
+</li>
+<li>Safe update (SU)
+<ul>
+<li>ポインタに<code>NULL</code>を代入するのはあるある(<code>int</code>からポインタへのキャスト発生)</li>
+</ul>
+</li>
+<li>Non-function-pointer access (SU)
+<ul>
+<li><code>if (((XPVLV*)(sv-&gt;sv\_any))-&gt;xlv\_targlen)</code></li>
+<li>みたいな感じで、キャストして関数ポインタに関係ない部分だけ読むのはセーフ</li>
+</ul>
+</li>
+</ul>
+<p>これらを排除した上で、偽陽性になりうるは次の2パターン。</p>
+<ul>
+<li>K1 関数ポインタが、互換性のない関数を指すポインタで初期化される
+<ul>
+<li>形が揃うよう修正を加えないと、CFGの構築時に必要なエッジが貼られなくなる</li>
+<li>ラッパとか書いて頑張るらしい（よくわからない）</li>
+<li>初期化された後、使われない(dead code)ものも存在</li>
+</ul>
+</li>
+<li>K2 関数ポインタが一度別の型にキャストされた後、元の型に再度キャストされてからindirect callする
+<ul>
+<li>indirect call時には適切な型に戻っているので、修正の必要なし</li>
+</ul>
+</li>
+</ul>
+<h4 id="c2-アセンブリがない"><a class="header" href="#c2-アセンブリがない">C2 アセンブリがない</a></h4>
+<ul>
+<li>これを破る際は、手でアノテーションを付ける必要がある</li>
+</ul>
+<h3 id="static-and-dynamic-linking"><a class="header" href="#static-and-dynamic-linking">Static and dynamic linking</a></h3>
+<p>静的リンク</p>
+<ul>
+<li>auxiliary informationの結合をする</li>
+<li>MCFI用に計装されたPLTエントリを作る</li>
+</ul>
+<p>動的リンク</p>
+<ul>
+<li>MCFIの動的リンカ・CFG生成器・ランタイムで処理される</li>
+<li>動的リンカそのものも、他のモジュールと同じく計装を施す</li>
+<li>どのモジュールがロードされるよりも前に、動的リンカがロードされる</li>
+</ul>
+<p>お仕事：</p>
+<ol>
+<li>Module preparation</li>
+<li>New CFG generation</li>
+<li>ID table updates</li>
+</ol>
 <h1 id="7-mcfis-toolchain"><a class="header" href="#7-mcfis-toolchain">7. MCFI's Toolchain</a></h1>
+<p>x86-32/64 Linux向けのtoolchainを作りました。</p>
+<h2 id="toolchainの構成要素"><a class="header" href="#toolchainの構成要素">toolchainの構成要素</a></h2>
+<h3 id="rewriter"><a class="header" href="#rewriter">rewriter</a></h3>
+<p>計装をする</p>
+<ul>
+<li>LLVM compilation framework (ver 3.3)の内部に実装</li>
+<li>C++で約4000行</li>
+<li>3つのpassをLLVMのバックエンドに挿入 (全てマシン依存。LLVM IRレベルのパス終了後。)
+<ul>
+<li>TxCheck用のscratch registerをreserveする用</li>
+<li>型情報をdumpする用</li>
+<li>計装する用</li>
+</ul>
+</li>
+</ul>
+<h3 id="static-linker"><a class="header" href="#static-linker">static linker</a></h3>
+<p>モジュールの結合と、計装されたPLT entryを作る</p>
+<ul>
+<li>Linuxの標準静的リンカ(<code>ld</code>)に手を加えた</li>
+</ul>
+<h3 id="cfg-generator"><a class="header" href="#cfg-generator">CFG generator</a></h3>
+<ul>
+<li>C++で500行</li>
+<li>module auxiliary information を使って、Bary, Taryテーブルを作成</li>
+<li>auxiliary module informationを集めてCFGを作る</li>
+<li>type-baseなアプローチにすることで高速化を実現</li>
+</ul>
+<h3 id="verifier"><a class="header" href="#verifier">verifier</a></h3>
+<p>checks whether an MCFI module is instrumented to respect its CFG. (?)</p>
+<ul>
+<li>C++で約4000行</li>
+<li>LLVM instruction decoder上に作った</li>
+<li>MCFIモジュールを受け取り、ディスアセンブルして次を確認 :
+<ul>
+<li>indirect branchが正しく計装されているか</li>
+<li>memory writeがsandbox内にとどまっているか（テーブルが保護されているか）</li>
+<li>indirect-branch targetが4Byte境界にアライメントされているか</li>
+</ul>
+</li>
+<li>auxiliary type informationがあるおかげで、完璧なディスアセンブルができる</li>
+<li>trusted computing baseの外にあるrewriterを削除する</li>
+</ul>
+<p><note>verifier必要？</note></p>
+<h3 id="runtime-system"><a class="header" href="#runtime-system">runtime system</a></h3>
+<p>計装されたプログラムをロード・実行する</p>
+<ul>
+<li>MIP runtimeに200行程度変更を加えて実装</li>
+<li>CFG generatorを呼んでテーブルを作らせる</li>
+<li>モジュールが直接システムコールを呼ぶのを禁止
+<ul>
+<li>代わりにシステムコールのラッパを作り、引数をチェック</li>
+<li>e.g. <code>mmap</code>や<code>mprotect</code>を監視して、writableかつexecutableなメモリが確保されないか監視</li>
+<li>本質的にはNaClがやってるような感じ</li>
+</ul>
+</li>
+<li>使いやすくするために、MIPのように工夫したらしい(?)</li>
+</ul>
+<h3 id="dynamic-linker"><a class="header" href="#dynamic-linker">dynamic linker</a></h3>
+<p>ランタイムから呼ばれる</p>
+<ul>
+<li>ライブラリを動的にロードする</li>
+<li>MUSLのリンカに手を加えた</li>
+</ul>
 <h1 id="8-evaluation"><a class="header" href="#8-evaluation">8. Evaluation</a></h1>
 <h2 id="81-overhead"><a class="header" href="#81-overhead">8.1 Overhead</a></h2>
+<h3 id="計装由来のオーバーヘッド"><a class="header" href="#計装由来のオーバーヘッド">計装由来のオーバーヘッド</a></h3>
+<h3 id="code-update由来のオーバーヘッド"><a class="header" href="#code-update由来のオーバーヘッド">code update由来のオーバーヘッド</a></h3>
+<h3 id="メモリ使用量のオーバーヘッド"><a class="header" href="#メモリ使用量のオーバーヘッド">メモリ使用量のオーバーヘッド</a></h3>
+<p>+17%</p>
+<h3 id="mcfiのトランザクションのアルゴリズムの評価"><a class="header" href="#mcfiのトランザクションのアルゴリズムの評価">MCFIのトランザクションのアルゴリズムの評価</a></h3>
 <h2 id="82-cfg-generation"><a class="header" href="#82-cfg-generation">8.2 CFG Generation</a></h2>
 <h2 id="83-security"><a class="header" href="#83-security">8.3 Security</a></h2>
 <h1 id="9-conclusions"><a class="header" href="#9-conclusions">9. Conclusions</a></h1>
+<ul>
+<li>MCFIは分割コンパイルに対応したCFI</li>
+<li>ライブラリが動的にリンクされると、MCFIのランタイムが新しいCFGを元にIDテーブルを更新</li>
+<li>CFGはtype-matching approachを使って生成する</li>
+<li>スレッド安全のために、テーブルへの走査はトランザクションとして行われる</li>
+<li>他のCFIに比べて効率的で防御力も強い</li>
+</ul>
 
                     </main>
 
@@ -604,7 +898,7 @@ Halt:
                             <a rel="prev" href="../paper/link.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
-                            <a rel="next" href="../memo.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../jargon.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
@@ -616,7 +910,7 @@ Halt:
                     <a rel="prev" href="../paper/link.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
-                    <a rel="next" href="../memo.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../jargon.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
