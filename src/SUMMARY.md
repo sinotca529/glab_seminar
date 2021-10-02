@@ -16,5 +16,5 @@
     <!-- - [Sthread](./paper/sthread.md) -->
     <!-- - [RustBelt](./paper/rustbelt.md) -->
     <!-- - [Rustのhardeningについて](./paper/rust_hardening.md) -->
-- [メモ](./memo.md)
+<!-- - [メモ](./memo.md) -->
 - [用語集](./jargon.md)
