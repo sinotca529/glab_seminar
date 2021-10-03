@@ -1477,6 +1477,7 @@ $$</li>
 <h2 id="感想"><a class="header" href="#感想">感想</a></h2>
 <ul>
 <li>末尾呼び出しに関するCFGの作り方がよくわからない</li>
+<li>そもそも、auxiliary informationは各関数・関数ポインタの型情報だけなのに、どうやってCFGを作るのか謎</li>
 <li>関数ポインタの指し先として認める条件がよくわからない
 <ul>
 <li>&quot;The function's address is taken in the code.&quot; ってなに？</li>
@@ -1487,19 +1488,22 @@ $$</li>
 <li>最適化のために仕方ないのはわかるが</li>
 </ul>
 </li>
-<li>もっとオーバーヘッド減らせる気がする
+<li>もっと時間・空間オーバーヘッド減らせる気がする
 <ul>
 <li>indirect call / inter-proceduralなindirect jumpについて :
 <ul>
 <li>MCFIは、structurally equivalentな型に、実行のたびに固有の番号を計算して割り当てている（たぶん）</li>
-<li>型情報をハッシュして初めから埋めとけば良くないか？</li>
+<li>ECNとして型情報のハッシュ値を使うのはどうか？
+<ul>
+<li>ハッシュ関数は一意なので、IDテーブルいらないし、リンク時の再計算もいらない</li>
+<li>複数プロセスでも使い回せる</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>return
 <ul>
-<li>入力のソースコードをハッシュすればモジュール固有の識別子が作れる気がする</li>
-<li>ただそれを使おうにもcall graphが動的に生成される(→動的な計算が必要)ので辛い。</li>
-<li>forwardの保護が完璧なら、戻りアドレスのやり取りをスタックではなくレジスタで行うことでなんとかなるかも</li>
+<li>戻り先の上にある、自分を呼び出したcall命令のチェックコードから、そのcall命令のbranch ECNを得て、、それを自分のaddress's ECNと照らし合わせればなんとかなるか？</li>
 </ul>
 </li>
 </ul>
