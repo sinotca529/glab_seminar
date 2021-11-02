@@ -9,8 +9,8 @@ title = "glab_seminar"
 
 [output.html]
 no-section-label = true
-additional-css = ["theme/custom.css"]
-additional-js = ["theme/custom.js"]
+additional-css = ["theme/custom.css", "theme/slider/slider.css"]
+additional-js = ["theme/custom.js", "theme/slider/slider.js"]
 
 [output.html.fold]
 enable = true
