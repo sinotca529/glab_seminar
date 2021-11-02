@@ -1,0 +1,94 @@
+/*https://dubdesign.net/download/html-css/htmlcss-slider2/*/
+
+.slider-001 {
+    width: 100%;
+    position: relative;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    border: 2px solid;
+}
+
+.slide-001 {
+    width: 100%;
+    flex-shrink: 0;
+    position: relative;
+    top: 0;
+    left: 0;
+    transition: all 0.6s ease-in-out;
+}
+
+.slide-content-001 {
+    padding-top: 5%;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-bottom: 5%;
+    text-align: center;
+    background-color: #d6ebff;
+}
+
+.slide-content-001 img {
+    width: 100%;
+    object-fit: contain;
+}
+
+.prev-001,
+.next-001 {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    height: 65px;
+    padding: 16px;
+    margin-top: -28px;
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    transition: all 0.2s ease;
+    border-radius: 0 4px 4px 0;
+    user-select: none;
+}
+
+.next-001 {
+    right: 0;
+    border-radius: 4px 0 0 4px;
+}
+
+.prev-001:hover,
+.next-001:hover {
+    background-color: rgba(107, 182, 255, 0.8);
+}
+
+.numbertext {
+    color: black;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 8px 16px;
+    position: absolute;
+    top: 0;
+}
+
+
+/* .dots {
+    height: 15px;
+    padding: 0;
+    position: absolute;
+    bottom: 22px;
+    width: 100%;
+    text-align: center;
+}
+
+.dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 10px 4px;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.dot:hover {
+    background-color: rgba(107, 182, 255, 0.8);
+} */
