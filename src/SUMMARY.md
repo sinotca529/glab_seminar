@@ -16,5 +16,10 @@
     <!-- - [Sthread](./paper/sthread.md) -->
     <!-- - [RustBelt](./paper/rustbelt.md) -->
     <!-- - [Rustのhardeningについて](./paper/rust_hardening.md) -->
+- [論文紹介](./paper_presen/paper_presen.md)
+    - [MCFI  \[ Niu+ PLDI'14 \]](./paper_presen/mcfi/main.md)
 <!-- - [メモ](./memo.md) -->
-- [用語集](./jargon.md)
+<!-- - [用語集](./jargon.md)
+    - [ROP gadget](./jargon/rop.md)
+- [LLVM簡易リファレンス](./llvm_ref.md)
+    - [LLVM for Grad Students](./llvm_for_grad_students.md) -->
