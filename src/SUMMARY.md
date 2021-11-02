@@ -8,14 +8,14 @@
         - [Define sound analysis](./slides/isa_4/analysis.md)
         - [Summary](./slides/isa_4/summary.md)
         - [Example of the framework](./slides/isa_4/ex_framework.md)
-- [論文読み](./paper/paper.md)
+<!-- - [論文読み](./paper/paper.md)
     - [リンク集](./paper/link.md)
     - [MCFI](./paper/mcfi.md)
-    <!-- - [RUDRA](./paper/rudra.md) -->
-    <!-- - [Exploiting Mixed Binaries](./paper/exploiting-mixed-binaries.md) -->
-    <!-- - [Sthread](./paper/sthread.md) -->
-    <!-- - [RustBelt](./paper/rustbelt.md) -->
-    <!-- - [Rustのhardeningについて](./paper/rust_hardening.md) -->
+    - [RUDRA](./paper/rudra.md)
+    - [Exploiting Mixed Binaries](./paper/exploiting-mixed-binaries.md)
+    - [Sthread](./paper/sthread.md)
+    - [RustBelt](./paper/rustbelt.md)
+    - [Rustのhardeningについて](./paper/rust_hardening.md) -->
 - [論文紹介](./paper_presen/paper_presen.md)
     - [MCFI  \[ Niu+ PLDI'14 \]](./paper_presen/mcfi/main.md)
 <!-- - [メモ](./memo.md) -->
