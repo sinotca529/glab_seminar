@@ -1,14 +1,14 @@
 
 # [MCFI \[Niu+ PLDI'14\]](https://dl.acm.org/doi/10.1145/2594291.2594295)
 - 目的
-    - 分割コンパイルされるプログラムに対して使えるCFIの作成
+    - 分割コンパイル(主に動的リンク)を扱えるCFIの作成
 - 既存手法の問題点
     - 既存手法はCFGを静的に計算するため，動的リンクをうまく扱えない
     - そのため，分割コンパイルされたプログラムにCFIを(効率よく)適用できない
 - 提案手法
-    - CFGをリンク時に動的に構築・更新することで，分割コンパイルに対応する
+    - 各モジュールにメタデータを持たせ，リンク時にCFGを動的に構築・更新することで，分割コンパイルに対応する
 - 結果
-    - 実行時間 : 平均+7% (仮定 : 動的リンクの頻度が毎秒50回)
+    - 実行時間 : 平均+7% (動的リンクの頻度が毎秒50回と仮定)
     - コード量 : 平均+17%
     - メモリ使用量 : 無視できる程度の増加
     - 防御力
@@ -17,22 +17,24 @@
 
 # 背景知識
 ## CFIとは
-- 制御フローを不正に操作する，control-flow hijackingなどの攻撃からプログラムを守る手段の一つ
+- CFI : Control Flow Integrity
+- control-flow hijackingなどの制御フローを不正に操作する攻撃からプログラムを守る手段の一つ
 
-大まかな手順 :
-1. 実行前に，Control-Flow Graph (CFG) を求めておく
+基本的な手順 (この手順に沿わないCFIもある) :
+1. 実行前に，保護対象のControl-Flow Graph (CFG) を求める
 2. 実行時に，プログラムがそのCFGに沿って動いているかチェックする
+    - indirect jmp/call, return命令の遷移先をチェックする
 
 ## クラシカルなCFIの手順
-1. indirect branch target (IBT) の集合を equivalence class (EC) に分割
+1. Indirect Branch Target (IBT) の集合を Equivalence Class (EC) に分割
 2. 各ECに一意の番号 Equivalence-Class Number (ECN) を振る
-3. ECNをもとにIBTを動的にチェックするコードを計装する
+3. ECNをもとにIBTを実行時にチェックするためのコードを計装する
 
 ### 1. IBTの集合をECに分割
 ECの満たすべき性質 :
-- indirect branch (ibranch) が指しうるtargetは全て，同じECに属する
+- indirect branch (ibranch) が指しうるtargetは全て同じECに属する
 - ECは共通部分を持たない
-    - これが原因でprecisionが下がる
+    - この性質が原因でprecisionが下がる (後述)
 
 <note>
 (indirect branch) = (indirect jmp) + (indirect call) + (return)
@@ -42,28 +44,28 @@ ECの満たすべき性質 :
 `rand`の中身までは解析で追わないものとする
 
 <div class="slider-001">
-    <div class="slide-001"><div class="slide-content-001"><img src="./fig/c_cfi1.drawio.svg"></div></div>
-    <div class="slide-001"><div class="slide-content-001"><img src="./fig/c_cfi2.drawio.svg"></div></div>
-    <div class="slide-001"><div class="slide-content-001"><img src="./fig/c_cfi3.drawio.svg"></div></div>
-    <div class="slide-001"><div class="slide-content-001"><img src="./fig/c_cfi4.drawio.svg"></div></div>
-    <div class="slide-001"><div class="slide-content-001"><img src="./fig/c_cfi5.drawio.svg"></div></div>
+    <div class="slide-001"><div class="slide-content-001"><img src="fig/classic_cfi_ecn_gen/1.dio.svg"></div></div>
+    <div class="slide-001"><div class="slide-content-001"><img src="fig/classic_cfi_ecn_gen/2.dio.svg"></div></div>
+    <div class="slide-001"><div class="slide-content-001"><img src="fig/classic_cfi_ecn_gen/3.dio.svg"></div></div>
+    <div class="slide-001"><div class="slide-content-001"><img src="fig/classic_cfi_ecn_gen/4.dio.svg"></div></div>
+    <div class="slide-001"><div class="slide-content-001"><img src="fig/classic_cfi_ecn_gen/5.dio.svg"></div></div>
 </div>
 
 ### 2. 各ECに一意の番号ECNを割り振る
-使われる場所によって，ECNに特別な呼び名がついている
-- **address ECN**
-    - branch命令の飛び先になりうるアドレスについて，そのアドレスが属するECの番号
-- **branch ECN**
-    - branch命令について，その飛び先として許されるECの番号
+用語の定義 :
+- **Address ECN**
+    - ibranch命令の飛び先になりうるアドレスについて，そのアドレスが属するECの番号
+- **Branch ECN**
+    - ibranch命令について，その飛び先として許されるECの番号
 - **Target ECN**
-    - branch命令について，実行時の実際の飛び先が属するECの番号
+    - ibranch命令について，実行時の実際の飛び先が属するECの番号
 
-![](./fig/c_cfi6.drawio.svg)
+![](fig/classic_cfi_ecn_gen/6.dio.svg)
 
 ### 3. ECNをもとにIBTを動的にチェックするコードを計装
 - branch ECNとtarget ECNが一致しない場合のみ，不正な実行とみなす
 
-![](./fig/c_cfi7.drawio.svg)
+![](fig/classic_cfi_ecn_gen/7.dio.svg)
 
 <question>
 
@@ -79,53 +81,64 @@ ECの満たすべき性質 :
 #### 計装コードの例
 次の`ret`を計装する．
 ```x86asm
-ret ; go to `retaddr:`
+    ...
+    ; `retaddr`へ飛ぶと仮定
+    ret
+
+retaddr:
+    ...
 ```
 
 これは次のように計装される．
 ```x86asm
+    ...
     ; 戻り先をrcxに退避
     popq %rcx
 
     ; 実際は，ECNに適当な即値が埋め込まれる
-    ; branch ECN　[$ECN] と target ECN [4(%rcx)] が一致しないなら，エラー
+    ; branch ECN　[$ECN] と target ECN [4(%rcx)] が異なるなら，エラー
     cmpl $ECN, 4(%rcx)
     jne  error
 
-    ; branch ECN と target ECN が一致するなら，ジャンプ
-    jmpq *%rcx ; go to `retaddr:`
+    ; branch ECN と target ECN が同じなら，`retaddr`へジャンプ
+    jmpq *%rcx
 
 retaddr:
     ; 副作用のない形でretaddrの address ECN を埋め込む
     ; 副作用がなければ，`prefetchnta`命令でなくても良い（はず）
     prefetchnta ECN
-
+    ...
 ```
 
 ## クラシカルなCFIの欠点
-複数のモジュール（ライブラリなど）から作られるソフトウェアに対応できない．
+動的リンクに対応できない．
 
-クラシカルなCFIでは :
-- ECNはコードセクション（書き込み不可）に埋め込まれる
-- 共有ライブラリは複数のソフトから共有される
-- CFIを使うには，分割されたモジュールを含めソフトウェア全体でECNがユニークである必要がある
+### 動的リンクがない場合 @ indirect call
+次のような保護がなされていた．
+![](fig/compare_cfi/classic_cfi.dio.svg)
 
-そのため :
-- ライブラリを共有するどのプロセスから見てもライブラリ内のECNがユニークになるようにECNを割り当てるのが難しい
+### 動的リンクがある場合 @ indirect call
+- `FN_FOO`と`FN_BAR`のaddress ECNについて :
+    - `a.out`は同じにしたい
+    - `b.out`は同じにしたくない
+    - ECNはコードセクション（書き込み不可）に埋め込まれる
+- `b.out`に合わせると，`a.out`で`FN_BAR`への`call`が違法判定されてしまう (FP)
+- → `a.out`に合わせる必要があるが，そうすると`b.out`のCFIの精度が落ちる
+- いかなるプログラムに対してもFPを出してはならないので，CFIの防御力が著しく下がる
 
+![](fig/compare_cfi/classic_cfi_dso.dio.svg)
 
 <note>
 
 クラシカルなCFIでの対処法 :
-- ソフトウェアごとに独自の計装を共有ライブラリにおこなう
-    - 「独自」なので共有できない
-    - 共有ライブラリの「共有できる」という特徴が台無しになる
+- 各ソフトウェアが，それ専用の計装が施された共有ライブラリを使う
+    - 「専用」なので共有できない
+    - 共有ライブラリの「共有できる」という利点がなくなってしまう
 
 </note>
 
 # MCFIの概要
-## 目的
-分割コンパイルされ，かつマルチスレッドで動くアプリに対応したCFIの提案
+MCFIの目的 : 分割コンパイルされ，かつマルチスレッドで動くアプリに対応したCFIの提案
 
 ## Threat model
 ### 攻撃者のモデル : concurrent attacker model
@@ -139,23 +152,28 @@ retaddr:
 ### その他
 - メモリがwritableかつexecutableにならない
     - 任意コード実行を防ぐ目的
-    - (これが保証されるように，MCFIの独自ランタイムを作る)
+    - (MCFIの独自ランタイムを作る際に，これが保証されるよう気をつける)
 
 ## MCFIの方針
-- 各モジュールに，動的にCFGを計算するための情報(auxiliary information)を持たせる
-- モジュールの(静的/動的)リンク時に，その情報を用いてCFGを更新する
+- 各モジュールにCFGを計算するための情報(auxiliary information)を持たせる
+- 静的リンク時には，独自の静的リンカで各モジュールの情報を結合する
+- 動的リンク時には，独自の動的リンカでその情報を用いてCFGを更新する
 - ECNにバージョンの概念を加えた「ID」を「IDテーブル」で管理する
+    - IDテーブルはBaryとTaryの2種類ある
+
+イメージ図 (実際の実装とは異なる．auxiliary info.は省略．)
+![](fig/compare_cfi/mcfi.dio.svg)
 
 ## Challenge
 ### マルチスレッド下で，安全・効率的にCFGを更新できるか
 CFGの更新中に，別スレッドでibranchのチェックが必要になることがある (逆も同様)
 
-MCFIの解法 :
+MCFIの手法 :
 - CFGをコード領域とは別の領域に作る
-- CFGの更新にはトランザクションを用いる
-    - <note>Software Transaction Memory に着想を得た</note>
+- CFGの更新にトランザクションを用いる
+
 ### モジュールのリンク時に高いprecisionで新たなCFGを作れるか
-MCFIの解法 :
+MCFIの手法 :
 - 関数と関数ポインタの型情報を各モジュールに持たせ，それを元にCFGを構築する
 
 # 提案手法の詳細
@@ -174,15 +192,32 @@ MCFIの解法 :
         Higher 2 Bytes            Lower 2 Bytes         ↑ 4-byte aligned
 ```
 
+## 用語
+Address ID, Branch ID, Target IDは，ECNと同様に定義する．
+
+<question>
+各IDの使われ方を説明してください．
+<details>
+<summary>Ans.</summary>
+
+- Address ID
+    - ibranch命令の飛び先になりうるアドレスについて，そのアドレスが属するID
+- Branch ID
+    - ibranchが飛ぶことを許されるID
+- Target ID
+    - 実行時にibranchの飛び先が属するID
+</details>
+</question>
+
 
 ## IDテーブルについて
 2つのテーブルがある :
-- Branch ID table (Bary table)
-    - ibranchのアドレスから，飛び先として許されるIDを引く
-    - `Map<ibranchのアドレス, branchID>`
 - Target ID table (Tary table)
-    - ibranchの飛び先になりうるアドレスから，それが属するIDを引く
-    - `Map<アドレス, targetID>`
+    - `Map<飛び先アドレス, AddressID>`
+    - ibranchの飛び先アドレスを用いて，それが属するIDを引く
+- Branch ID table (Bary table)
+    - ibranchのアドレスから，それのbranch IDを引く
+    - `Map<ibranchのアドレス, BranchID>`
 
 <note>
 
@@ -192,13 +227,12 @@ MCFIの解法 :
 </note>
 
 ### Taryテーブルの構造
-- `Map<ibranchのアドレス, branchID>`
-- target IDの配列として表現
-- インデックスはibranch命令のあるアドレス
+- `Map<飛び先アドレス, AddressID>`
+- IDの配列として表現
 - targetになり得ないアドレスに対応するエントリはゼロ埋め
 
 #### テーブルを小さくするための工夫
-- IDは4Byte長なので，愚直にやるとコード領域の4倍のサイズが必要
+- IDは4Byte長なので，全アドレス分のエントリを用意するとコード領域の4倍のサイズが必要
 
 - 工夫 : nopを挿入して全ての飛び先を4バイト境界に配置
     - Tary tableのエントリ数は1/4に削減される
@@ -206,27 +240,30 @@ MCFIの解法 :
     - 例えばtargetが4バイト境界でないアドレスに不正操作された場合，Tary tableを引いた時点で攻撃を検知できる．
 
 ### Baryテーブルの構造
-- `Map<アドレス, targetID>`
+- `Map<ibranchのアドレス, BranchID>`
 - branch IDの配列として表現
 - 一度ロードされたら，その命令のアドレスは変化しない．
 - そこで，モジュールをロードするときにBaryテーブルの固定のインデックスを埋め込む
 - → Taryテーブルと異なり，無効なエントリは存在しないので，サイズは最小限
 
-## IDテーブルの場所 @x86_64
+## IDテーブルの保護 @x86_64
+- IDテーブルは実行時に動的に更新される (後述)
+- → テーブルを攻撃者から保護する必要がある
+
+保護の方法
 - IDテーブルは，アドレス空間[4GB, 8GB)に置く
-- IDテーブルが不正に操作されないよう，[0, 4GB)の範囲しか書き込めないよう，メモリwriteに計装する
+- プログラム中のメモリwriteについて，[0, 4GB)の範囲しか書き込めないよう計装する
 
 <note>
-mallocでたまたまアドレス空間[4GB, 8GB)からメモリが確保されたらどうするのかは謎．
+mallocでたまたまアドレス空間[4GB, 8GB)からメモリが確保されたらどうするのかは不明．
 </note>
 
-### イメージ図
-![](fig/barytary.png)
-
+### イメージ図 (再掲)
+![](fig/compare_cfi/mcfi.dio.svg)
 
 ### IDテーブルをコード領域から分離する利点
-- 従来のCFIは，ECNをコードに埋め込んでいた
-- MCFIは，それをコード領域から分離した
+- 従来のCFIはECNをコードに埋め込んでいた
+- MCFIはそれをコード領域から分離した
 
 利点 :
 - ECNが，プロセス固有のID tablesによってパラメタ化される
@@ -239,10 +276,11 @@ mallocでたまたまアドレス空間[4GB, 8GB)からメモリが確保され�
 
 ## IDテーブルの読み取りと更新
 - IDテーブル(CFG)の更新中に，別スレッドでibranchのチェックが起こりうる (逆も然り)
+    - チェック機構が更新中の表を参照するのはNG
 - トランザクションを行うことで予期せぬ動作を防ぐ
 
 1. Update transaction : `TxUpdate`
-    - 動的リンク時に実行される
+    - 動的リンク時 (表の更新時) に実行される
     - リンク後の新たなCFGに沿った，新たなIDでテーブルを更新する
 2. Check transaction : `TxCheck`
     - ibranchの前に実行される
@@ -265,7 +303,7 @@ mallocでたまたまアドレス空間[4GB, 8GB)からメモリが確保され�
 ```c
 void TxUpdate() {
     // - 複数のスレッドで同時に動的リンクが起きても問題ないようロックを取る
-    // - 動的リンクは稀なので，排他制御してもオーバーヘッドは実用上かさまない
+    // - 動的リンクは稀なので，排他制御してもオーバーヘッドは実用上問題ない
     // - ロック取得中でもTxCheckは実行できる
     acquire(updLock);
     globalVersion += 1;
@@ -273,8 +311,7 @@ void TxUpdate() {
     // テーブルの更新はインターリーブさせてはならない
     // もしインターリーブすると
     // - TaryとBaryの両方において，古いIDと新しいIDが混在する状態が生まれる
-    // - TxCheckにおいて，異なるibranchに対してバージョンの違うIDが使われてしまう
-    // (何が困るの???)
+    // - TxCheckにおいて，異なるibranchに対してバージョンの違うテーブルでの検査がおこる
     updTaryTable();
     sfence;
     updBaryTable();
@@ -289,6 +326,7 @@ void updTaryTable() {
     allocateAndInit(newTbl);
 
     for (addr = codeBase; addr < CodeLimit; addr += 4) {
+        // ecnには，addrの新しいtargetECNが入る
         ecn = getTaryECN(addr);
         if (ecn >= 0) {
             entry = (addr - CodeBase) / 4;
@@ -297,6 +335,7 @@ void updTaryTable() {
         }
     }
 
+    // 各エントリのコピーはアトミックになるように実装する
     copyTaryTable(newTbl, TaryTableBase);
 
     free(newTbl);
@@ -358,8 +397,9 @@ ibranchは次のように分類できる
 
 ### `T*`型の関数ポインタ由来のindirect call
 次の条件を両方満たすものを，ibranchの合法な飛び先とみなす．
-- The function's address is taken in the code.
+- オペランドとしてコード中に現れる
 - 飛び先の関数の型`S`が，`T`と構造的に等しい(structurally equivalent)．
+    - e.g. `struct A {int a; int b}`と`struct B {int c; int d}`を区別しない
     - これを厳格に当てはめると，合法なtargetが見落とされうるので適当な前処理をする (後述)
 
 ### intra-proceduralなindirect jump
@@ -390,45 +430,46 @@ ibranchは次のように分類できる
 
 
 ### CFGを作る上での前提条件
-入力のCプログラムは，事前処理され，以下を満たしているとする
+入力のCプログラムは以下を満たすよう事前処理しておく．
 
-- (C1) 関数ポインタへの/からのキャストが明示・暗黙を問わずない
-    - 関数ポインタ型を持つunionによって起こる暗黙のキャストも禁止
+- **(C1) 関数ポインタへの/からのキャストが明示・暗黙を問わずない**
+    - 関数ポインタ型を持つunionによって起こるキャストも禁止
     - 関数ポインタを含むstructへのキャストも禁止
-- (C2) アセンブリに適切なアノテーションがついている
+- **(C2) インラインアセンブリが無い**
+    - 使いたい場合は適切にアノテーションを付ける
 
-<note>関数ポインタ「から」のキャストは許して良い気がする</note>
+<!-- <note>関数ポインタ「から」のキャストは許して良い気がする</note> -->
 
 #### C1に抵触するが，例外的に許すもの
 - Upcast (UC)
-    - C言語で継承や多態を書くときに使われる
+    - C言語で継承や多態性を表現するときに使われる
 - Safe downcast (DC)
-    - C言語で継承や多態を書くときに使われる
+    - C言語で継承や多態性を表現するときに使われる
     - downcastは一般に非安全だが，注意深く書いてあれば問題ない
 - Malloc and free (MF)
-    - (`malloc`/`free`)では`void*`(からの/への)キャストが必要になる
+    - (`malloc`/`free`)では`void*`(からの/への)キャストが必要
 - Safe update (SU)
     - 関数ポインタに即値を代入する場合
-    - 整数型からポインタへのキャストが生じる
-    - e.g. ポインタに`NULL`を代入する場合
+        - 整数型からポインタへのキャストが生じる
+        - 例 : ポインタに`NULL`を代入する場合
 - Non-function-pointer access (SU)
     - キャストはするが，関数ポインタに関係ない部分のみが使われる場合
-    - 例 : `if (((XPVLV*)(sv->sv_any))->xlv_targlen)`
+        - 例 : `if (((A*)(b->c))->d) {...}`
 
 #### その他の例外
 **(K1) 関数ポインタが，互換性のない関数を指すポインタで初期化される場合**
 
-例 : ジェネリクスの代用として，互換性のない関数をもたせる
-- `long`型の要素を持つHashMapを考える
-    - キーの比較に使う関数を保持する関数ポインタの型は`int (*)(long, long)`
-- このHashMapを表す構造体を，文字列`char*`型の要素を持つHashMapとして使いたい
-    - キーの比較用関数として，互換性のない`strcmp`をセットする
+例 : 互換性のない関数をもたせることで多態性を表現
+- `long`型の要素を持つSetを考える
+    - 要素を比較する関数を指す関数ポインタの型は`int (*)(long, long)`
+- このHasSetを，文字列`char*`型のHashSetとして使いたい
+    - 要素を比較する関数として，型の異なる`strcmp`をセットする
 
 問題点 :
-- 関数ポインタの型と，それが指す関数の型が異なるので，CFGの構築時に必要なエッジが張られなくなる
+- 関数ポインタとそれが指す関数の型が異なるので，MCFIのCFIでは誤検知(FP)される
 
 対処 :
-- ラッパーを書いて型を一致させる
+- ラッパを書いて型を一致させる
 ```c
 int wrap_strcmp(long a, long b) {
     return strcmp((char*)a, (char*)b);
@@ -437,6 +478,26 @@ int wrap_strcmp(long a, long b) {
 
 **(K2) 関数ポインタが一度別の型にキャストされた後，元の型に再度キャストされる**
 - indirect call時には適切な型に戻っているので，手を加える必要なし
+
+#### C1/C2に抵触する部分についての表
+|SPECCPU2006 | SLOC    | VBE  | UC  | DC  | MF  | SU  | NF  | VAE | K1 | K1-fixed | K2  |
+|:-----------|--------:|-----:|----:|----:|----:|----:|----:|----:|---:|---------:|----:|
+|perlbench   | 126,345 | 2878 | 510 | 957 | 234 | 633 | 318 | 226 | 4  | 4        | 222 |
+|bzip2       | 5,731   | 27   | 0   | 0   | 6   | 4   | 0   | 17  | 0  | 0        | 17  |
+|gcc         | 235,884 | 822  | 0   | 0   | 15  | 737 | 27  | 43  | 36 | 22       | 7   |
+|mcf         | 1,574   | 0    | 0   | 0   | 0   | 0   | 0   | 0   | -  | -        | -   |
+|gobmk       | 157,649 | 0    | 0   | 0   | 0   | 0   | 0   | 0   | -  | -        | -   |
+|hmmer       | 20,658  | 20   | 0   | 0   | 20  | 0   | 0   | 0   | -  | -        | -   |
+|sjeng       | 10,544  | 0    | 0   | 0   | 0   | 0   | 0   | 0   | -  | -        | -   |
+|libquantum  | 2,606   | 1    | 0   | 0   | 0   | 0   | 0   | 1   | 1  | 1        | 0   |
+|h264ref     | 36,098  | 8    | 0   | 0   | 8   | 0   | 0   | 0   | -  | -        | -   |
+|milc        | 9,575   | 8    | 0   | 0   | 3   | 0   | 0   | 5   | 0  | 0        | 5   |
+|lbm         | 904     | 0    | 0   | 0   | 0   | 0   | 0   | 0   | -  | -        | -   |
+|sphinx3     | 13,128  | 12   | 0   | 0   | 11  | 1   | 0   | 0   | -  | -        | -   |
+
+- VBE : UC, DCなどのfalse-positiveを処理する前のC1,C2の違反数
+- VAE : UC, DCなどを除外(K1, K2は処理前)したあとのC1, C2の違反数
+- gccのK1-fixedに含まれない14箇所は，dead-codeなどの理由で修正を要さなかった
 
 # 評価
 調べたいこと :
@@ -447,7 +508,11 @@ int wrap_strcmp(long a, long b) {
 検体 :
 - SPECCPU2006 C benchmarks
 
-## オーバーヘッド
+## 時間オーバーヘッド
+次の2種類を考える．
+- チェック用コードなどの計装に由来するもの
+- 動的リンク時の解析・排他制御に由来するもの
+
 ### 計装による時間オーバーヘッド
 ![](./fig/overhead.png)
 - ライブラリは全て静的リンクして計測
@@ -456,41 +521,53 @@ int wrap_strcmp(long a, long b) {
 
 ### CFGの動的構築による時間オーバーヘッド
 - 動的リンクは稀にしか起きないという仮定を置けば，オーバーヘッドは大きくないだろう (推測)
-- 一応，動的リンクが頻繁に起こるJIT環境を想定したテストをおこなった
+- 動的リンクが頻繁に起こるJIT環境を想定したテストをおこなった
     - 50Hzで人為的にIDテーブルの更新を起こした
     - <note>50HzはJITを行うJSエンジンを計測した結果を元にした値</note>
 
-![](./fig/overhead.png)
+![](./fig/overhead2.png)
 
 - 横軸 : 検体
 - 縦軸 : 実行時間の計装・CFGの動的構築による増加割合
 
-### 空間オーバーヘッド
-- static code sizeは 平均+17%
-- 実行時のメモリ使用量のオーバーヘッドは，ソフトウェアが確保するheapの大きさに比べれば無視できる程度
+### 空間・コード量のオーバーヘッド
+- 実行ファイル・オブジェクトのサイズは平均+17%
+- メモリ使用量のオーバーヘッドは，ソフトウェアが確保するheapの大きさに比べれば無視できる程度
 
 ### IDテーブルの読み取り・更新の速度
 トランザクションの実装には様々な手法があるが，MCFIの戦略は良いものであった
 
-||MCFI|TML|Readers Writer Lock|Mutex|
-||:--:|:--:|:--:|:--:|
-|Normalized Exec Time|1|2|29|22|
+|                    |MCFI|TML |Readers Writer Lock|Mutex|
+|:-------------------|:--:|:--:|:-----------------:|:---:|
+|Normalized Exec Time|1   |2   |29                 |22   |
 
-
-## 作られるCFGの精度
-![](./fig/cfg_stat.png)
+## 作られるCFGの精度 @x86-64
+|SPEC 2006 | IBs  | IBTs  | EQCs |
+|:---------|-----:|------:|-----:|
+|perlbench | 2081 | 15273 | 737  |
+|bzip2     | 217  | 544   | 93   |
+|gcc       | 4796 | 46943 | 1991 |
+|mcf       | 174  | 445   | 106  |
+|gobmk     | 2487 | 10667 | 579  |
+|hmmer     | 715  | 4369  | 353  |
+|sjeng     | 337  | 1435  | 184  |
+|libquantum| 258  | 702   | 121  |
+|h264ref   | 1096 | 3604  | 432  |
+|milc      | 432  | 2356  | 264  |
+|lbm       | 161  | 426   | 96   |
+|sphinx3   | 589  | 2895  | 321  |
 
 - IBs : 計装したibranchの数
 - IBTs : ibranchのtargetになりうる場所の数
 - EQCs : 作られたECの数
-    - 上限は min(IBs, IBTs)で，底に近いほど良い
+    - 上限は min(IBs, IBTs)で，それに近いほど良い
 - coarse-graind CFIよりは2,3桁ほど精度が良い
 
 <note>
 
 - fine-graind CFI
     - CFGを元に計算され，各ibranchごとに，飛び先として許されるECを持つことができる
-        - （ことができる → 2つのibranchの指し先が全く同じこともあるので）
+        - 2つのibranchの指し先が全く同じこともある
 - coarse-graind CFI
     - fine-graind に比べ，一つのECがより多くのibranchに共有される
     - 例 : 飛び先のアドレスが特定の範囲なら許す
@@ -504,10 +581,10 @@ int wrap_strcmp(long a, long b) {
 
 ### AIRの観点から
 |手法  |分割コンパイル|実行時間      |AIR(※2) |
-|:--:|:--:|:--|:--|
-|MCFI  |対応          | 平均7%(※1)  |99.99%|
-|binCFI|非対応        | 平均5%       |98.91%|
-|NaCl  |非対応        | 平均5%       |96.15%|
+|:----:|:------------:|:-------------|:--------|
+|MCFI  |対応          | 平均7%(※1)  |99.99%   |
+|binCFI|非対応        | 平均5%       |98.91%   |
+|NaCl  |非対応        | 平均5%       |96.15%   |
 
 - (※1) : 計装由来のオーバーヘッドが平均4～6%, IDテーブルの更新を含めると平均6～7%
 - (※2) : Average Indirect-target Reduction [(ソース)](https://www.usenix.org/system/files/conference/usenixsecurity13/sec13-paper_zhang.pdf)
@@ -516,6 +593,11 @@ int wrap_strcmp(long a, long b) {
     - $|T_j|$: 保護ありで$j$番目のibranchの飛び先になれるアドレスの数
     - $$\dfrac{1}{n}\sum_{j=1}^n \left( 1 - \dfrac{|T_j|}{S} \right)$$
 
-# 自分の研究との関連
+# 結論
+- 分割コンパイル(静的リンク・動的リンク)を扱えるCFIを提案した
+- MCFIにより計装されたibranchは，CFGを表す2つの表を元にチェックされる
+- 動的リンク時には，それら表がMCFIのランタイムにより更新される
+- スレッド安全性を持たせるため，表の操作はトランザクション処理される
+
 
 <!-- 概要，o背景知識，o問題設定，o提案手法，o実装，o実験，関連研究，結論および自分の研究との関連 -->

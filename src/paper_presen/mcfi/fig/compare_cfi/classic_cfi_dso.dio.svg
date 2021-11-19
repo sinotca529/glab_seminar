@@ -1,0 +1,208 @@
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="767px" height="393px" viewBox="-0.5 -0.5 767 393" content="&lt;mxfile&gt;&lt;diagram id=&quot;7kSyCMmyKPUn_gmTXkYv&quot; name=&quot;ページ1&quot;&gt;7VpLc9s2EP4tPWgm6Uw0JCG+jpIcpYe26dSHJKcMRIIiW4hQIMiW+usLECDFB2jRDqjYdT0eW1i8dr9dYj8sNQHL7fEDhbv0NxIjPHGs+DgBNxPHsYMg5P+E5CQlnmgJwYZmsRp0Ftxm/yAltJT0kMVo3xjICMEs2zWFEclzFLGGDFJK7pvDEoKbu+7gBnUEtxHEXemnLGaplAaOf5b/grJNWu5se8rgLSwHK0v2KYzJfU0E3k/AkhLC5KftcYmwAK/ERc5b9fRWilGUsyETFO53EB+UbUovdiqNpeSQx0iMtyZgcZ9mDN3uYCR677l7uSxlW8xbNv+YZBgvCSa0mAtiiIIk4vI9o+RvVOvxogCtE97T1VgZcYcoQ8eaSFnwAZEtYvTEh6jed37oyTkqnoCl4L0/ewcESpbWPeMpIVQRsakWP4PGPyjc9BgCDYYeZgINwm3i8SXR4tJvB+HYBY/LPcF8z0rSgLwUiunv9kX0z/kAjtKxPsPbiP9wSg6s3JCrKveUfR1fckBZ02FNx+QkRy0vKhHE2SbnzYi7CXH5Qrgn44/EXHVsszgW22gjpBlDY7jcCbou9zQedww4fPZDHd7a66mr+NxMl0LeZRWzLQrz+M3bornif1e/f119/Fg057K5mP9Z7r2mPdpE1RN+3hCExU+PDkDMghh/E1spjXqCuW/vnoH7HcxrW7EN+4qivLL35zdnABzhj9lbzRb+MkuKEZfNtKwwFAfP97t4zX0RpVLbHhOtn6QVdavmD0LUgoPPmE6ngyDsMyOB2wyfpCG8C253Eggwa4Z8s6NQdVGk3UdE+2WTLp915RmGUcIeOsEo4lrBdbGQ0HVHspwV54W7mLg3YqUDI1Lz/kPUyCkXtBIbcLuJzdccc6GBYy4YkRsojDq0YLUKQwCqnpJdOYbw9Dy7iaffzRq2M1LaKNnrWGQrSRIn0pKt2Ft7rmcIQwCsJoaBJiYtLYYmQLQ1IF4v+eJsnRAy3ZPXx7iqs6f0u9f1u22P9eyYIdmPyW4DGJTiSNrEKzKsynz5ei8ToLWjKEEsSnMGNb0dESdi8nfY8s12LbsPSJ5GOKVOTUUcL5CTx5OPQQTXtAOuBdvDwPSIzWjxhMfpUbH4dFb/H+R37Vw6A10+4sx0hQsjh6ruIvvCGV5V0XkAUd8dJ0n5F9AjlKVkQ3KIfyVkpzD7CzF2UiVOEXZNRNExY59rn7+Ipaauat0c1cpF41Q2cq7353rjS71xnlS0yllGHLUnB6rOjfL6wCDdoHKUCjgUN+qrXW9ShCHL7prlVp1r1NQ/xBNciwLXbt6bZn7LvVIrNa3l4UqPYQ/RmNckwd1dFMQznYMCZw08U6y+XU9znaElVNfESRT+UFa//r+GWvhcUzYfq4bq6C7DJnnMOKWry2XUsm5qplD6XezXTGlVR3ivBu4rKtr2QC3MGh3ol1IFNvDOY0DV+5XWmsNmbdR1NQxAV98xUWsuX6I+T+5sX5s7V99qGJU8D3aOrub6wu+JntfiPpoq9mhvArRvkF84oO2Lt+t0AR3r4l1u9TxPj+dw83audfMGrTdsXumbCzdvzR2+lY+A31pJmvyEOzxvnr9hJYefv6cG3v8L&lt;/diagram&gt;&lt;/mxfile&gt;">
+    <defs/>
+    <g>
+        <rect x="0" y="22" width="380" height="160" fill="#dae8fc" stroke="#6c8ebf" pointer-events="all"/>
+        <rect x="0" y="2" width="60" height="20" fill="none" stroke="none" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 58px; height: 1px; padding-top: 12px; margin-left: 1px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                <font face="consolas" style="font-size: 20px">
+                                    a.out
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="30" y="16" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    a.out
+                </text>
+            </switch>
+        </g>
+        <rect x="10" y="57" width="370" height="90" fill="none" stroke="none" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe flex-start; width: 1px; height: 1px; padding-top: 102px; margin-left: 12px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: left; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: nowrap; ">
+                                <font face="consolas" style="font-size: 20px">
+                                    <font style="font-size: 20px">
+                                        |%rax = rand() ? FN_FOO : FN_BAR
+                                        <br/>
+                                        <font color="#999999">
+                                            |# callq %rax
+                                        </font>
+                                        <br/>
+                                    </font>
+                                    <span>
+                                        |tgt_ecn = *(%rax + 4)
+                                        <br/>
+                                        |if
+                                        <font color="#009900" style="font-size: 20px">
+                                            branch_ecn
+                                        </font>
+                                        != tgt_ecn :
+                                        <br/>
+                                    </span>
+                                    | ...
+                                </font>
+                                <span style="font-family: &quot;consolas&quot; ; font-size: 20px">
+                                    <br/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="12" y="106" fill="#000000" font-family="Helvetica" font-size="12px">
+                    |%rax = rand() ? FN_FOO : FN_BAR...
+                </text>
+            </switch>
+        </g>
+        <rect x="135" y="92" width="120" height="20" fill="none" stroke="#ff9933" stroke-width="2" pointer-events="all"/>
+        <rect x="466" y="107" width="300" height="200" fill="#fff2cc" stroke="#d6b656" pointer-events="all"/>
+        <rect x="461" y="87" width="110" height="20" fill="none" stroke="none" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 108px; height: 1px; padding-top: 97px; margin-left: 462px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                <font face="consolas" style="font-size: 20px">
+                                    libfoo.so
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="516" y="101" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    libfoo.so
+                </text>
+            </switch>
+        </g>
+        <rect x="466" y="152" width="240" height="120" fill="none" stroke="none" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe flex-start; width: 1px; height: 1px; padding-top: 212px; margin-left: 468px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: left; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: nowrap; ">
+                                <font face="consolas">
+                                    <span style="font-size: 20px">
+                                        |FN_FOO:
+                                        <br/>
+                                        |  prefetchnta   ???
+                                        <br/>
+                                        |  ...
+                                        <br/>
+                                    </span>
+                                    <font style="font-size: 20px">
+                                        <br/>
+                                        |FN_BAR:
+                                        <br/>
+                                    </font>
+                                    <span style="font-size: 20px">
+                                        |  prefetchnta   ???
+                                    </span>
+                                    <font style="font-size: 20px">
+                                        <br/>
+                                    </font>
+                                </font>
+                                <font style="font-size: 20px">
+                                    <font face="consolas">
+                                        |  ...
+                                    </font>
+                                    <br/>
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="468" y="216" fill="#000000" font-family="Helvetica" font-size="12px">
+                    |FN_FOO:...
+                </text>
+            </switch>
+        </g>
+        <rect x="636" y="152" width="75" height="20" fill="none" stroke="#ff9933" stroke-width="2" pointer-events="all"/>
+        <path d="M 255 102 L 627.83 150.93" fill="none" stroke="#ff9933" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 633.78 151.71 L 625.33 154.63 L 627.83 150.93 L 626.37 146.7 Z" fill="#ff9933" stroke="#ff9933" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <rect x="0" y="242" width="380" height="150" fill="#d5e8d4" stroke="#82b366" pointer-events="all"/>
+        <rect x="0" y="222" width="60" height="20" fill="none" stroke="none" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 58px; height: 1px; padding-top: 232px; margin-left: 1px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                <font face="consolas" style="font-size: 20px">
+                                    b.out
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="30" y="236" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    b.out
+                </text>
+            </switch>
+        </g>
+        <rect x="5" y="272" width="310" height="90" fill="none" stroke="none" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe flex-start; width: 1px; height: 1px; padding-top: 317px; margin-left: 7px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: left; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: nowrap; ">
+                                <font style="font-size: 20px">
+                                    <span style="font-family: &quot;consolas&quot;">
+                                        |%rax = FN_FOO
+                                        <br/>
+                                        <font color="#999999" style="font-size: 20px">
+                                            |# callq %rax
+                                        </font>
+                                        <br/>
+                                    </span>
+                                    <span style="font-family: &quot;consolas&quot;">
+                                        |tgt_ecn = *(%rax + 4)
+                                        <br/>
+                                        |if
+                                        <font color="#009900" style="font-size: 20px">
+                                            branch_ecn
+                                        </font>
+                                        != tgt_ecn :
+                                    </span>
+                                    <br style="font-family: &quot;consolas&quot;"/>
+                                </font>
+                                <span style="font-family: &quot;consolas&quot; ; font-size: 20px">
+                                    <font style="font-size: 20px">
+                                        | ...
+                                    </font>
+                                    <br/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="7" y="321" fill="#000000" font-family="Helvetica" font-size="12px">
+                    |%rax = FN_FOO...
+                </text>
+            </switch>
+        </g>
+        <path d="M 250 317 L 628.29 174.9" fill="none" stroke="#ff9933" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 633.91 172.79 L 627.82 179.34 L 628.29 174.9 L 625.01 171.86 Z" fill="#ff9933" stroke="#ff9933" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <rect x="130" y="307" width="120" height="20" fill="none" stroke="#ff9933" stroke-width="2" pointer-events="all"/>
+        <rect x="636" y="247" width="75" height="20" fill="none" stroke="#ff9933" stroke-width="2" pointer-events="all"/>
+        <path d="M 255 102 L 628.3 244.07" fill="none" stroke="#ff9933" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 633.91 246.2 L 625.01 247.1 L 628.3 244.07 L 627.86 239.62 Z" fill="#ff9933" stroke="#ff9933" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+    </g>
+    <switch>
+        <g requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"/>
+        <a transform="translate(0,-5)" xlink:href="https://www.diagrams.net/doc/faq/svg-export-text-problems" target="_blank">
+            <text text-anchor="middle" font-size="10px" x="50%" y="100%">
+                Viewer does not support full SVG 1.1
+            </text>
+        </a>
+    </switch>
+</svg>
