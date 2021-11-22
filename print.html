@@ -1594,9 +1594,9 @@ retaddr:
     ; 戻り先をrcxに退避
     popq %rcx
 
-    ; 実際は，ECNに適当な即値が埋め込まれる
+    ; 実際はBRANCH_ECN1に適当な即値が埋め込まれる
     ; branch ECN　[$ECN] と target ECN [4(%rcx)] が異なるなら，エラー
-    cmpl $ECN, 4(%rcx)
+    cmpl $BRANCH_ECN1, 4(%rcx)
     jne  error
 
     ; branch ECN と target ECN が同じなら，`retaddr`へジャンプ
@@ -1605,8 +1605,11 @@ retaddr:
 retaddr:
     ; 副作用のない形でretaddrの address ECN を埋め込む
     ; 副作用がなければ，`prefetchnta`命令でなくても良い（はず）
-    prefetchnta ECN
+    prefetchnta ADDR_ECN1
     ...
+
+illegaladdr:
+    prefetchnta ADDR_ECN2
 </code></pre>
 <h2 id="クラシカルなcfiの欠点"><a class="header" href="#クラシカルなcfiの欠点">クラシカルなCFIの欠点</a></h2>
 <p>動的リンクに対応できない．</p>
@@ -1615,18 +1618,27 @@ retaddr:
 <img src="paper_presen/mcfi/fig/compare_cfi/classic_cfi.dio.svg" alt="" /></p>
 <h3 id="動的リンクがある場合--indirect-call"><a class="header" href="#動的リンクがある場合--indirect-call">動的リンクがある場合 @ indirect call</a></h3>
 <ul>
-<li><code>FN_FOO</code>と<code>FN_BAR</code>のaddress ECNについて :
-<ul>
-<li><code>a.out</code>は同じにしたい</li>
-<li><code>b.out</code>は同じにしたくない</li>
+<li><code>FN_FOO</code>と<code>FN_BAR</code>のaddress ECNに着目する</li>
 <li>ECNはコードセクション（書き込み不可）に埋め込まれる</li>
 </ul>
+<p><img src="paper_presen/mcfi/fig/compare_cfi/classic_cfi_dso.dio.svg" alt="" /></p>
+<h4 id="boutに合わせfn_fooとfn_barに異なるecnを振る場合"><a class="header" href="#boutに合わせfn_fooとfn_barに異なるecnを振る場合"><strong><code>b.out</code>に合わせ，<code>FN_FOO</code>と<code>FN_BAR</code>に異なるECNを振る場合</strong></a></h4>
+<ul>
+<li><code>a.out</code>で<code>FN_BAR</code>への<code>call</code>が違法判定される (FP)</li>
+</ul>
+<p><img src="paper_presen/mcfi/fig/compare_cfi/classic_cfi_dso_b.dio.svg" alt="" /></p>
+<h4 id="aoutに合わせfn_fooとfn_barに異なるecnを振る場合"><a class="header" href="#aoutに合わせfn_fooとfn_barに異なるecnを振る場合"><strong><code>a.out</code>に合わせ，<code>FN_FOO</code>と<code>FN_BAR</code>に異なるECNを振る場合</strong></a></h4>
+<ul>
+<li><code>b.out</code>で<code>FN_BAR</code>への<code>call</code>が合法判定される (FN)
+<ul>
+<li>精度が落ちている</li>
+</ul>
 </li>
-<li><code>b.out</code>に合わせると，<code>a.out</code>で<code>FN_BAR</code>への<code>call</code>が違法判定されてしまう (FP)</li>
-<li>→ <code>a.out</code>に合わせる必要があるが，そうすると<code>b.out</code>のCFIの精度が落ちる</li>
+</ul>
+<p><img src="paper_presen/mcfi/fig/compare_cfi/classic_cfi_dso_a.dio.svg" alt="" /></p>
+<ul>
 <li>いかなるプログラムに対してもFPを出してはならないので，CFIの防御力が著しく下がる</li>
 </ul>
-<p><img src="paper_presen/mcfi/fig/compare_cfi/classic_cfi_dso.dio.svg" alt="" /></p>
 <note>
 <p>クラシカルなCFIでの対処法 :</p>
 <ul>
@@ -1639,48 +1651,59 @@ retaddr:
 </ul>
 </note>
 <h1 id="mcfiの概要"><a class="header" href="#mcfiの概要">MCFIの概要</a></h1>
-<p>MCFIの目的 : 分割コンパイルされ，かつマルチスレッドで動くアプリに対応したCFIの提案</p>
+<h2 id="目的"><a class="header" href="#目的">目的</a></h2>
+<p>分割コンパイルされ，かつマルチスレッドで動くアプリに対応したCFIの提案</p>
 <h2 id="threat-model"><a class="header" href="#threat-model">Threat model</a></h2>
 <h3 id="攻撃者のモデル--concurrent-attacker-model"><a class="header" href="#攻撃者のモデル--concurrent-attacker-model">攻撃者のモデル : concurrent attacker model</a></h3>
 <p>攻撃者は，</p>
 <ul>
-<li>アプリのスレッドとconcurrentに動くスレッドから攻撃する</li>
-<li>アプリの任意の2命令の間にメモリ操作ができる
+<li>攻撃対象とconcurrentに動くスレッドから攻撃する</li>
+<li>攻撃対象の任意の2命令の間に，任意のメモリを読み書きできる
 <ul>
 <li>ただし， memory page protection の範囲で</li>
 </ul>
 </li>
 <li>レジスタを直接操作することはできない
 <ul>
-<li>ただし，レジスタに読まれるメモリを操作することで，間接的に操作することはできる</li>
+<li>レジスタに読まれるメモリを操作することで，間接的にレジスタを操作することはできる</li>
 </ul>
 </li>
 </ul>
-<h3 id="その他"><a class="header" href="#その他">その他</a></h3>
+<h3 id="その他の前提"><a class="header" href="#その他の前提">その他の前提</a></h3>
 <ul>
-<li>メモリがwritableかつexecutableにならない
+<li>メモリはwritableかつexecutableにならない
 <ul>
-<li>任意コード実行を防ぐ目的</li>
-<li>(MCFIの独自ランタイムを作る際に，これが保証されるよう気をつける)</li>
+<li>任意コード実行を防ぐため</li>
+<li>MCFIの独自ランタイムをうまく設計して，これを保証する</li>
 </ul>
 </li>
 </ul>
 <h2 id="mcfiの方針"><a class="header" href="#mcfiの方針">MCFIの方針</a></h2>
 <ul>
-<li>各モジュールにCFGを計算するための情報(auxiliary information)を持たせる</li>
-<li>静的リンク時には，独自の静的リンカで各モジュールの情報を結合する</li>
-<li>動的リンク時には，独自の動的リンカでその情報を用いてCFGを更新する</li>
-<li>ECNにバージョンの概念を加えた「ID」を「IDテーブル」で管理する
+<li>
+<p>各モジュールにCFGを計算するための補助情報(auxiliary information)を持たせる</p>
+<ul>
+<li>静的リンク時 : 各モジュールの補助情報を独自の静的リンカで結合する</li>
+<li>動的リンク時 : 補助情報を用いて独自の動的リンカでCFGを更新する</li>
+</ul>
+</li>
+<li>
+<p>ECNにバージョンの概念を加えた「ID」をIDテーブルで管理する</p>
 <ul>
 <li>IDテーブルはBaryとTaryの2種類ある</li>
 </ul>
 </li>
 </ul>
-<p>イメージ図 (実際の実装とは異なる．auxiliary info.は省略．)
-<img src="paper_presen/mcfi/fig/compare_cfi/mcfi.dio.svg" alt="" /></p>
+<h3 id="イメージ図-実際の実装とは異なる付加情報は省略"><a class="header" href="#イメージ図-実際の実装とは異なる付加情報は省略">イメージ図 (実際の実装とは異なる．付加情報は省略．)</a></h3>
+<p><img src="paper_presen/mcfi/fig/compare_cfi/mcfi.dio.svg" alt="" /></p>
 <h2 id="challenge"><a class="header" href="#challenge">Challenge</a></h2>
-<h3 id="マルチスレッド下で安全効率的にcfgを更新できるか"><a class="header" href="#マルチスレッド下で安全効率的にcfgを更新できるか">マルチスレッド下で，安全・効率的にCFGを更新できるか</a></h3>
-<p>CFGの更新中に，別スレッドでibranchのチェックが必要になることがある (逆も同様)</p>
+<h3 id="マルチスレッド下で安全効率的にcfgを更新できるか"><a class="header" href="#マルチスレッド下で安全効率的にcfgを更新できるか">マルチスレッド下で安全・効率的にCFGを更新できるか</a></h3>
+<p>IDテーブルが壊れたり，整合性のないIDテーブルがチェックに使われたりしてはならない．</p>
+<p>起こりうること :</p>
+<ul>
+<li>CFGの更新中に，別スレッドでibranchのチェックが必要になる (逆も同様)</li>
+<li>CFGの更新中に，別スレッドでもCFGの更新が必要になる</li>
+</ul>
 <p>MCFIの手法 :</p>
 <ul>
 <li>CFGをコード領域とは別の領域に作る</li>
@@ -1696,20 +1719,24 @@ retaddr:
 <ul>
 <li>ID = ECN + バージョン番号</li>
 <li>CFIが動的に更新されるたび，バージョン番号を上げる</li>
-<li>4Byte長 (atomicに操作できる)</li>
-<li>各ByteのLSBが下から順に(1,0,0,0)のとき，そのIDは有効(valid)とみなす</li>
+<li>IDは4Byte長であり，4Byte境界に配置する (atomicに操作できる)</li>
+<li>各ByteのLSBが下から順に(1,0,0,0)のとき，そのIDは有効(valid)とみなす
+<ul>
+<li>後でこの概念を使う</li>
 </ul>
-<pre><code>            ECN                       Version
-/                          \ /                         \
-+---------+---+---------+---+---------+---+---------+---+
-|         : 0 |         : 0 |         : 0 |         : 1 |
-+---------+---+---------+---+---------+---+---------+---+
-        Higher 2 Bytes            Lower 2 Bytes         ↑ 4-byte aligned
+</li>
+</ul>
+<pre><code>          ECN                    Version
+/                      \ /                     \
++---------+-+---------+-+---------+-+---------+-+
+|         :0|         :0|         :0|         :1|
++---------+-+---------+-+---------+-+---------+-+
+    Higher 2 Bytes            Lower 2 Bytes     ↑ 4-byte aligned
 </code></pre>
 <h2 id="用語"><a class="header" href="#用語">用語</a></h2>
-<p>Address ID, Branch ID, Target IDは，ECNと同様に定義する．</p>
+<p>Address ID，Branch ID，Target IDは，ECNと同様に定義する．</p>
 <question>
-各IDの使われ方を説明してください．
+各IDの使われ方は？
 <details>
 <summary>Ans.</summary>
 <ul>
@@ -1749,7 +1776,7 @@ retaddr:
 </ul>
 <note>
 <p>便宜上<code>Map</code>と書いたが，アドレスからIDを引ければデータ構造は何でも良い．<br>
-(実際には配列が使われる)</p>
+高速に引けるという理由で，実装では配列が使われている．</p>
 </note>
 <h3 id="taryテーブルの構造"><a class="header" href="#taryテーブルの構造">Taryテーブルの構造</a></h3>
 <ul>
@@ -1759,38 +1786,100 @@ retaddr:
 </ul>
 <h4 id="テーブルを小さくするための工夫"><a class="header" href="#テーブルを小さくするための工夫">テーブルを小さくするための工夫</a></h4>
 <ul>
-<li>
-<p>IDは4Byte長なので，全アドレス分のエントリを用意するとコード領域の4倍のサイズが必要</p>
-</li>
-<li>
-<p>工夫 : nopを挿入して全ての飛び先を4バイト境界に配置</p>
+<li>工夫 : nopを挿入して全てのIBTを4バイト境界に配置
 <ul>
-<li>Tary tableのエントリ数は1/4に削減される</li>
+<li>Tary tableのエントリ数は約1/4に削減される</li>
 </ul>
 </li>
-<li>
-<p>4バイト境界に無いアドレスでテーブルが引かれるのを検知するために，valid IDの概念を使う</p>
+<li>4バイト境界に無いアドレスでテーブルが引かれると...
 <ul>
-<li>例えばtargetが4バイト境界でないアドレスに不正操作された場合，Tary tableを引いた時点で攻撃を検知できる．</li>
+<li>validではないIDが返される</li>
+<li>→ Tary tableを引いた時点で攻撃を検知できる</li>
 </ul>
 </li>
 </ul>
+<pre><code>            |   工夫なし                         |      工夫あり
+            +------------------------------------+-----------------------------------
+Code region |  +----------+---------------+      |     +----------+---------------+
+            |  | address  | code          |      |     | address  | code          |
+            |  +----------+---------------+      |     +----------+---------------+
+            |  | 0b010000 |               |      |     | 0b010000 |               |
+            |  | ...      |               |      |     | ...      |               |
+            |  | 0b010111 | FN1:          |      |     | 0b010111 | nop; nop; ... |
+            |  | ...      |   ...         |      |     | 0b011000 | FN1:          |
+            |  |          |               |      |     | ...      |   ...         |
+            |  | 0b011111 | FN2:          |      |     | 0b011111 | nop; nop; ... |
+            |  | ...      |   ...         |      |     | 0b101100 | FN2:          |
+            |  |          |               |      |     | ...      |   ...         |
+            |  | 0b110000 |               |      |     |          |               |
+            |  +----------+---------------+      |     | 0x111111 |               |
+            |                                    |     +----------+---------------+
+            +------------------------------------+-----------------------------------
+Tary table  |         +---------------+          |          +---------------+
+            |  010000 |  0            |          |   010000 |  0            |
+            |  010001 |  0            | #Entry:  |   010100 |  0            |  #Entry:
+            |    ...  | ...           |   33     |   011000 | FN1's addr id |    12
+            |  010111 | FN1's addr id |          |    ...   | ...           |
+            |    ...  | ...           |          |   101100 | FN2's addr id |
+            |  011111 | FN2's addr id |          |    ...   | ...           |
+            |    ...  | ...           |          |   111100 |  0            |
+            |  110000 |  0            |          |          +---------------+
+            |         +---------------+          |  コード量は増えるが，表のエントリ数は減る
+            +------------------------------------+-----------------------------------
+</code></pre>
+<note>
+工夫ありの場合エントリ数が減るだけでなく，各エントリが4Byteであるため，Tary tableのベースアドレスにIBTのアドレスを足すだけで対応するエントリにアクセスできる．
+</note>
 <h3 id="baryテーブルの構造"><a class="header" href="#baryテーブルの構造">Baryテーブルの構造</a></h3>
 <ul>
 <li><code>Map&lt;ibranchのアドレス, BranchID&gt;</code></li>
 <li>branch IDの配列として表現</li>
-<li>一度ロードされたら，その命令のアドレスは変化しない．</li>
-<li>そこで，モジュールをロードするときにBaryテーブルの固定のインデックスを埋め込む</li>
-<li>→ Taryテーブルと異なり，無効なエントリは存在しないので，サイズは最小限</li>
 </ul>
+<h4 id="テーブルを小さくするための工夫-1"><a class="header" href="#テーブルを小さくするための工夫-1">テーブルを小さくするための工夫</a></h4>
+<ul>
+<li>プログラムの実行中，ibranch命令のアドレスは変化しない</li>
+<li>→ モジュールのロード時に，各ibranchのチェック用コードにBaryテーブルを引くためのインデックスを埋め込める
+<ul>
+<li>→ 無効なエントリは存在せず，エントリ数は最小限</li>
+</ul>
+</li>
+</ul>
+<pre><code>ロード前 :
+  libfoo.so                                Bary table
+  +--------------------------------+       idx  +--------+
+  | FN3:                           |        0   |  ID00  |
+  |   ...                          |       ...  |  ...   |
+  |   ; callq %rax                 |       10   |  ID10  |
+  |   branchId = Bary[xxx]         |            +--------+
+  |   targetId = Tary[%rax]        |
+  |   if (branchID != targetID) {  |
+  |   ...                          |
+  +--------------------------------+
+
+----------------------------------------------------------------------
+
+ロード後 :
+  libfoo.so                                Bary table
+  +--------------------------------+       idx  +--------+
+  | FN3:                           |        0   |  ID00  |
+  |   ...                          |       ...  |  ...   |
+  |   ; callq %rax                 |       10   |  ID10  |
+  |   branchId = Bary[11]          |       11   |  ID11  |
+  |   targetId = Tary[%rax]        |            +--------+
+  |   if (branchID != targetID) {  |
+  |   ...                          |
+  +--------------------------------+
+
+</code></pre>
 <h2 id="idテーブルの保護-x86_64"><a class="header" href="#idテーブルの保護-x86_64">IDテーブルの保護 @x86_64</a></h2>
 <ul>
-<li>IDテーブルは実行時に動的に更新される (後述)</li>
+<li>IDテーブルは実行時に動的に更新される</li>
+<li>→ 書き込み可能なデータとして扱われる</li>
 <li>→ テーブルを攻撃者から保護する必要がある</li>
 </ul>
 <p>保護の方法</p>
 <ul>
-<li>IDテーブルは，アドレス空間[4GB, 8GB)に置く</li>
+<li>IDテーブルをアドレス空間[4GB, 8GB)に置く</li>
 <li>プログラム中のメモリwriteについて，[0, 4GB)の範囲しか書き込めないよう計装する</li>
 </ul>
 <note>
@@ -1805,7 +1894,7 @@ mallocでたまたまアドレス空間[4GB, 8GB)からメモリが確保され�
 </ul>
 <p>利点 :</p>
 <ul>
-<li>ECNが，プロセス固有のID tablesによってパラメタ化される
+<li>ECNがプロセス固有のID tablesによってパラメタ化される
 <ul>
 <li>共有ライブラリのcode領域はECNを持たないので，プロセス間でライブラリを共有できる</li>
 <li>(共有ライブラリに関するIDとして，プロセスごとに異なる値を使うことができる)</li>
@@ -1844,13 +1933,13 @@ mallocでたまたまアドレス空間[4GB, 8GB)からメモリが確保され�
 <ul>
 <li><code>getBaryECN(IbranchOpAddr) -&gt; BranchECN</code>
 <ul>
-<li>branchの飛び先として許される（新たな）ECの番号を返す</li>
+<li>branchの飛び先として許される（新たな）ECNを返す</li>
 <li>対応するECNが無い場合は負値を返す</li>
 </ul>
 </li>
 <li><code>getTaryECN(TargetAddr) -&gt; ECN</code>
 <ul>
-<li>branchの飛び先になりうる箇所のアドレスについて，それが属す（新たな）ECの番号を返す</li>
+<li>branchの飛び先になりうる箇所のアドレスについて，それが属す（新たな）ECNを返す</li>
 <li>対応するECNがない場合は負値を返す</li>
 </ul>
 </li>
@@ -1863,46 +1952,50 @@ mallocでたまたまアドレス空間[4GB, 8GB)からメモリが確保され�
     // - 動的リンクは稀なので，排他制御してもオーバーヘッドは実用上問題ない
     // - ロック取得中でもTxCheckは実行できる
     acquire(updLock);
+
     globalVersion += 1;
 
-    // テーブルの更新はインターリーブさせてはならない
-    // もしインターリーブすると
-    // - TaryとBaryの両方において，古いIDと新しいIDが混在する状態が生まれる
-    // - TxCheckにおいて，異なるibranchに対してバージョンの違うテーブルでの検査がおこる
-    updTaryTable();
+    updateTaryTable();
     sfence;
-    updBaryTable();
+    updateGOT();
+    sfence;
+    updateBaryTable();
 
     release(updLock);
 }
-
-void updTaryTable() {
-    // テーブルを確保し，初期化(ゼロ埋め)
-    // （恐らく）古いCFGの情報がないと新しいCFGを構築できないので，
-    // CFGを直接弄るのではなくnewTblを確保する．
+</code></pre>
+<!--
+void updateTaryTable() {
+    // 新しいテーブルを構築するための領域を確保して初期化(ゼロ埋め)
     allocateAndInit(newTbl);
 
-    for (addr = codeBase; addr &lt; CodeLimit; addr += 4) {
-        // ecnには，addrの新しいtargetECNが入る
+    // 4Byte境界の各アドレスについて，newTblのエントリを埋める
+    for (addr = codeBase; addr < CodeLimit; addr += 4) {
         ecn = getTaryECN(addr);
-        if (ecn &gt;= 0) {
+        if (ecn >= 0) {
             entry = (addr - CodeBase) / 4;
             newTbl[entry] = 0x1; // init reserved bits
             setECNAndVer(newTbl, entry, ecn, globalVersion);
         }
     }
 
-    // 各エントリのコピーはアトミックになるように実装する
+    // newTblをTaryTableにコピーする
+    // 各エントリがアトミックにコピーされるよう実装する
     copyTaryTable(newTbl, TaryTableBase);
 
     free(newTbl);
 }
-</code></pre>
-<h3 id="check-transactions"><a class="header" href="#check-transactions">Check transactions</a></h3>
-<ul>
-<li>return, indirect jump, indirect call で実装が異なる</li>
-</ul>
-<p>returnの場合 :</p>
+-->
+<question>
+GOTの更新中にIBTのチェックが成功することはない．なぜか？<br>
+(Check transactionsの説明後に聞きます)
+<details>
+<summary>Ans.</summary>
+メモリフェンス命令により，Taryの全エントリが更新済みであり，Baryの全エントリが未更新であることが保証される．
+したがって，GOT更新中は常にbranch IDとtarget IDのバージョンが異なるのでチェックに成功しない．
+</details>
+</question>
+<h3 id="check-transactions-retの場合"><a class="header" href="#check-transactions-retの場合">Check transactions (<code>ret</code>の場合)</a></h3>
 <pre><code class="language-x86asm">TxCheck {
     ; 戻り先をレジスタに退避．
     ; チェック中に戻り先が不正操作された場合の影響をなくす
@@ -1911,9 +2004,9 @@ void updTaryTable() {
     ; これにより，飛び先は [0, 4GB)の範囲に制限される
     movl %ecx, %ecx
 Try:
-    ; Baryテーブルを引いて，結果（branch ID）を%ediに (これは常に valid ID)
+    ; Baryテーブルを引いてbranch IDを得る (これは常に valid ID)
     movl %gs:ConstBaryIndex, %edi
-    ; Taryテーブルを引いて，結果(target ID)を%esiに (これは invalid IDになりうる)
+    ; Taryテーブルを引いてtarget IDを得る (これは invalid IDになりうる)
     movl %gs:(%rcx), %esi
     cmpl %edi, %esi
     jne  Check
@@ -1934,7 +2027,7 @@ Halt:
 </code></pre>
 <!-- $ // 自前のlatex用の前処理がバグっているのでその対処-->
 <h1 id="module-linking"><a class="header" href="#module-linking">Module Linking</a></h1>
-<p>MCFIは，動的にCFGを計算するために，各モジュールに関数・関数ポインタの型をもたせる</p>
+<p>動的にCFGを計算するための付加情報として，各モジュールに関数・関数ポインタの型をもたせる</p>
 <note>
 モジュールに何をもたせるかには，precisionとefficiencyのトレードオフがある．
 </note>
@@ -1957,16 +2050,15 @@ Halt:
 <li>オペランドとしてコード中に現れる</li>
 <li>飛び先の関数の型<code>S</code>が，<code>T</code>と構造的に等しい(structurally equivalent)．
 <ul>
-<li>e.g. <code>struct A {int a; int b}</code>と<code>struct B {int c; int d}</code>を区別しない</li>
-<li>これを厳格に当てはめると，合法なtargetが見落とされうるので適当な前処理をする (後述)</li>
+<li>例 :  <code>struct A {int a; int b}</code>と<code>struct B {int c; int d}</code></li>
+<li>これを厳格に当てはめると合法なcall flowが見落とされうるので適当な前処理をする (後述)</li>
 </ul>
 </li>
 </ul>
 <h3 id="intra-proceduralなindirect-jump"><a class="header" href="#intra-proceduralなindirect-jump">intra-proceduralなindirect jump</a></h3>
 <ul>
 <li>switch文やindirect goto文をコンパイルする際に使われる</li>
-<li>飛び先は，ハードコードされた読み専用のジャンプテーブルから構成される</li>
-<li>静的に解析できる</li>
+<li>他のモジュールが関わらないので，静的に解析しきれる</li>
 </ul>
 <h3 id="inter-proceduralなindirect-jump"><a class="header" href="#inter-proceduralなindirect-jump">inter-proceduralなindirect jump</a></h3>
 <ul>
@@ -1978,19 +2070,19 @@ Halt:
 <li>合法な飛び先（戻り先）を得るためにcall graphを作成</li>
 <li>direct/indirect call, tail callを考慮して，健全な（合法なエッジの見落としがない）CFGを構築</li>
 </ul>
-<h3 id="その他-1"><a class="header" href="#その他-1">その他</a></h3>
+<h3 id="その他"><a class="header" href="#その他">その他</a></h3>
 <ul>
 <li><code>longjmp</code>
 <ul>
-<li><code>set jmp</code>callで飛び先が決定される</li>
-<li>対応する<code>set jmp</code>を（静的解析で）見つけることで対処</li>
+<li><code>setjmp</code>で飛び先が決定される</li>
+<li><code>setjmp</code>の出現箇所全てを飛び先として許すことで解決</li>
 </ul>
 </li>
 <li>シグナルハンドラ
 <ul>
 <li>シグナルハンドラはアプリのコードにreturnしない</li>
-<li>代わりに，<code>sigreturn</code>システムコールを呼ぶ，小さなcode snippetへとreturnする</li>
-<li>code snippetをインライン化することで，この問題に対応した</li>
+<li>代わりに，<code>sigreturn</code>システムコールを呼ぶコード片へとreturnする</li>
+<li>そのコード片をインライン化することで，この問題に対応した</li>
 </ul>
 </li>
 <li>可変長引数を持つ関数
@@ -2062,12 +2154,12 @@ Halt:
 <p><strong>(K1) 関数ポインタが，互換性のない関数を指すポインタで初期化される場合</strong></p>
 <p>例 : 互換性のない関数をもたせることで多態性を表現</p>
 <ul>
-<li><code>long</code>型の要素を持つSetを考える
+<li><code>long</code>型の要素を持つ<code>Set</code>を考える
 <ul>
 <li>要素を比較する関数を指す関数ポインタの型は<code>int (*)(long, long)</code></li>
 </ul>
 </li>
-<li>このHasSetを，文字列<code>char*</code>型のHashSetとして使いたい
+<li>この<code>Set</code>を，文字列<code>char*</code>型の<code>Set</code>として使いたい
 <ul>
 <li>要素を比較する関数として，型の異なる<code>strcmp</code>をセットする</li>
 </ul>
@@ -2107,7 +2199,7 @@ Halt:
 <ul>
 <li>VBE : UC, DCなどのfalse-positiveを処理する前のC1,C2の違反数</li>
 <li>VAE : UC, DCなどを除外(K1, K2は処理前)したあとのC1, C2の違反数</li>
-<li>gccのK1-fixedに含まれない14箇所は，dead-codeなどの理由で修正を要さなかった</li>
+<li>gccのK1-fixedに含まれない14箇所は，dead-codeなどの理由で修正の必要がなかった</li>
 </ul>
 <h1 id="評価"><a class="header" href="#評価">評価</a></h1>
 <p>調べたいこと :</p>
@@ -2156,22 +2248,22 @@ Halt:
 <h3 id="idテーブルの読み取り更新の速度"><a class="header" href="#idテーブルの読み取り更新の速度">IDテーブルの読み取り・更新の速度</a></h3>
 <p>トランザクションの実装には様々な手法があるが，MCFIの戦略は良いものであった</p>
 <table><thead><tr><th align="left"></th><th align="center">MCFI</th><th align="center">TML</th><th align="center">Readers Writer Lock</th><th align="center">Mutex</th></tr></thead><tbody>
-<tr><td align="left">Normalized Exec Time</td><td align="center">1</td><td align="center">2</td><td align="center">29</td><td align="center">22</td></tr>
+<tr><td align="left">正規化された実行時間</td><td align="center">1</td><td align="center">2</td><td align="center">29</td><td align="center">22</td></tr>
 </tbody></table>
 <h2 id="作られるcfgの精度-x86-64"><a class="header" href="#作られるcfgの精度-x86-64">作られるCFGの精度 @x86-64</a></h2>
-<table><thead><tr><th align="left">SPEC 2006</th><th align="right">IBs</th><th align="right">IBTs</th><th align="right">EQCs</th></tr></thead><tbody>
-<tr><td align="left">perlbench</td><td align="right">2081</td><td align="right">15273</td><td align="right">737</td></tr>
-<tr><td align="left">bzip2</td><td align="right">217</td><td align="right">544</td><td align="right">93</td></tr>
-<tr><td align="left">gcc</td><td align="right">4796</td><td align="right">46943</td><td align="right">1991</td></tr>
-<tr><td align="left">mcf</td><td align="right">174</td><td align="right">445</td><td align="right">106</td></tr>
-<tr><td align="left">gobmk</td><td align="right">2487</td><td align="right">10667</td><td align="right">579</td></tr>
-<tr><td align="left">hmmer</td><td align="right">715</td><td align="right">4369</td><td align="right">353</td></tr>
-<tr><td align="left">sjeng</td><td align="right">337</td><td align="right">1435</td><td align="right">184</td></tr>
-<tr><td align="left">libquantum</td><td align="right">258</td><td align="right">702</td><td align="right">121</td></tr>
-<tr><td align="left">h264ref</td><td align="right">1096</td><td align="right">3604</td><td align="right">432</td></tr>
-<tr><td align="left">milc</td><td align="right">432</td><td align="right">2356</td><td align="right">264</td></tr>
-<tr><td align="left">lbm</td><td align="right">161</td><td align="right">426</td><td align="right">96</td></tr>
-<tr><td align="left">sphinx3</td><td align="right">589</td><td align="right">2895</td><td align="right">321</td></tr>
+<table><thead><tr><th align="left">SPEC 2006</th><th align="right">IBs</th><th align="right">IBTs</th><th align="right">min(IBs, IBTs)</th><th align="right">EQCs</th></tr></thead><tbody>
+<tr><td align="left">perlbench</td><td align="right">2081</td><td align="right">15273</td><td align="right">2081</td><td align="right">737</td></tr>
+<tr><td align="left">bzip2</td><td align="right">217</td><td align="right">544</td><td align="right">217</td><td align="right">93</td></tr>
+<tr><td align="left">gcc</td><td align="right">4796</td><td align="right">46943</td><td align="right">4796</td><td align="right">1991</td></tr>
+<tr><td align="left">mcf</td><td align="right">174</td><td align="right">445</td><td align="right">174</td><td align="right">106</td></tr>
+<tr><td align="left">gobmk</td><td align="right">2487</td><td align="right">10667</td><td align="right">2487</td><td align="right">579</td></tr>
+<tr><td align="left">hmmer</td><td align="right">715</td><td align="right">4369</td><td align="right">715</td><td align="right">353</td></tr>
+<tr><td align="left">sjeng</td><td align="right">337</td><td align="right">1435</td><td align="right">337</td><td align="right">184</td></tr>
+<tr><td align="left">libquantum</td><td align="right">258</td><td align="right">702</td><td align="right">258</td><td align="right">121</td></tr>
+<tr><td align="left">h264ref</td><td align="right">1096</td><td align="right">3604</td><td align="right">1096</td><td align="right">432</td></tr>
+<tr><td align="left">milc</td><td align="right">432</td><td align="right">2356</td><td align="right">432</td><td align="right">264</td></tr>
+<tr><td align="left">lbm</td><td align="right">161</td><td align="right">426</td><td align="right">161</td><td align="right">96</td></tr>
+<tr><td align="left">sphinx3</td><td align="right">589</td><td align="right">2895</td><td align="right">589</td><td align="right">321</td></tr>
 </tbody></table>
 <ul>
 <li>IBs : 計装したibranchの数</li>
@@ -2208,6 +2300,11 @@ Halt:
 <li>ツール(rp++)を用いて ROP-gadgetを調べた</li>
 <li>x86-32/64 において，96.93%/95.75%のROP-gadgetが保護された</li>
 </ul>
+<note>
+ROP gadget攻撃 :<br>
+スタックを上手く改変することで正規のコード片をつなぎ合わせて不正なcall flowを起こす攻撃．
+任意コード実行とは異なり，不正なコードの注入はしない．
+</note>
 <h3 id="airの観点から"><a class="header" href="#airの観点から">AIRの観点から</a></h3>
 <table><thead><tr><th align="center">手法</th><th align="center">分割コンパイル</th><th align="left">実行時間</th><th align="left">AIR(※2)</th></tr></thead><tbody>
 <tr><td align="center">MCFI</td><td align="center">対応</td><td align="left">平均7%(※1)</td><td align="left">99.99%</td></tr>
@@ -2225,13 +2322,116 @@ Halt:
 </ul>
 </li>
 </ul>
+<h1 id="関連研究との比較"><a class="header" href="#関連研究との比較">関連研究との比較</a></h1>
+<table>
+    <thead>
+        <tr>
+            <th align="center"></th>
+            <th align="center">動的リンクの対応</th>
+            <th align="left">精度</th>
+            <th align="left">Overhead (ave)</th>
+            <th align="center">ハードウェア支援</th>
+            <th align="left">備考</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td align="center">MCFI</td>
+            <td align="center" bgcolor="#7eb953">OK</td>
+            <td align="left" bgcolor="#ff7f7f">型の一致</td>
+            <td align="left">7%</td>
+            <td align="center" bgcolor="#7eb953">未使用</td>
+            <td align="left"></td>
+        </tr>
+        <tr>
+            <td align="center">Clang12</td>
+            <td align="center" bgcolor="#7eb953">OK</td>
+            <td align="left" bgcolor="#ff7f7f">型の一致</td>
+            <td align="left">?</td>
+            <td align="center" bgcolor="#7eb953">未使用</td>
+            <td align="left">型のハッシュ値をECNとして用いるため，動的な表の構築が不要．MCFIより原理的に高速．ただしハッシュの衝突に注意．</td>
+        </tr>
+        <tr>
+            <td align="center">PICFI</td>
+            <td align="center" bgcolor="#7eb953">OK</td>
+            <td align="left" bgcolor="#ffd96a">型の一致 and 実行中に使用された</td>
+            <td align="left">&lt; MCFI+1%</td>
+            <td align="center" bgcolor="#7eb953">未使用</td>
+            <td align="left">MCFIの後続研究</td>
+        </tr>
+        <tr>
+            <td align="center">uCFI</td>
+            <td align="center" bgcolor="#ff7f7f">NG</td>
+            <td align="left" bgcolor="#7eb953">IBTを1つに絞る</td>
+            <td align="left">9.95%</td>
+            <td align="center" bgcolor="#ff7f7f">使用</td>
+            <td align="left">実行時に収集するメタデータを不正操作することで突破可能．</td>
+        </tr>
+        <tr>
+            <td align="center">OS-CFI</td>
+            <td align="center" bgcolor="#ff7f7f">NG</td>
+            <td align="left" bgcolor="#7eb953">origin-sensitive</td>
+            <td align="left">7.6%</td>
+            <td align="center" bgcolor="#ff7f7f">使用</td>
+            <td align="left">内部でSUPAを用いている</td>
+        </tr>
+    </tbody>
+</table>
+<ul>
+<li>オーバーヘッドは環境や検体に大きく左右されうるので参考程度</li>
+<li>origin-sensitive
+<ul>
+<li>関数ポインタが最後に更新された地点を区別して考える</li>
+<li>コールスタックを部分的に考慮する場合もある</li>
+</ul>
+</li>
+</ul>
 <h1 id="結論"><a class="header" href="#結論">結論</a></h1>
 <ul>
 <li>分割コンパイル(静的リンク・動的リンク)を扱えるCFIを提案した</li>
-<li>MCFIにより計装されたibranchは，CFGを表す2つの表を元にチェックされる</li>
-<li>動的リンク時には，それら表がMCFIのランタイムにより更新される</li>
-<li>スレッド安全性を持たせるため，表の操作はトランザクション処理される</li>
+<li>CFG (ECN)をコードに埋め込まず，実行時に動的に構築することで分割コンパイルに対応した</li>
+<li>各モジュールに付加情報を持たせ，
+<ul>
+<li>静的リンク時には，その付加情報をマージする</li>
+<li>動的リンク時には，その付加情報を用いてCFIに用いるCFGを更新する</li>
 </ul>
+</li>
+<li>マルチスレッドに対応するため，表の操作は適切にトランザクション処理される</li>
+</ul>
+<h1 id="自分の研究との関連"><a class="header" href="#自分の研究との関連">自分の研究との関連</a></h1>
+<p>目的 : 分割コンパイルされたプログラムを扱える高精度(少なくともflow-sensitive)なCFIの提案</p>
+<ul>
+<li>保護対象はmoduleを跨ぐibranch</li>
+</ul>
+<p>アプローチとして2つ考えている．</p>
+<h3 id="1-使い勝手は悪いが実装コストの低い手法"><a class="header" href="#1-使い勝手は悪いが実装コストの低い手法">1. 使い勝手は悪いが，実装コストの低い手法</a></h3>
+<ul>
+<li>MCFIが動的におこなっていたCFGの生成を，実行前に静的におこなう手法
+<ul>
+<li>SUPAを用いてflow-sensitiveなCFGを作る</li>
+</ul>
+</li>
+<li>実行時に表を更新しないので :
+<ul>
+<li>表をread-onlyとして扱える = 表の保護が不要</li>
+<li>独自のランタイム・動的リンカが不要</li>
+<li>動的リンク時の解析コストがCFIの精度に非依存</li>
+</ul>
+</li>
+<li>解析を実行前に終わらせるので :
+<ul>
+<li>モジュールの更新時に，それを使用するプログラム全てについて再解析が必要になる</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-使い勝手は良いが実装コストの高い手法"><a class="header" href="#2-使い勝手は良いが実装コストの高い手法">2. 使い勝手は良いが，実装コストの高い手法</a></h3>
+<ul>
+<li>MCFIに，より多くの付加情報を持たせる拡張</li>
+<li>付加情報として何をもたせ，それをどう実行時に扱うかが難しい所</li>
+<li>実行時に表を更新するので実行コストが高い</li>
+</ul>
+<h3 id="予定"><a class="header" href="#予定">予定</a></h3>
+<p>保険としてまず1を実装し，その後，1の精度向上 or 2の検討をしようと考えている．</p>
 <!-- 概要，o背景知識，o問題設定，o提案手法，o実装，o実験，関連研究，結論および自分の研究との関連 -->
 
                     </main>
@@ -2245,9 +2445,6 @@ Halt:
                 </div>
             </div>
 
-            <nav class="nav-wide-wrapper" aria-label="Page navigation">
-
-            </nav>
 
         </div>
 

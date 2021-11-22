@@ -131,8 +131,10 @@ question:before {
 }
 
 img {
-    width: 100%;
+    width: 90%;
     background-color: #d6ebff;
+    display: block;
+    margin: auto;
 }
 
 
